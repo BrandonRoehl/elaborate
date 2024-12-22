@@ -24,8 +24,8 @@ struct ContentView: View {
 //                    }.frame(alignment: .leading).border(.secondary)
 
                     TextEditor(text: $document.text).font(font)
-                        .writingToolsBehavior(.disabled)
-                        .textEditorStyle(.plain)
+//                        .writingToolsBehavior(.disabled)
+//                        .textEditorStyle(.plain)
 //                        .frame(maxWidth: .infinity)
 //                }
 //            }.frame(maxWidth: .infinity)
