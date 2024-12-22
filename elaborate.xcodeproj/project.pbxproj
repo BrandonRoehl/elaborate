@@ -429,6 +429,10 @@
 				DEVELOPMENT_ASSET_PATHS = "\"elaborate/Preview Content\"";
 				DEVELOPMENT_TEAM = V7JGZY6Z4Z;
 				ENABLE_PREVIEWS = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)",
+				);
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = elaborate/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = Elaborate;
@@ -471,6 +475,10 @@
 				DEVELOPMENT_ASSET_PATHS = "\"elaborate/Preview Content\"";
 				DEVELOPMENT_TEAM = V7JGZY6Z4Z;
 				ENABLE_PREVIEWS = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)",
+				);
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = elaborate/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = Elaborate;
