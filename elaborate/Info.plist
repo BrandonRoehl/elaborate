@@ -9,10 +9,10 @@
 			<string>Editor</string>
 			<key>LSItemContentTypes</key>
 			<array>
-				<string>com.example.plain-text</string>
+				<string>org.brandonroehl.elb</string>
 			</array>
 			<key>NSUbiquitousDocumentUserActivityType</key>
-			<string>$(PRODUCT_BUNDLE_IDENTIFIER).example-document</string>
+			<string>$(PRODUCT_BUNDLE_IDENTIFIER).elborate</string>
 		</dict>
 	</array>
 	<key>UTImportedTypeDeclarations</key>
@@ -25,12 +25,14 @@
 			<key>UTTypeDescription</key>
 			<string>Example Text</string>
 			<key>UTTypeIdentifier</key>
-			<string>com.example.plain-text</string>
+			<string>org.brandonroehl.elb</string>
 			<key>UTTypeTagSpecification</key>
 			<dict>
 				<key>public.filename-extension</key>
 				<array>
-					<string>exampletext</string>
+					<string>ivy</string>
+					<string>elb</string>
+					<string>txt</string>
 				</array>
 			</dict>
 		</dict>

@@ -2,7 +2,7 @@
 //  elaborateDocument.swift
 //  elaborate
 //
-//  Created by Brandon Roehl on 12/21/24.
+//  Created by Brandon Roehl on 11/24/24.
 //
 
 import SwiftUI
@@ -10,7 +10,7 @@ import UniformTypeIdentifiers
 
 extension UTType {
     static var exampleText: UTType {
-        UTType(importedAs: "com.example.plain-text")
+        UTType(importedAs: "org.brandonroehl.elb")
     }
 }
 
