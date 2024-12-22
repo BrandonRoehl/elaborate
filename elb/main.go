@@ -1,7 +1,16 @@
 package elb
 
-import "fmt"
+import (
+	"fmt"
+
+	"robpike.io/ivy/mobile"
+)
 
 func Execute(content string) {
-	fmt.Println("ELB:", content)
+	output, err := mobile.Eval(content)
+	if err != nil {
+		fmt.Println(err)
+	} else {
+		fmt.Println(output)
+	}
 }
