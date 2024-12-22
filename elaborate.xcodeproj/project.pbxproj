@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		553248042D18BB34000E238F /* Elb.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 553248032D18BB34000E238F /* Elb.xcframework */; };
+		553248052D18BB34000E238F /* Elb.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 553248032D18BB34000E238F /* Elb.xcframework */; };
+		553248062D18BB34000E238F /* Elb.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 553248032D18BB34000E238F /* Elb.xcframework */; };
 		556ABF5F2D17A2C7004D6A05 /* ElaborateApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 556ABF5E2D17A2C7004D6A05 /* ElaborateApp.swift */; };
 		556ABF612D17A2C7004D6A05 /* ElaborateDocument.swift in Sources */ = {isa = PBXBuildFile; fileRef = 556ABF602D17A2C7004D6A05 /* ElaborateDocument.swift */; };
 		556ABF632D17A2C7004D6A05 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 556ABF622D17A2C7004D6A05 /* ContentView.swift */; };
@@ -35,6 +38,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		553248032D18BB34000E238F /* Elb.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = Elb.xcframework; path = elb/Elb.xcframework; sourceTree = "<group>"; };
 		556ABF5B2D17A2C7004D6A05 /* elaborate.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = elaborate.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		556ABF5E2D17A2C7004D6A05 /* ElaborateApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ElaborateApp.swift; sourceTree = "<group>"; };
 		556ABF602D17A2C7004D6A05 /* ElaborateDocument.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ElaborateDocument.swift; sourceTree = "<group>"; };
@@ -55,6 +59,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				553248042D18BB34000E238F /* Elb.xcframework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -62,6 +67,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				553248052D18BB34000E238F /* Elb.xcframework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -69,6 +75,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				553248062D18BB34000E238F /* Elb.xcframework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -78,6 +85,7 @@
 		556ABF522D17A2C7004D6A05 = {
 			isa = PBXGroup;
 			children = (
+				553248032D18BB34000E238F /* Elb.xcframework */,
 				556ABF5D2D17A2C7004D6A05 /* elaborate */,
 				556ABF722D17A2CA004D6A05 /* elaborateTests */,
 				556ABF7C2D17A2CA004D6A05 /* elaborateUITests */,
@@ -431,7 +439,7 @@
 				ENABLE_PREVIEWS = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
-					"$(PROJECT_DIR)",
+					"$(PROJECT_DIR)/elb",
 				);
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = elaborate/Info.plist;
@@ -477,7 +485,7 @@
 				ENABLE_PREVIEWS = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
-					"$(PROJECT_DIR)",
+					"$(PROJECT_DIR)/elb",
 				);
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = elaborate/Info.plist;

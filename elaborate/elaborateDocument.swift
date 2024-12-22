@@ -7,6 +7,7 @@
 
 import SwiftUI
 import UniformTypeIdentifiers
+import Elb
 
 extension UTType {
     static var elaborate: UTType {
@@ -30,6 +31,10 @@ struct ElaborateDocument: FileDocument {
             throw CocoaError(.fileReadCorruptFile)
         }
         text = string
+    }
+    
+    func execute() {
+        ElbExecute(self.text)
     }
     
     func fileWrapper(configuration: WriteConfiguration) throws -> FileWrapper {
