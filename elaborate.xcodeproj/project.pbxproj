@@ -7,8 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		556ABF5F2D17A2C7004D6A05 /* elaborateApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 556ABF5E2D17A2C7004D6A05 /* elaborateApp.swift */; };
-		556ABF612D17A2C7004D6A05 /* elaborateDocument.swift in Sources */ = {isa = PBXBuildFile; fileRef = 556ABF602D17A2C7004D6A05 /* elaborateDocument.swift */; };
+		556ABF5F2D17A2C7004D6A05 /* ElaborateApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 556ABF5E2D17A2C7004D6A05 /* ElaborateApp.swift */; };
+		556ABF612D17A2C7004D6A05 /* ElaborateDocument.swift in Sources */ = {isa = PBXBuildFile; fileRef = 556ABF602D17A2C7004D6A05 /* ElaborateDocument.swift */; };
 		556ABF632D17A2C7004D6A05 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 556ABF622D17A2C7004D6A05 /* ContentView.swift */; };
 		556ABF652D17A2C9004D6A05 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 556ABF642D17A2C9004D6A05 /* Assets.xcassets */; };
 		556ABF6A2D17A2C9004D6A05 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 556ABF692D17A2C9004D6A05 /* Preview Assets.xcassets */; };
@@ -36,8 +36,8 @@
 
 /* Begin PBXFileReference section */
 		556ABF5B2D17A2C7004D6A05 /* elaborate.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = elaborate.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		556ABF5E2D17A2C7004D6A05 /* elaborateApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = elaborateApp.swift; sourceTree = "<group>"; };
-		556ABF602D17A2C7004D6A05 /* elaborateDocument.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = elaborateDocument.swift; sourceTree = "<group>"; };
+		556ABF5E2D17A2C7004D6A05 /* ElaborateApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ElaborateApp.swift; sourceTree = "<group>"; };
+		556ABF602D17A2C7004D6A05 /* ElaborateDocument.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ElaborateDocument.swift; sourceTree = "<group>"; };
 		556ABF622D17A2C7004D6A05 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		556ABF642D17A2C9004D6A05 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		556ABF662D17A2C9004D6A05 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -98,8 +98,8 @@
 		556ABF5D2D17A2C7004D6A05 /* elaborate */ = {
 			isa = PBXGroup;
 			children = (
-				556ABF5E2D17A2C7004D6A05 /* elaborateApp.swift */,
-				556ABF602D17A2C7004D6A05 /* elaborateDocument.swift */,
+				556ABF5E2D17A2C7004D6A05 /* ElaborateApp.swift */,
+				556ABF602D17A2C7004D6A05 /* ElaborateDocument.swift */,
 				556ABF622D17A2C7004D6A05 /* ContentView.swift */,
 				556ABF642D17A2C9004D6A05 /* Assets.xcassets */,
 				556ABF662D17A2C9004D6A05 /* Info.plist */,
@@ -264,8 +264,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				556ABF612D17A2C7004D6A05 /* elaborateDocument.swift in Sources */,
-				556ABF5F2D17A2C7004D6A05 /* elaborateApp.swift in Sources */,
+				556ABF612D17A2C7004D6A05 /* ElaborateDocument.swift in Sources */,
+				556ABF5F2D17A2C7004D6A05 /* ElaborateApp.swift in Sources */,
 				556ABF632D17A2C7004D6A05 /* ContentView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -431,6 +431,7 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = elaborate/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = Elaborate;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphoneos*]" = YES;
@@ -472,6 +473,7 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = elaborate/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = Elaborate;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphoneos*]" = YES;

@@ -8,12 +8,29 @@
 import SwiftUI
 
 struct ContentView: View {
-    @Binding var document: elaborateDocument
+    @Binding var document: ElaborateDocument
     
     let font = Font.system(.body).monospaced()
-
+    
     var body: some View {
-        VSplitView {
+        TextEditor(text: $document.text).font(font)
+            .toolbarRole(.editor)
+            .toolbar {
+                ToolbarItemGroup(placement: .bottomBar) {
+                    Button("automatic") {
+                        print("automatic")
+                    }
+                }
+                ToolbarItem(placement: .primaryAction) {
+                    Button("Help") {
+                        print("helpme")
+                    }
+                }
+            }
+    }
+}
+
+//        VSplitView {
 //            ScrollView {
 //                HStack {
 //                    VStack {
@@ -23,19 +40,16 @@ struct ContentView: View {
 //                        }
 //                    }.frame(alignment: .leading).border(.secondary)
 
-                    TextEditor(text: $document.text).font(font)
 //                        .writingToolsBehavior(.disabled)
 //                        .textEditorStyle(.plain)
 //                        .frame(maxWidth: .infinity)
 //                }
 //            }.frame(maxWidth: .infinity)
-            ScrollView {
-                Text(document.text).font(font).frame(maxWidth: .infinity)
-            }.frame(maxWidth: .infinity)
-        }
-    }
-}
+//            ScrollView {
+//                Text(document.text).font(font).frame(maxWidth: .infinity)
+//            }.frame(maxWidth: .infinity)
+//        }
 
 #Preview {
-    ContentView(document: .constant(elaborateDocument()))
+    ContentView(document: .constant(ElaborateDocument()))
 }

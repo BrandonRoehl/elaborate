@@ -1,5 +1,5 @@
 //
-//  elaborateDocument.swift
+//  ElaborateDocument.swift
 //  elaborate
 //
 //  Created by Brandon Roehl on 11/24/24.
@@ -14,7 +14,7 @@ extension UTType {
     }
 }
 
-struct elaborateDocument: FileDocument {
+struct ElaborateDocument: FileDocument {
     var text: String
 
     init(text: String = "Hello, world!") {

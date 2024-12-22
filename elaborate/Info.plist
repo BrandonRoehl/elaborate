@@ -23,15 +23,15 @@
 				<string>public.plain-text</string>
 			</array>
 			<key>UTTypeDescription</key>
-			<string>Example Text</string>
+			<string>Elaborate Document</string>
 			<key>UTTypeIdentifier</key>
 			<string>org.brandonroehl.elb</string>
 			<key>UTTypeTagSpecification</key>
 			<dict>
 				<key>public.filename-extension</key>
 				<array>
-					<string>ivy</string>
 					<string>elb</string>
+					<string>ivy</string>
 					<string>txt</string>
 				</array>
 			</dict>
