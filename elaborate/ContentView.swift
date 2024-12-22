@@ -16,13 +16,8 @@ struct ContentView: View {
         TextEditor(text: $document.text).font(font)
             .toolbarRole(.editor)
             .toolbar {
-                ToolbarItemGroup(placement: .bottomBar) {
-                    Button("automatic") {
-                        print("automatic")
-                    }
-                }
                 ToolbarItem(placement: .primaryAction) {
-                    Button("Help") {
+                    Button("Help", systemImage: "questionmark.circle") {
                         print("helpme")
                     }
                 }

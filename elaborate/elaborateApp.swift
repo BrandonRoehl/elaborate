@@ -8,7 +8,7 @@
 import SwiftUI
 
 @main
-struct elaborateApp: App {
+struct ElaborateApp: App {
     var body: some Scene {
         DocumentGroup(newDocument: ElaborateDocument()) { file in
             ContentView(document: file.$document)
