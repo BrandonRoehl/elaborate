@@ -12,3 +12,13 @@ go install golang.org/x/mobile/cmd/gomobile@latest
 # Initialize gomobile
 gomobile init
 ```
+
+## Build the Bindings
+```sh
+make bind
+```
+
+## Build the iOS App
+```sh
+xcodebuild
+```

@@ -1,4 +1,4 @@
-module github.com/brandonroehl/elaborate/elb
+module github.com/brandonroehl/elaborate
 
 go 1.23.4
 

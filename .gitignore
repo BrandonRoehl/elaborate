@@ -88,4 +88,4 @@ go.work.sum
 .env
 
 # Frameworks that were build with go
-elb/Elb.xcframework
+Elb.xcframework
