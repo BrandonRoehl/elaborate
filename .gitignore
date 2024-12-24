@@ -92,4 +92,5 @@ Elb.xcframework
 
 # Protobuf
 *.pb.go
+*.pb.swift
 

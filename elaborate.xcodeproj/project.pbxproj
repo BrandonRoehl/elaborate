@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 56;
+	objectVersion = 70;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -65,6 +65,27 @@
 		557A56A22D1A6FF700209EFF /* transport.proto */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.protobuf; path = transport.proto; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		55E0FEAB2D1B6F1E00344C57 /* PBXFileSystemSynchronizedBuildFileExceptionSet */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				transport.pb.swift,
+			);
+			target = 556ABF6E2D17A2CA004D6A05 /* elaborateTests */;
+		};
+		55E0FEAC2D1B6F1E00344C57 /* PBXFileSystemSynchronizedBuildFileExceptionSet */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				transport.pb.swift,
+			);
+			target = 556ABF782D17A2CA004D6A05 /* elaborateUITests */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
+/* Begin PBXFileSystemSynchronizedRootGroup section */
+		55E0FEAA2D1B6F1800344C57 /* transport */ = {isa = PBXFileSystemSynchronizedRootGroup; exceptions = (55E0FEAB2D1B6F1E00344C57 /* PBXFileSystemSynchronizedBuildFileExceptionSet */, 55E0FEAC2D1B6F1E00344C57 /* PBXFileSystemSynchronizedBuildFileExceptionSet */, ); explicitFileTypes = {}; explicitFolders = (); path = transport; sourceTree = "<group>"; };
+/* End PBXFileSystemSynchronizedRootGroup section */
+
 /* Begin PBXFrameworksBuildPhase section */
 		556ABF582D17A2C7004D6A05 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
@@ -122,6 +143,7 @@
 		556ABF5D2D17A2C7004D6A05 /* elaborate */ = {
 			isa = PBXGroup;
 			children = (
+				55E0FEAA2D1B6F1800344C57 /* transport */,
 				556ABF5E2D17A2C7004D6A05 /* ElaborateApp.swift */,
 				556ABF602D17A2C7004D6A05 /* ElaborateDocument.swift */,
 				556ABF622D17A2C7004D6A05 /* ContentView.swift */,
@@ -180,6 +202,9 @@
 			buildRules = (
 			);
 			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				55E0FEAA2D1B6F1800344C57 /* transport */,
 			);
 			name = elaborate;
 			productName = elaborate;

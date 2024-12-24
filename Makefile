@@ -5,13 +5,13 @@ IOSVERSION=17
 bind: Elb.xcframework
 
 .PHONY: proto
-proto: elb/transport/transport.pb.go
+proto: elb/transport/transport.pb.go elaborate/transport/transport.pb.go
 
 Elb.xcframework: elb/*.go elb/transport/transport.pb.go 
 	gomobile bind "-target=$(PLATFORMS)" "-iosversion=$(IOSVERSION)" ./elb/
 
-elb/transport/transport.pb.go: transport.proto
-	protoc --go_out=. transport.proto
+elb/transport/transport.pb.go elaborate/transport/transport.pb.go: transport.proto
+	protoc --go_out=. --swift_out=./elaborate/transport/ transport.proto
 
 .PHONY: clean
 clean:

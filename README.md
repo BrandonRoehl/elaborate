@@ -23,5 +23,6 @@ make bind
 
 ## Build the iOS App
 ```sh
+brew install swift-protobuf
 xcodebuild
 ```
