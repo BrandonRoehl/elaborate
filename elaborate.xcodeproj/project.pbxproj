@@ -61,7 +61,6 @@
 		557A56972D1A6DD800209EFF /* Elb.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; path = Elb.xcframework; sourceTree = "<group>"; };
 		557A569B2D1A6FB800209EFF /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		557A569F2D1A6FDC00209EFF /* Makefile */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.make; path = Makefile; sourceTree = "<group>"; };
-		557A56A02D1A6FEC00209EFF /* main.go */ = {isa = PBXFileReference; lastKnownFileType = text; path = main.go; sourceTree = "<group>"; };
 		557A56A22D1A6FF700209EFF /* transport.proto */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.protobuf; path = transport.proto; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -125,7 +124,6 @@
 				556ABF7C2D17A2CA004D6A05 /* elaborateUITests */,
 				556ABF5C2D17A2C7004D6A05 /* Products */,
 				557A569F2D1A6FDC00209EFF /* Makefile */,
-				557A56A12D1A6FEC00209EFF /* elb */,
 				557A56A22D1A6FF700209EFF /* transport.proto */,
 			);
 			sourceTree = "<group>";
@@ -178,14 +176,6 @@
 				556ABF7F2D17A2CA004D6A05 /* elaborateUITestsLaunchTests.swift */,
 			);
 			path = elaborateUITests;
-			sourceTree = "<group>";
-		};
-		557A56A12D1A6FEC00209EFF /* elb */ = {
-			isa = PBXGroup;
-			children = (
-				557A56A02D1A6FEC00209EFF /* main.go */,
-			);
-			path = elb;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */

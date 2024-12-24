@@ -3,6 +3,7 @@ package elb
 import (
 	"bufio"
 	"bytes"
+	"io"
 	"log"
 	"strings"
 
@@ -49,17 +50,17 @@ func newConf() (config.Config, value.Context) {
 	return conf, context
 }
 
-func Execute(content string) []byte {
+func innerExecute(reader io.Reader) []*transport.Result {
 	// The context and config to run the file through.
 	conf, context := newConf()
 	// The results of the file execution.
 	results := make([]*transport.Result, 0)
 	// The file content
-	scanner := bufio.NewScanner(strings.NewReader(content))
+	scanner := bufio.NewScanner(reader)
 	var index int64 = 0
 	for scanner.Scan() {
 		// Defer the increment of the index to the end of the loop.
-		defer func() { index++ }()
+		defer func() { index += 1 }()
 
 		// Skip empty lines.
 		expr := scanner.Text()
@@ -89,6 +90,13 @@ func Execute(content string) []byte {
 		}
 		results = append(results, &result)
 	}
+	return results
+}
+
+func Execute(content string) []byte {
+	reader := strings.NewReader(content)
+	// The results of the file execution.
+	results := innerExecute(reader)
 	// Return the results.
 	response := transport.Response{
 		Results: results,

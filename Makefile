@@ -16,3 +16,8 @@ elb/transport/transport.pb.go elaborate/transport/transport.pb.go: transport.pro
 .PHONY: clean
 clean:
 	rm -rf Elb.xcframework elb/transport/transport.pb.go
+
+.PHONY: test
+test:
+	go test
+
