@@ -3,12 +3,12 @@ package elaborate;
 
 option go_package = "./elb/transport";
 
-enum Status {
-  SUCCESS = 0;
-  ERROR = 1;
-}
-
 message Result {
+  enum Status {
+    ERROR = 0;
+    SUCCESS = 1;
+  }
+
   string output = 1;
   int64 line = 2;
   Status status = 3;

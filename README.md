@@ -6,9 +6,10 @@
 - Gomobile latest
 - Xcode 15.2
 - Protocol Buffers 5.29
-  - `brew install protobuf protoc-gen-go`
 
 ```sh
+# Install the protoc-gen-go plugin
+go install google.golang.org/protobuf/cmd/protoc-gen-go@latest
 # Install gomobile
 go install golang.org/x/mobile/cmd/gomobile@latest
 # Initialize gomobile

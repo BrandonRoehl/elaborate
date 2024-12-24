@@ -5,6 +5,8 @@ import (
 	"bytes"
 	"strings"
 
+	"github.com/brandonroehl/elaborate/elb/transport"
+
 	"robpike.io/ivy/config"
 	"robpike.io/ivy/exec"
 	"robpike.io/ivy/run" // Needed to initialize IvyEval
@@ -18,19 +20,6 @@ import (
 // 		vectorType: sys, // Expect a vector of chars.
 // 	},
 // }
-
-type Status int
-
-const (
-	Success Status = iota
-	Error
-)
-
-type Result struct {
-	Output string
-	Status Status
-	Line   int
-}
 
 // How to add new unary operators:
 // func init() {
@@ -58,14 +47,14 @@ func newConf() (config.Config, value.Context) {
 	return conf, context
 }
 
-func Execute(content string) []Result {
+func Execute(content string) []transport.Result {
 	// The context and config to run the file through.
 	conf, context := newConf()
 	// The results of the file execution.
-	results := make([]Result, 0)
+	results := make([]transport.Result, 0)
 	// The file content
 	scanner := bufio.NewScanner(strings.NewReader(content))
-	var index int = 0
+	var index int64 = 0
 	for scanner.Scan() {
 		// Defer the increment of the index to the end of the loop.
 		defer func() { index++ }()
@@ -80,19 +69,19 @@ func Execute(content string) []Result {
 		stderr := new(bytes.Buffer)
 		conf.SetErrOutput(stderr)
 		run.Ivy(context, expr, stdout, stderr)
-		var result Result
+		var result transport.Result
 		if stderr.Len() > 0 {
-			result = Result{
+			result = transport.Result{
 				Output: stderr.String(),
-				Status: Error,
+				Status: transport.Result_SUCCESS,
 				Line:   index,
 			}
 			// If we hit an error stop processing the file.
 			break
 		} else {
-			result = Result{
+			result = transport.Result{
 				Output: stdout.String(),
-				Status: Success,
+				Status: transport.Result_ERROR,
 				Line:   index,
 			}
 		}
