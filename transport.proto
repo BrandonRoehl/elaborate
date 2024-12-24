@@ -13,3 +13,6 @@ message Result {
   int64 line = 2;
   Status status = 3;
 }
+
+// The array of results you should expect as a response from the server
+message Response { repeated Result results = 1; }

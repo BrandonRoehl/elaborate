@@ -3,9 +3,11 @@ package elb
 import (
 	"bufio"
 	"bytes"
+	"log"
 	"strings"
 
 	"github.com/brandonroehl/elaborate/elb/transport"
+	"google.golang.org/protobuf/proto"
 
 	"robpike.io/ivy/config"
 	"robpike.io/ivy/exec"
@@ -47,11 +49,11 @@ func newConf() (config.Config, value.Context) {
 	return conf, context
 }
 
-func Execute(content string) []transport.Result {
+func Execute(content string) []byte {
 	// The context and config to run the file through.
 	conf, context := newConf()
 	// The results of the file execution.
-	results := make([]transport.Result, 0)
+	results := make([]*transport.Result, 0)
 	// The file content
 	scanner := bufio.NewScanner(strings.NewReader(content))
 	var index int64 = 0
@@ -85,7 +87,16 @@ func Execute(content string) []transport.Result {
 				Line:   index,
 			}
 		}
-		results = append(results, result)
+		results = append(results, &result)
 	}
-	return results
+	// Return the results.
+	response := transport.Response{
+		Results: results,
+	}
+	out, err := proto.Marshal(&response)
+	if err != nil {
+		log.Println("Error marshaling", err)
+		return make([]byte, 0)
+	}
+	return out
 }

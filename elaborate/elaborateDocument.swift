@@ -34,7 +34,7 @@ struct ElaborateDocument: FileDocument {
     }
     
     func execute() {
-//        ElbExecute(self.text)
+        let data = ElbExecute(self.text)
     }
     
     func fileWrapper(configuration: WriteConfiguration) throws -> FileWrapper {
