@@ -1,5 +1,18 @@
 PLATFORMS=ios,iossimulator,macos,maccatalyst
 IOSVERSION=17
 
-bind:
+.PHONY: bind
+bind: Elb.xcframework
+
+.PHONY: proto
+proto: elb/transport/transport.pb.go
+
+Elb.xcframework: elb/*.go elb/transport/transport.pb.go 
 	gomobile bind "-target=$(PLATFORMS)" "-iosversion=$(IOSVERSION)" ./elb/
+
+elb/transport/transport.pb.go: transport.proto
+	protoc --go_out=. transport.proto
+
+.PHONY: clean
+clean:
+	rm -rf Elb.xcframework elb/transport/transport.pb.go
