@@ -89,3 +89,7 @@ go.work.sum
 
 # Frameworks that were build with go
 Elb.xcframework
+
+# Protobuf
+*.pb.go
+

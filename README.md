@@ -3,8 +3,10 @@
 ## Prerequisites
 
 - Go 1.23
-- Gomobile
+- Gomobile latest
 - Xcode 15.2
+- Protocol Buffers 5.29
+  - `brew install protobuf protoc-gen-go`
 
 ```sh
 # Install gomobile

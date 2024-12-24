@@ -19,6 +19,12 @@
 		557A56982D1A6DD800209EFF /* Elb.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 557A56972D1A6DD800209EFF /* Elb.xcframework */; };
 		557A56992D1A6DD800209EFF /* Elb.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 557A56972D1A6DD800209EFF /* Elb.xcframework */; };
 		557A569A2D1A6DD800209EFF /* Elb.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 557A56972D1A6DD800209EFF /* Elb.xcframework */; };
+		557A569C2D1A6FB800209EFF /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = 557A569B2D1A6FB800209EFF /* README.md */; };
+		557A569D2D1A6FB800209EFF /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = 557A569B2D1A6FB800209EFF /* README.md */; };
+		557A569E2D1A6FB800209EFF /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = 557A569B2D1A6FB800209EFF /* README.md */; };
+		557A56A32D1A6FF700209EFF /* transport.proto in Sources */ = {isa = PBXBuildFile; fileRef = 557A56A22D1A6FF700209EFF /* transport.proto */; };
+		557A56A42D1A6FF700209EFF /* transport.proto in Sources */ = {isa = PBXBuildFile; fileRef = 557A56A22D1A6FF700209EFF /* transport.proto */; };
+		557A56A52D1A6FF700209EFF /* transport.proto in Sources */ = {isa = PBXBuildFile; fileRef = 557A56A22D1A6FF700209EFF /* transport.proto */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -53,6 +59,10 @@
 		556ABF7D2D17A2CA004D6A05 /* elaborateUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = elaborateUITests.swift; sourceTree = "<group>"; };
 		556ABF7F2D17A2CA004D6A05 /* elaborateUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = elaborateUITestsLaunchTests.swift; sourceTree = "<group>"; };
 		557A56972D1A6DD800209EFF /* Elb.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; path = Elb.xcframework; sourceTree = "<group>"; };
+		557A569B2D1A6FB800209EFF /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
+		557A569F2D1A6FDC00209EFF /* Makefile */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.make; path = Makefile; sourceTree = "<group>"; };
+		557A56A02D1A6FEC00209EFF /* main.go */ = {isa = PBXFileReference; lastKnownFileType = text; path = main.go; sourceTree = "<group>"; };
+		557A56A22D1A6FF700209EFF /* transport.proto */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.protobuf; path = transport.proto; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -87,11 +97,15 @@
 		556ABF522D17A2C7004D6A05 = {
 			isa = PBXGroup;
 			children = (
+				557A569B2D1A6FB800209EFF /* README.md */,
 				557A56972D1A6DD800209EFF /* Elb.xcframework */,
 				556ABF5D2D17A2C7004D6A05 /* elaborate */,
 				556ABF722D17A2CA004D6A05 /* elaborateTests */,
 				556ABF7C2D17A2CA004D6A05 /* elaborateUITests */,
 				556ABF5C2D17A2C7004D6A05 /* Products */,
+				557A569F2D1A6FDC00209EFF /* Makefile */,
+				557A56A12D1A6FEC00209EFF /* elb */,
+				557A56A22D1A6FF700209EFF /* transport.proto */,
 			);
 			sourceTree = "<group>";
 		};
@@ -142,6 +156,14 @@
 				556ABF7F2D17A2CA004D6A05 /* elaborateUITestsLaunchTests.swift */,
 			);
 			path = elaborateUITests;
+			sourceTree = "<group>";
+		};
+		557A56A12D1A6FEC00209EFF /* elb */ = {
+			isa = PBXGroup;
+			children = (
+				557A56A02D1A6FEC00209EFF /* main.go */,
+			);
+			path = elb;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -251,6 +273,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				557A569E2D1A6FB800209EFF /* README.md in Resources */,
 				556ABF6A2D17A2C9004D6A05 /* Preview Assets.xcassets in Resources */,
 				556ABF652D17A2C9004D6A05 /* Assets.xcassets in Resources */,
 			);
@@ -260,6 +283,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				557A569D2D1A6FB800209EFF /* README.md in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -267,6 +291,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				557A569C2D1A6FB800209EFF /* README.md in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -279,6 +304,7 @@
 			files = (
 				556ABF612D17A2C7004D6A05 /* ElaborateDocument.swift in Sources */,
 				556ABF5F2D17A2C7004D6A05 /* ElaborateApp.swift in Sources */,
+				557A56A32D1A6FF700209EFF /* transport.proto in Sources */,
 				556ABF632D17A2C7004D6A05 /* ContentView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -287,6 +313,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				557A56A42D1A6FF700209EFF /* transport.proto in Sources */,
 				556ABF742D17A2CA004D6A05 /* elaborateTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -296,6 +323,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				556ABF802D17A2CA004D6A05 /* elaborateUITestsLaunchTests.swift in Sources */,
+				557A56A52D1A6FF700209EFF /* transport.proto in Sources */,
 				556ABF7E2D17A2CA004D6A05 /* elaborateUITests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
