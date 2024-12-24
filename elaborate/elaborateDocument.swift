@@ -33,8 +33,13 @@ struct ElaborateDocument: FileDocument {
         text = string
     }
     
-    func execute() {
-        let data = ElbExecute(self.text)
+    func execute() throws -> [Elaborate_Result] {
+        guard let data = ElbExecute(self.text) else {
+            // TODO Throw an actual response
+            return []
+        }
+        let result = try Elaborate_Response(serializedBytes: data)
+        return result.results
     }
     
     func fileWrapper(configuration: WriteConfiguration) throws -> FileWrapper {
