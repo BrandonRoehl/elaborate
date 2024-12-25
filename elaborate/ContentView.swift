@@ -6,8 +6,11 @@
 //
 
 import SwiftUI
+import os
 
 struct ContentView: View {
+    static let logger = Logger(subsystem: "elb", category: "content")
+
     @Binding var document: ElaborateDocument
     
     let font = Font.system(.body).monospaced()
@@ -32,14 +35,15 @@ struct ContentView: View {
             print("=== Running ===")
             let results = try self.document.execute()
             for result in results {
-                if result.status != .success {
-                    print(result.line, ":", try result.jsonString())
+                let json = try result.jsonString()
+                if result.status == .success {
+                    Self.logger.info("\(result.line):\(json)")
                 } else {
-                    print("ERROR:", result.line, ":", try result.jsonString())
+                    Self.logger.error("ERROR:\(result.line):\(json)")
                 }
             }
         } catch {
-            print("Error:", error)
+            Self.logger.error("Error: \(error)")
         }
     }
 }
@@ -53,7 +57,6 @@ struct ContentView: View {
 //                            Text(" \(i): ").font(font)
 //                        }
 //                    }.frame(alignment: .leading).border(.secondary)
-
 //                        .writingToolsBehavior(.disabled)
 //                        .textEditorStyle(.plain)
 //                        .frame(maxWidth: .infinity)

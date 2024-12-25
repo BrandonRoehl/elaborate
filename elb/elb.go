@@ -57,17 +57,14 @@ func innerExecute(reader io.Reader) []*transport.Result {
 	results := make([]*transport.Result, 0)
 	// The file content
 	scanner := bufio.NewScanner(reader)
-	var index int64 = 0
+	var index int64 = -1
 	for scanner.Scan() {
-		// Defer the increment of the index to the end of the loop.
-		defer func() { index += 1 }()
-
+		index++
 		// Skip empty lines.
 		expr := scanner.Text()
 		if len(expr) == 0 {
 			continue
 		}
-
 		stdout := new(bytes.Buffer)
 		stderr := new(bytes.Buffer)
 		conf.SetErrOutput(stderr)
@@ -76,19 +73,21 @@ func innerExecute(reader io.Reader) []*transport.Result {
 		if stderr.Len() > 0 {
 			result = transport.Result{
 				Output: stderr.String(),
-				Status: transport.Result_SUCCESS,
+				Status: transport.Result_ERROR,
 				Line:   index,
 			}
-			// If we hit an error stop processing the file.
-			break
 		} else {
 			result = transport.Result{
 				Output: stdout.String(),
-				Status: transport.Result_ERROR,
+				Status: transport.Result_SUCCESS,
 				Line:   index,
 			}
 		}
 		results = append(results, &result)
+		// Stop if there was an error.
+		if result.Status == transport.Result_ERROR {
+			break
+		}
 	}
 	return results
 }
