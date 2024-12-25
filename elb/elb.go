@@ -62,9 +62,6 @@ func innerExecute(reader io.Reader) []*transport.Result {
 		index++
 		// Skip empty lines.
 		expr := scanner.Text()
-		if len(expr) == 0 {
-			continue
-		}
 		stdout := new(bytes.Buffer)
 		stderr := new(bytes.Buffer)
 		conf.SetErrOutput(stderr)
