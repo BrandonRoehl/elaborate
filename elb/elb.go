@@ -13,31 +13,12 @@ import (
 	"robpike.io/ivy/config"
 	"robpike.io/ivy/exec"
 	"robpike.io/ivy/run" // Needed to initialize IvyEval
-	"robpike.io/ivy/value"
 )
 
-// value.UnaryOps["roehl"] = {
-// 	name:        "sys",
-// 	elementwise: false,
-// 	fn: [numType]unaryFn{
-// 		vectorType: sys, // Expect a vector of chars.
-// 	},
-// }
+var conf config.Config
 
-// How to add new unary operators:
-// func init() {
-// value.UnaryOps["roehl"] = value.UnaryOp{
-// 	Name:        "sys",
-// 	Elementwise: false,
-// 	Fn:          map[value.NumType]value.UnaryFn{value.VectorType: sys},
-// }
-// }
-
-func newConf() (config.Config, value.Context) {
-	var (
-		conf    config.Config
-		context value.Context
-	)
+func init() {
+	// These need to happen before SetOutput is called.
 	conf.SetFormat("")
 	conf.SetMaxBits(1e9)
 	conf.SetMaxDigits(1e4)
@@ -46,13 +27,19 @@ func newConf() (config.Config, value.Context) {
 	conf.SetBase(0, 0)
 	conf.SetRandomSeed(0)
 	conf.SetMobile(true)
-	context = exec.NewContext(&conf)
-	return conf, context
+
+	// value.BinaryOps
+	// How to add new unary operators:
+	// value.UnaryOps["roehl"] = value.UnaryOp{
+	// 	Name:        "sys",
+	// 	Elementwise: false,
+	// 	Fn:          map[value.NumType]value.UnaryFn{value.VectorType: sys},
+	// }
 }
 
 func innerExecute(reader io.Reader) []*transport.Result {
-	// The context and config to run the file through.
-	conf, context := newConf()
+	// The new context for every iteration.
+	context := exec.NewContext(&conf)
 	// The results of the file execution.
 	results := make([]*transport.Result, 0)
 	// The file content
@@ -62,23 +49,16 @@ func innerExecute(reader io.Reader) []*transport.Result {
 		index++
 		// Skip empty lines.
 		expr := scanner.Text()
-		stdout := new(bytes.Buffer)
-		stderr := new(bytes.Buffer)
-		conf.SetErrOutput(stderr)
-		run.Ivy(context, expr, stdout, stderr)
+		var stdout, stderr bytes.Buffer
+		run.Ivy(context, expr, &stdout, &stderr)
 		var result transport.Result
+		result.Line = index
 		if stderr.Len() > 0 {
-			result = transport.Result{
-				Output: stderr.String(),
-				Status: transport.Result_ERROR,
-				Line:   index,
-			}
+			result.Output = stderr.String()
+			result.Status = transport.Result_ERROR
 		} else {
-			result = transport.Result{
-				Output: stdout.String(),
-				Status: transport.Result_SUCCESS,
-				Line:   index,
-			}
+			result.Output = stdout.String()
+			result.Status = transport.Result_SUCCESS
 		}
 		results = append(results, &result)
 		// Stop if there was an error.
