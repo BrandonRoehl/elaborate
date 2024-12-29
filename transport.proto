@@ -6,7 +6,9 @@ option go_package = "./elb/transport";
 message Result {
   enum Status {
     ERROR = 0;
-    SUCCESS = 1;
+    VALUE = 1;
+    EOF = 2;
+    BLANK = 3;
   }
 
   string output = 1;

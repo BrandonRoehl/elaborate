@@ -36,7 +36,9 @@ struct Elaborate_Result: Sendable {
   enum Status: SwiftProtobuf.Enum, Swift.CaseIterable {
     typealias RawValue = Int
     case error // = 0
-    case success // = 1
+    case value // = 1
+    case eof // = 2
+    case blank // = 3
     case UNRECOGNIZED(Int)
 
     init() {
@@ -46,7 +48,9 @@ struct Elaborate_Result: Sendable {
     init?(rawValue: Int) {
       switch rawValue {
       case 0: self = .error
-      case 1: self = .success
+      case 1: self = .value
+      case 2: self = .eof
+      case 3: self = .blank
       default: self = .UNRECOGNIZED(rawValue)
       }
     }
@@ -54,7 +58,9 @@ struct Elaborate_Result: Sendable {
     var rawValue: Int {
       switch self {
       case .error: return 0
-      case .success: return 1
+      case .value: return 1
+      case .eof: return 2
+      case .blank: return 3
       case .UNRECOGNIZED(let i): return i
       }
     }
@@ -62,7 +68,9 @@ struct Elaborate_Result: Sendable {
     // The compiler won't synthesize support with the UNRECOGNIZED case.
     static let allCases: [Elaborate_Result.Status] = [
       .error,
-      .success,
+      .value,
+      .eof,
+      .blank,
     ]
 
   }
@@ -134,7 +142,9 @@ extension Elaborate_Result: SwiftProtobuf.Message, SwiftProtobuf._MessageImpleme
 extension Elaborate_Result.Status: SwiftProtobuf._ProtoNameProviding {
   static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
     0: .same(proto: "ERROR"),
-    1: .same(proto: "SUCCESS"),
+    1: .same(proto: "VALUE"),
+    2: .same(proto: "EOF"),
+    3: .same(proto: "BLANK"),
   ]
 }
 

@@ -56,9 +56,12 @@ func innerExecute(reader io.Reader) []*transport.Result {
 		if stderr.Len() > 0 {
 			result.Output = stderr.String()
 			result.Status = transport.Result_ERROR
-		} else {
+		} else if stdout.Len() > 0 {
 			result.Output = stdout.String()
-			result.Status = transport.Result_SUCCESS
+			result.Status = transport.Result_VALUE
+		} else {
+			result.Output = ""
+			result.Status = transport.Result_BLANK
 		}
 		results = append(results, &result)
 		// Stop if there was an error.
