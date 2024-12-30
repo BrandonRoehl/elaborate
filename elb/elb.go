@@ -46,10 +46,13 @@ func init() {
 	// }
 }
 
-func updateLine(response *transport.Result, parse *parse.Parser) {
+// parseLine extracts the line number from the location string.
+// requiring `parse.NewParser(" ", scanner, context)`
+func parseLine(parse *parse.Parser) int64 {
 	loc := parse.Loc()
 	line := loc[2 : len(loc)-2]
-	response.Line, _ = strconv.ParseInt(line, 10, 64)
+	out, _ := strconv.ParseInt(line, 10, 64)
+	return out
 }
 
 func Execute(content string) []byte {
@@ -106,8 +109,8 @@ func printValues(conf *config.Config, writer io.Writer, values []value.Value) bo
 // value is true, it means we ran out of data (EOF) and the run was successful.
 // Typical execution is therefore to loop calling Run until it succeeds.
 // Error details are reported to the configured error output stream.
-func Run(p *parse.Parser, context value.Context) (result transport.Result) {
-	conf := context.Config()
+func Run(p *parse.Parser, context value.Context) (results []*transport.Result) {
+	// Handle errors that are thrown
 	defer func() {
 		err := recover()
 		if err == nil {
@@ -118,13 +121,20 @@ func Run(p *parse.Parser, context value.Context) (result transport.Result) {
 			_, ok = err.(big.ErrNaN) // Floating point error from math/big.
 		}
 		if ok {
-			updateLine(&result, p)
-			result.Output = fmt.Sprint(err)
-			result.Status = transport.Result_ERROR
+			results = append(results, &transport.Result{
+				Output: fmt.Sprint(err),
+				Status: transport.Result_ERROR,
+				Line:   parseLine(p),
+			})
 			return
 		}
 		panic(err)
 	}()
+
+	// Read the file and aggregate the results
+	conf := context.Config()
+	var info bytes.Buffer
+	conf.SetOutput(&info)
 	for {
 		exprs, ok := p.Line()
 		var values []value.Value
@@ -135,15 +145,28 @@ func Run(p *parse.Parser, context value.Context) (result transport.Result) {
 		var out bytes.Buffer
 		if printValues(conf, &out, values) {
 			context.AssignGlobal("_", values[len(values)-1])
-			updateLine(&result, p)
-			result.Status = transport.Result_VALUE
-			result.Output = out.String()
-			return
+			results = append(results, &transport.Result{
+				Output: out.String(),
+				Status: transport.Result_VALUE,
+				Line:   parseLine(p),
+			})
+		}
+		// Collect info
+		if info.Len() > 0 {
+			results = append(results, &transport.Result{
+				Output: info.String(),
+				Status: transport.Result_INFO,
+				Line:   parseLine(p),
+			})
+			info.Reset()
 		}
 		// If we are at EOF, we're done. Return the last value.
 		if !ok {
-			updateLine(&result, p)
-			result.Status = transport.Result_EOF
+			results = append(results, &transport.Result{
+				Output: "",
+				Status: transport.Result_EOF,
+				Line:   parseLine(p),
+			})
 			return
 		}
 	}
@@ -159,14 +182,6 @@ func innerExecute(expr string) []*transport.Result {
 	scanner := scan.New(context, " ", reader)
 	parser := parse.NewParser(" ", scanner, context)
 
-	results := make([]*transport.Result, 0)
-	for {
-		result := Run(parser, context)
-		results = append(results, &result)
-		// if result.Status == transport.Result_EOF || result.Status == transport.Result_ERROR {
-		if result.Status == transport.Result_EOF {
-			break
-		}
-	}
-	return results
+	// Run to the end or the first error
+	return Run(parser, context)
 }
