@@ -38,6 +38,7 @@ struct Elaborate_Result: Sendable {
     case error // = 0
     case value // = 1
     case eof // = 2
+    case info // = 3
     case UNRECOGNIZED(Int)
 
     init() {
@@ -49,6 +50,7 @@ struct Elaborate_Result: Sendable {
       case 0: self = .error
       case 1: self = .value
       case 2: self = .eof
+      case 3: self = .info
       default: self = .UNRECOGNIZED(rawValue)
       }
     }
@@ -58,6 +60,7 @@ struct Elaborate_Result: Sendable {
       case .error: return 0
       case .value: return 1
       case .eof: return 2
+      case .info: return 3
       case .UNRECOGNIZED(let i): return i
       }
     }
@@ -67,6 +70,7 @@ struct Elaborate_Result: Sendable {
       .error,
       .value,
       .eof,
+      .info,
     ]
 
   }
@@ -140,6 +144,7 @@ extension Elaborate_Result.Status: SwiftProtobuf._ProtoNameProviding {
     0: .same(proto: "ERROR"),
     1: .same(proto: "VALUE"),
     2: .same(proto: "EOF"),
+    3: .same(proto: "INFO"),
   ]
 }
 

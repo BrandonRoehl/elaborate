@@ -37,7 +37,7 @@ struct ContentView: View {
             for result in results {
                 let json = try result.jsonString()
                 switch result.status {
-                case .value:
+                case .value, .info:
                     Self.logger.info("\(result.line):\(json)")
                 case .error:
                     Self.logger.error("\(result.line):\(json)")
