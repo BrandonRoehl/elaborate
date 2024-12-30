@@ -14,12 +14,17 @@ struct ContentView: View {
 
     @Binding var document: ElaborateDocument
     @State var results: [Elaborate_Result] = []
+    @State var running: Bool = false
+    @FocusState private var focused: Bool
     
+    @State var task: Task<Void, Never>? = nil
     let font = Font.system(.body).monospaced()
     
     var body: some View {
         VStack {
-            TextEditor(text: $document.text).font(font)
+            TextEditor(text: $document.text)
+                .font(font)
+                .focused($focused)
             List($results) { result in
                 ResultView(result: result)
             }
@@ -34,11 +39,20 @@ struct ContentView: View {
             ToolbarItem(placement: .primaryAction) {
                 Button("Run", systemImage: "play.fill", action: self.run)
             }
+            if running {
+                ToolbarItem(placement: .primaryAction) {
+                    ProgressView()
+                }
+            }
         }
     }
     
     func run() {
-        Task.detached(priority: .background) { [text = document.text] in
+        focused = false
+        running = true
+        // Just cancel and start the next
+        task?.cancel()
+        task = Task.detached(priority: .background) { [text = document.text] in
             do {
                 print("=== Running ===")
                 guard let data = ElbExecute(text) else {
@@ -49,6 +63,7 @@ struct ContentView: View {
                 
                 await Task { @MainActor in
                     self.results = response.results
+                    self.running = false
                 }.value
             } catch {
                 await Self.logger.error("Error: \(error)")
