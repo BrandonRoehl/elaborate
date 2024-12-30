@@ -15,7 +15,7 @@ struct ResultView: View {
     @Binding var result: Elaborate_Result
     
     let mono = Font.system(.body).monospaced()
-    let regular = Font.system(.body).monospaced()
+    let regular = Font.system(.body)
     
     var icon: String {
         return switch result.status {
@@ -64,11 +64,36 @@ struct ResultView: View {
 }
 
 #Preview {
-    ResultView(result: .constant({
-        var result = Elaborate_Result()
-        result.line = 1
-        result.output = "1234 alskdjasd aslkjdasd asldkjasdlkj asldkjasd lajsd\n"
-        result.status = .value
-        return result
-    }()))
+    List() {
+        ResultView(result: .constant({
+            var result = Elaborate_Result()
+            result.line = 1
+            result.output = "1234 alskdjasd aslkjdasd asldkjasdlkj asldkjasd lajsd\n"
+            result.status = .value
+            return result
+        }()))
+        
+        ResultView(result: .constant({
+            var result = Elaborate_Result()
+            result.line = 1
+            result.output = "Info that gets printed"
+            result.status = .info
+            return result
+        }()))
+        
+        ResultView(result: .constant({
+            var result = Elaborate_Result()
+            result.line = 1
+            result.output = "This is an error output"
+            result.status = .error
+            return result
+        }()))
+        
+        ResultView(result: .constant({
+            var result = Elaborate_Result()
+            result.line = 1
+            result.status = .eof
+            return result
+        }()))
+    }
 }
