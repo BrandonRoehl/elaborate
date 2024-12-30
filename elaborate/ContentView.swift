@@ -6,19 +6,21 @@
 //
 
 import SwiftUI
+import Elb
 import os
 
 struct ContentView: View {
     static let logger = Logger(subsystem: "elb", category: "content")
 
     @Binding var document: ElaborateDocument
+    @State var results: [Elaborate_Result] = []
     
     let font = Font.system(.body).monospaced()
     
     var body: some View {
         VStack {
             TextEditor(text: $document.text).font(font)
-            List($document.results) { result in
+            List($results) { result in
                 ResultView(result: result)
             }
         }
@@ -36,12 +38,20 @@ struct ContentView: View {
     }
     
     func run() {
-        Task(priority: .background) {
+        Task.detached(priority: .background) { [text = document.text] in
             do {
                 print("=== Running ===")
-                try self.document.execute()
+                guard let data = ElbExecute(text) else {
+                    // TODO Throw an actual response
+                    return
+                }
+                let response = try Elaborate_Response(serializedBytes: data)
+                
+                await Task { @MainActor in
+                    self.results = response.results
+                }.value
             } catch {
-                Self.logger.error("Error: \(error)")
+                await Self.logger.error("Error: \(error)")
             }
         }
     }
