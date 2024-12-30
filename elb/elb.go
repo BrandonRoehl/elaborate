@@ -6,6 +6,7 @@ import (
 	"io"
 	"log"
 	"math/big"
+	"os"
 	"strconv"
 	"strings"
 
@@ -33,6 +34,8 @@ func init() {
 	conf.SetBase(0, 0)
 	conf.SetRandomSeed(0)
 	conf.SetMobile(true)
+	conf.SetOutput(os.Stdout)
+	conf.SetErrOutput(os.Stdout)
 
 	// value.BinaryOps
 	// How to add new unary operators:

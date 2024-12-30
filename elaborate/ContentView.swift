@@ -36,10 +36,15 @@ struct ContentView: View {
             let results = try self.document.execute()
             for result in results {
                 let json = try result.jsonString()
-                if result.status == .success {
+                switch result.status {
+                case .value:
                     Self.logger.info("\(result.line):\(json)")
-                } else {
-                    Self.logger.error("ERROR:\(result.line):\(json)")
+                case .error:
+                    Self.logger.error("\(result.line):\(json)")
+                case .eof:
+                    Self.logger.debug("\(result.line):EOF")
+                case .UNRECOGNIZED(let status):
+                    Self.logger.error("Unknown status \(status)")
                 }
             }
         } catch {
