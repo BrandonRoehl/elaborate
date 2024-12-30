@@ -8,7 +8,6 @@ message Result {
     ERROR = 0;
     VALUE = 1;
     EOF = 2;
-    BLANK = 3;
   }
 
   string output = 1;

@@ -20,11 +20,11 @@ func TestInnerExecute(t *testing.T) {
 	assert.Equal(3, len(results))
 
 	assert.Equal("3\n", results[0].Output)
-	// assert.Equal(int64(2), results[0].Line)
+	assert.Equal(int64(2), results[0].Line)
 	assert.Equal(transport.Result_VALUE, results[0].Status)
 
 	assert.Equal("9\n", results[1].Output)
-	// assert.Equal(int64(3), results[0].Line)
+	assert.Equal(int64(3), results[1].Line)
 	assert.Equal(transport.Result_VALUE, results[1].Status)
 
 	assert.Equal(transport.Result_EOF, results[2].Status)

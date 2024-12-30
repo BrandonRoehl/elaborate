@@ -128,6 +128,7 @@ func Run(p *parse.Parser, context value.Context) (result transport.Result) {
 		if exprs != nil {
 			values = context.Eval(exprs)
 		}
+		// Attempt to print the values if there are any
 		var out bytes.Buffer
 		if printValues(conf, &out, values) {
 			context.AssignGlobal("_", values[len(values)-1])
@@ -136,6 +137,7 @@ func Run(p *parse.Parser, context value.Context) (result transport.Result) {
 			result.Output = out.String()
 			return
 		}
+		// If we are at EOF, we're done. Return the last value.
 		if !ok {
 			updateLine(&result, p)
 			result.Status = transport.Result_EOF
@@ -158,7 +160,8 @@ func innerExecute(expr string) []*transport.Result {
 	for {
 		result := Run(parser, context)
 		results = append(results, &result)
-		if result.Status == transport.Result_EOF || result.Status == transport.Result_ERROR {
+		// if result.Status == transport.Result_EOF || result.Status == transport.Result_ERROR {
+		if result.Status == transport.Result_EOF {
 			break
 		}
 	}
