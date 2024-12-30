@@ -1,10 +1,12 @@
 package elb
 
 import (
-	"bufio"
 	"bytes"
+	"fmt"
 	"io"
 	"log"
+	"math/big"
+	"strconv"
 	"strings"
 
 	"github.com/brandonroehl/elaborate/elb/transport"
@@ -12,7 +14,11 @@ import (
 
 	"robpike.io/ivy/config"
 	"robpike.io/ivy/exec"
-	"robpike.io/ivy/run" // Needed to initialize IvyEval
+	"robpike.io/ivy/parse"
+	"robpike.io/ivy/scan"
+	"robpike.io/ivy/value"
+
+	_ "robpike.io/ivy/run" // Needed to initialize IvyEval
 )
 
 var conf config.Config
@@ -37,45 +43,15 @@ func init() {
 	// }
 }
 
-func innerExecute(reader io.Reader) []*transport.Result {
-	// The new context for every iteration.
-	context := exec.NewContext(&conf)
-	// The results of the file execution.
-	results := make([]*transport.Result, 0)
-	// The file content
-	scanner := bufio.NewScanner(reader)
-	var index int64 = -1
-	for scanner.Scan() {
-		index++
-		// Skip empty lines.
-		expr := scanner.Text()
-		var stdout, stderr bytes.Buffer
-		run.Ivy(context, expr, &stdout, &stderr)
-		var result transport.Result
-		result.Line = index
-		if stderr.Len() > 0 {
-			result.Output = stderr.String()
-			result.Status = transport.Result_ERROR
-		} else if stdout.Len() > 0 {
-			result.Output = stdout.String()
-			result.Status = transport.Result_VALUE
-		} else {
-			result.Output = ""
-			result.Status = transport.Result_BLANK
-		}
-		results = append(results, &result)
-		// Stop if there was an error.
-		if result.Status == transport.Result_ERROR {
-			break
-		}
-	}
-	return results
+func updateLine(response *transport.Result, parse *parse.Parser) {
+	loc := parse.Loc()
+	line := loc[2 : len(loc)-2]
+	response.Line, _ = strconv.ParseInt(line, 10, 64)
 }
 
 func Execute(content string) []byte {
-	reader := strings.NewReader(content)
 	// The results of the file execution.
-	results := innerExecute(reader)
+	results := innerExecute(content)
 	// Return the results.
 	response := transport.Response{
 		Results: results,
@@ -86,4 +62,105 @@ func Execute(content string) []byte {
 		return make([]byte, 0)
 	}
 	return out
+}
+
+// printValues neatly prints the values returned from execution, followed by a newline.
+// It also handles the ')debug types' output.
+// The return value reports whether it printed anything.
+func printValues(conf *config.Config, writer io.Writer, values []value.Value) bool {
+	if len(values) == 0 {
+		return false
+	}
+	if conf.Debug("types") {
+		for i, v := range values {
+			if i > 0 {
+				fmt.Fprint(writer, ",")
+			}
+			fmt.Fprintf(writer, "%T", v)
+		}
+		fmt.Fprintln(writer)
+	}
+	printed := false
+	for _, v := range values {
+		if _, ok := v.(parse.Assignment); ok {
+			continue
+		}
+		s := v.Sprint(conf)
+		if printed && len(s) > 0 && s[len(s)-1] != '\n' {
+			fmt.Fprint(writer, " ")
+		}
+		fmt.Fprint(writer, s)
+		printed = true
+	}
+	if printed {
+		fmt.Fprintln(writer)
+	}
+	return printed
+}
+
+// Run runs the parser/evaluator until EOF or error.
+// The return value says whether we completed without error. If the return
+// value is true, it means we ran out of data (EOF) and the run was successful.
+// Typical execution is therefore to loop calling Run until it succeeds.
+// Error details are reported to the configured error output stream.
+func Run(p *parse.Parser, context value.Context) (result transport.Result) {
+	conf := context.Config()
+	defer func() {
+		err := recover()
+		if err == nil {
+			return
+		}
+		_, ok := err.(value.Error)
+		if !ok {
+			_, ok = err.(big.ErrNaN) // Floating point error from math/big.
+		}
+		if ok {
+			updateLine(&result, p)
+			result.Output = fmt.Sprint(err)
+			result.Status = transport.Result_ERROR
+			return
+		}
+		panic(err)
+	}()
+	for {
+		exprs, ok := p.Line()
+		var values []value.Value
+		if exprs != nil {
+			values = context.Eval(exprs)
+		}
+		var out bytes.Buffer
+		if printValues(conf, &out, values) {
+			context.AssignGlobal("_", values[len(values)-1])
+			updateLine(&result, p)
+			result.Status = transport.Result_VALUE
+			result.Output = out.String()
+			return
+		}
+		if !ok {
+			updateLine(&result, p)
+			result.Status = transport.Result_EOF
+			return
+		}
+	}
+}
+
+func innerExecute(expr string) []*transport.Result {
+	if !strings.HasSuffix(expr, "\n") {
+		expr += "\n"
+	}
+	reader := strings.NewReader(expr)
+
+	context := exec.NewContext(&conf)
+	scanner := scan.New(context, " ", reader)
+	parser := parse.NewParser(" ", scanner, context)
+
+	results := make([]*transport.Result, 0)
+	for {
+		result := Run(parser, context)
+		results = append(results, &result)
+		if result.Status == transport.Result_EOF || result.Status == transport.Result_ERROR {
+			break
+		}
+	}
+	return results
 }
