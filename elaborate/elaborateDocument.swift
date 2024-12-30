@@ -17,6 +17,7 @@ extension UTType {
 
 struct ElaborateDocument: FileDocument {
     var text: String
+    var results: [Elaborate_Result] = []
 
     init(text: String = "Hello, world!") {
         self.text = text
@@ -33,13 +34,13 @@ struct ElaborateDocument: FileDocument {
         text = string
     }
     
-    func execute() throws -> [Elaborate_Result] {
+    mutating func execute() throws {
         guard let data = ElbExecute(self.text) else {
             // TODO Throw an actual response
-            return []
+            return
         }
-        let result = try Elaborate_Response(serializedBytes: data)
-        return result.results
+        let response = try Elaborate_Response(serializedBytes: data)
+        self.results = response.results
     }
     
     func fileWrapper(configuration: WriteConfiguration) throws -> FileWrapper {

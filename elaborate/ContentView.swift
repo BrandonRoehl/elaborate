@@ -16,39 +16,33 @@ struct ContentView: View {
     let font = Font.system(.body).monospaced()
     
     var body: some View {
-        TextEditor(text: $document.text).font(font)
-            .toolbarRole(.editor)
-            .toolbar {
-                ToolbarItem(placement: .primaryAction) {
-                    Button("Help", systemImage: "questionmark.circle") {
-                        print("helpme")
-                    }
-                }
-                ToolbarItem(placement: .primaryAction) {
-                    Button("Run", systemImage: "play.fill", action: self.run)
+        VStack {
+            TextEditor(text: $document.text).font(font)
+            List($document.results) { result in
+                ResultView(result: result)
+            }
+        }
+        .toolbarRole(.editor)
+        .toolbar {
+            ToolbarItem(placement: .primaryAction) {
+                Button("Help", systemImage: "questionmark.circle") {
+                    print("helpme")
                 }
             }
+            ToolbarItem(placement: .primaryAction) {
+                Button("Run", systemImage: "play.fill", action: self.run)
+            }
+        }
     }
     
     func run() {
-        do {
-            print("=== Running ===")
-            let results = try self.document.execute()
-            for result in results {
-                let json = try result.jsonString()
-                switch result.status {
-                case .value, .info:
-                    Self.logger.info("\(result.line):\(json)")
-                case .error:
-                    Self.logger.error("\(result.line):\(json)")
-                case .eof:
-                    Self.logger.debug("\(result.line):EOF")
-                case .UNRECOGNIZED(let status):
-                    Self.logger.error("Unknown status \(status)")
-                }
+        Task(priority: .background) {
+            do {
+                print("=== Running ===")
+                try self.document.execute()
+            } catch {
+                Self.logger.error("Error: \(error)")
             }
-        } catch {
-            Self.logger.error("Error: \(error)")
         }
     }
 }
