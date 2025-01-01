@@ -22,9 +22,18 @@ import (
 	_ "robpike.io/ivy/run" // Needed to initialize IvyEval
 )
 
-var conf config.Config
+// func init() {
+// value.BinaryOps
+// How to add new unary operators:
+// value.UnaryOps["roehl"] = value.UnaryOp{
+// 	Name:        "sys",
+// 	Elementwise: false,
+// 	Fn:          map[value.NumType]value.UnaryFn{value.VectorType: sys},
+// }
+// }
 
-func init() {
+func newConfig() *config.Config {
+	var conf config.Config
 	// These need to happen before SetOutput is called.
 	conf.SetFormat("")
 	conf.SetMaxBits(1e9)
@@ -36,14 +45,7 @@ func init() {
 	conf.SetMobile(true)
 	conf.SetOutput(os.Stdout)
 	conf.SetErrOutput(os.Stdout)
-
-	// value.BinaryOps
-	// How to add new unary operators:
-	// value.UnaryOps["roehl"] = value.UnaryOp{
-	// 	Name:        "sys",
-	// 	Elementwise: false,
-	// 	Fn:          map[value.NumType]value.UnaryFn{value.VectorType: sys},
-	// }
+	return &conf
 }
 
 // parseLine extracts the line number from the location string.
@@ -178,7 +180,8 @@ func innerExecute(expr string) []*transport.Result {
 	}
 	reader := strings.NewReader(expr)
 
-	context := exec.NewContext(&conf)
+	conf := newConfig()
+	context := exec.NewContext(conf)
 	scanner := scan.New(context, " ", reader)
 	parser := parse.NewParser(" ", scanner, context)
 
