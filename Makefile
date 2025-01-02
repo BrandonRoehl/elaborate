@@ -5,7 +5,7 @@ IOSVERSION=17
 bind: Elb.xcframework
 
 .PHONY: proto
-proto: elb/transport/transport.pb.go elaborate/transport/transport.pb.go
+proto: elb/transport/transport.pb.go elaborate/transport/transport.pb.swift
 
 Elb.xcframework: elb/*.go elb/transport/transport.pb.go 
 	gomobile bind "-target=$(PLATFORMS)" "-iosversion=$(IOSVERSION)" ./elb/
