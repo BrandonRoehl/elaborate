@@ -16,27 +16,16 @@ extension Elaborate_Result : Identifiable {
 
 extension Elaborate_Result {
     var textLocation: TextLocated<Message>? {
-        let category: Message.Category
-        let summary: String
-        let description: String?
-        switch self.status {
-        case .error:
-            category = .error
-            let splits = self.output.split(separator: "\n", maxSplits: 1)
-            summary = String(splits[0])
-            description = splits.count > 1 ? String(splits[1]) : nil
-        case .info:
-            category = .informational
-            let splits = self.output.split(separator: "\n", maxSplits: 1)
-            summary = String(splits[0])
-            description = splits.count > 1 ? String(splits[1]) : nil
-        case .value:
-            category = .live
-            summary = self.output
-            description = nil
-        case .eof, .UNRECOGNIZED(_):
+        guard let category: Message.Category? = switch self.status {
+        case .error: .error
+        case .info: .informational
+        case .value: .live
+        case .eof, .UNRECOGNIZED(_): nil
+        } else {
             return nil
         }
+        
+        let summary = self.output
         let line = Int(self.line)
         return TextLocated<Message>(
             location: TextLocation(oneBasedLine: line, column: 1),
@@ -44,7 +33,7 @@ extension Elaborate_Result {
                 category: category,
                 length: 1,
                 summary: summary,
-                description: description.map(AttributedString.init)
+                description: nil
             )
         )
     }

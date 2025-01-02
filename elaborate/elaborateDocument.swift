@@ -17,7 +17,7 @@ extension UTType {
 struct ElaborateDocument: FileDocument {
     var text: String
 
-    init(text: String = "Hello, world!") {
+    init(text: String = "count \"Hello, world!\"") {
         self.text = text
     }
 

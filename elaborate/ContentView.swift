@@ -62,7 +62,9 @@ struct ContentView: View {
     }
     
     func run() {
+#if os(iOS)
         editorIsFocused = false
+#endif
         running = true
         // Just cancel and start the next
         task?.cancel()
