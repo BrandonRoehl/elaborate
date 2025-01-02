@@ -18,7 +18,7 @@ struct ContentView: View {
     @State var results: [Elaborate_Result] = []
     @State var running: Bool = false
 
-//    @Environment(\.colorScheme) private var colorScheme: ColorScheme
+    @Environment(\.colorScheme) private var colorScheme: ColorScheme
 
     // NB: Writes to a @SceneStorage backed variable are somestimes (always?) not availabe in the update cycle where
     //     the update occurs, but only one cycle later. That can lead to back and forth bouncing values and other
@@ -28,11 +28,10 @@ struct ContentView: View {
     @SceneStorage("editPosition") private var editPositionStorage: CodeEditor.Position?
 
     @State private var messages: Set<TextLocated<Message>> = Set()
-
+    
     @FocusState private var editorIsFocused: Bool
 
     @State var task: Task<Void, Never>? = nil
-    let font = Font.system(.body).monospaced()
     
     var body: some View {
         CodeEditor(text: $document.text,
@@ -40,7 +39,8 @@ struct ContentView: View {
                    messages: $messages,
                    language: .swift(),
                    layout: CodeEditor.LayoutConfiguration(showMinimap: true, wrapText: true))
-          .focused($editorIsFocused)
+        .focused($editorIsFocused)
+        .environment(\.codeEditorTheme, colorScheme == .dark ? Theme.defaultDark : Theme.defaultLight)
         .toolbarRole(.editor)
         .toolbar {
             ToolbarItem(placement: .primaryAction) {
