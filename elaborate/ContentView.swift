@@ -38,14 +38,25 @@ struct ContentView: View {
     @FocusState private var editorIsFocused: Bool
 
     @State var task: Task<Void, Never>? = nil
-    
-    let stream = AsyncChannel<ElaborateDocument>()
+    @State var stream = AsyncChannel<ElaborateDocument>()
     
 #if os(iOS)
     let layout: CodeEditor.LayoutConfiguration = .init(showMinimap: false, wrapText: true)
 #elseif os(macOS) || os(visionOS)
     let layout: CodeEditor.LayoutConfiguration = .init(showMinimap: true, wrapText: true)
 #endif
+    
+    var theme: Theme {
+        var theme: Theme = colorScheme == .dark ? Theme.defaultDark : Theme.defaultLight
+        theme.backgroundColour = .clear
+        theme.fontName = "SFMono"
+#if os(iOS)
+        theme.fontSize = 13
+#elseif os(macOS) || os(visionOS)
+        theme.fontSize = 20
+#endif
+        return theme
+    }
     
     var body: some View {
         CodeEditor(text: $document.text,
@@ -54,7 +65,7 @@ struct ContentView: View {
                    language: .elaborate(),
                    layout: layout)
         .focused($editorIsFocused)
-        .environment(\.codeEditorTheme, colorScheme == .dark ? Theme.defaultDark : Theme.defaultLight)
+        .environment(\.codeEditorTheme, self.theme)
         .toolbarRole(.editor)
         .toolbar {
             if running {
@@ -67,16 +78,10 @@ struct ContentView: View {
                     print("helpme")
                 }
             }
-            ToolbarItem(placement: .primaryAction) {
-                Button("Run", systemImage: "play.fill") {
-                    Task.detached(priority: .background) {
-                        await run(self.document)
-                    }
-                }
-            }
         }
         .onAppear {
             self.task = Task.detached(priority: .background) {
+                let stream = await self.stream.debounce(for: .milliseconds(100))
                 for await doc in stream {
                     await Self.logger.debug("Running")
                     await run(doc)

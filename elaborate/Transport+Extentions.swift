@@ -18,8 +18,8 @@ extension Elaborate_Result {
     var textLocation: TextLocated<Message>? {
         guard let category: Message.Category = switch self.status {
         case .error: .error
-        case .info: .informational
-        case .value: .live
+        case .info: .hole
+        case .value: .informational
         case .eof, .UNRECOGNIZED(_): nil
         } else {
             return nil
