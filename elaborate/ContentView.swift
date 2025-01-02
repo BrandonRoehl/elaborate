@@ -6,6 +6,8 @@
 //
 
 import SwiftUI
+import LanguageSupport
+import CodeEditorView
 import Elb
 import os
 
@@ -15,20 +17,34 @@ struct ContentView: View {
     @Binding var document: ElaborateDocument
     @State var results: [Elaborate_Result] = []
     @State var running: Bool = false
-    @FocusState private var focused: Bool
-    
+
+//    @Environment(\.colorScheme) private var colorScheme: ColorScheme
+
+    // NB: Writes to a @SceneStorage backed variable are somestimes (always?) not availabe in the update cycle where
+    //     the update occurs, but only one cycle later. That can lead to back and forth bouncing values and other
+    //     problems in views that take multiple bindings as arguments.
+    @State private var editPosition: CodeEditor.Position = .init()
+
+    @SceneStorage("editPosition") private var editPositionStorage: CodeEditor.Position?
+
+    @State private var messages:         Set<TextLocated<Message>> = Set ()
+    @State private var language:         Language                  = .swift
+    @State private var showMessageEntry: Bool                      = false
+    @State private var showMinimap:      Bool                      = true
+    @State private var wrapText:         Bool                      = true
+
+    @FocusState private var editorIsFocused: Bool
+
     @State var task: Task<Void, Never>? = nil
     let font = Font.system(.body).monospaced()
     
     var body: some View {
-        VStack {
-            TextEditor(text: $document.text)
-                .font(font)
-                .focused($focused)
-            List($results) { result in
-                ResultView(result: result)
-            }
-        }
+        CodeEditor(text: $document.text,
+                   position: $editPosition,
+                   messages: $messages,
+                   language: language.configuration,
+                   layout: CodeEditor.LayoutConfiguration(showMinimap: showMinimap, wrapText: wrapText))
+          .focused($editorIsFocused)
         .toolbarRole(.editor)
         .toolbar {
             ToolbarItem(placement: .primaryAction) {
@@ -48,7 +64,7 @@ struct ContentView: View {
     }
     
     func run() {
-        focused = false
+        editorIsFocused = false
         running = true
         // Just cancel and start the next
         task?.cancel()
@@ -71,26 +87,6 @@ struct ContentView: View {
         }
     }
 }
-
-//        VSplitView {
-//            ScrollView {
-//                HStack {
-//                    VStack {
-//                        let lines = document.text.count(where: \.isNewline) + 1
-//                        ForEach(1...lines, id: \.self) { i in
-//                            Text(" \(i): ").font(font)
-//                        }
-//                    }.frame(alignment: .leading).border(.secondary)
-//                        .writingToolsBehavior(.disabled)
-//                        .textEditorStyle(.plain)
-//                        .frame(maxWidth: .infinity)
-//                }
-//            }.frame(maxWidth: .infinity)
-//            ScrollView {
-//                Text(document.text).font(font).frame(maxWidth: .infinity)
-//            }.frame(maxWidth: .infinity)
-//        }
-
 
 #Preview {
     ContentView(document: .constant(ElaborateDocument()))

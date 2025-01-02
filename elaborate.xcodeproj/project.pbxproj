@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		550A85EC2D26246A006D6DD5 /* CodeEditorView in Frameworks */ = {isa = PBXBuildFile; productRef = 550A85EB2D26246A006D6DD5 /* CodeEditorView */; };
+		550A85EE2D26246A006D6DD5 /* LanguageSupport in Frameworks */ = {isa = PBXBuildFile; productRef = 550A85ED2D26246A006D6DD5 /* LanguageSupport */; };
 		5530459D2D234F42005CDD73 /* Transport+Extentions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5530459C2D234F38005CDD73 /* Transport+Extentions.swift */; };
 		5530459F2D235103005CDD73 /* ResultView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5530459E2D2350FC005CDD73 /* ResultView.swift */; };
 		556ABF5F2D17A2C7004D6A05 /* ElaborateApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 556ABF5E2D17A2C7004D6A05 /* ElaborateApp.swift */; };
@@ -27,6 +29,9 @@
 		557A56A32D1A6FF700209EFF /* transport.proto in Sources */ = {isa = PBXBuildFile; fileRef = 557A56A22D1A6FF700209EFF /* transport.proto */; };
 		557A56A42D1A6FF700209EFF /* transport.proto in Sources */ = {isa = PBXBuildFile; fileRef = 557A56A22D1A6FF700209EFF /* transport.proto */; };
 		557A56A52D1A6FF700209EFF /* transport.proto in Sources */ = {isa = PBXBuildFile; fileRef = 557A56A22D1A6FF700209EFF /* transport.proto */; };
+		55EB143B2D261F41003A8DE9 /* CodeEditorView in Frameworks */ = {isa = PBXBuildFile; productRef = 55EB143A2D261F41003A8DE9 /* CodeEditorView */; };
+		55EB143D2D2623FB003A8DE9 /* CodeEditorView in Frameworks */ = {isa = PBXBuildFile; productRef = 55EB143C2D2623FB003A8DE9 /* CodeEditorView */; };
+		55EB143F2D2623FB003A8DE9 /* LanguageSupport in Frameworks */ = {isa = PBXBuildFile; productRef = 55EB143E2D2623FB003A8DE9 /* LanguageSupport */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -94,8 +99,13 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				55EB143B2D261F41003A8DE9 /* CodeEditorView in Frameworks */,
 				557A56962D1A6CAA00209EFF /* SwiftProtobuf in Frameworks */,
+				550A85EE2D26246A006D6DD5 /* LanguageSupport in Frameworks */,
 				557A56992D1A6DD800209EFF /* Elb.xcframework in Frameworks */,
+				550A85EC2D26246A006D6DD5 /* CodeEditorView in Frameworks */,
+				55EB143F2D2623FB003A8DE9 /* LanguageSupport in Frameworks */,
+				55EB143D2D2623FB003A8DE9 /* CodeEditorView in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -277,6 +287,7 @@
 			mainGroup = 556ABF522D17A2C7004D6A05;
 			packageReferences = (
 				557A56942D1A6CAA00209EFF /* XCRemoteSwiftPackageReference "swift-protobuf" */,
+				550A85EA2D26246A006D6DD5 /* XCRemoteSwiftPackageReference "CodeEditorView" */,
 			);
 			productRefGroup = 556ABF5C2D17A2C7004D6A05 /* Products */;
 			projectDirPath = "";
@@ -512,10 +523,10 @@
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				"INFOPLIST_KEY_UISupportsDocumentBrowser[sdk=iphoneos*]" = YES;
 				"INFOPLIST_KEY_UISupportsDocumentBrowser[sdk=iphonesimulator*]" = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 17.2;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.6;
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/Frameworks";
 				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
-				MACOSX_DEPLOYMENT_TARGET = 13.7;
+				MACOSX_DEPLOYMENT_TARGET = 14.6;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = org.brandonroehl.elaborate;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -558,10 +569,10 @@
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				"INFOPLIST_KEY_UISupportsDocumentBrowser[sdk=iphoneos*]" = YES;
 				"INFOPLIST_KEY_UISupportsDocumentBrowser[sdk=iphonesimulator*]" = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 17.2;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.6;
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/Frameworks";
 				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
-				MACOSX_DEPLOYMENT_TARGET = 13.7;
+				MACOSX_DEPLOYMENT_TARGET = 14.6;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = org.brandonroehl.elaborate;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -701,6 +712,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		550A85EA2D26246A006D6DD5 /* XCRemoteSwiftPackageReference "CodeEditorView" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/mchakravarty/CodeEditorView";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.14.0;
+			};
+		};
 		557A56942D1A6CAA00209EFF /* XCRemoteSwiftPackageReference "swift-protobuf" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/apple/swift-protobuf.git";
@@ -709,13 +728,46 @@
 				minimumVersion = 1.28.2;
 			};
 		};
+		55EB14392D261F41003A8DE9 /* XCRemoteSwiftPackageReference "CodeEditorView" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/mchakravarty/CodeEditorView";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.14.0;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		550A85EB2D26246A006D6DD5 /* CodeEditorView */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 550A85EA2D26246A006D6DD5 /* XCRemoteSwiftPackageReference "CodeEditorView" */;
+			productName = CodeEditorView;
+		};
+		550A85ED2D26246A006D6DD5 /* LanguageSupport */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 550A85EA2D26246A006D6DD5 /* XCRemoteSwiftPackageReference "CodeEditorView" */;
+			productName = LanguageSupport;
+		};
 		557A56952D1A6CAA00209EFF /* SwiftProtobuf */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 557A56942D1A6CAA00209EFF /* XCRemoteSwiftPackageReference "swift-protobuf" */;
 			productName = SwiftProtobuf;
+		};
+		55EB143A2D261F41003A8DE9 /* CodeEditorView */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 55EB14392D261F41003A8DE9 /* XCRemoteSwiftPackageReference "CodeEditorView" */;
+			productName = CodeEditorView;
+		};
+		55EB143C2D2623FB003A8DE9 /* CodeEditorView */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 55EB14392D261F41003A8DE9 /* XCRemoteSwiftPackageReference "CodeEditorView" */;
+			productName = CodeEditorView;
+		};
+		55EB143E2D2623FB003A8DE9 /* LanguageSupport */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 55EB14392D261F41003A8DE9 /* XCRemoteSwiftPackageReference "CodeEditorView" */;
+			productName = LanguageSupport;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
