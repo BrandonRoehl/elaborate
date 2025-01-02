@@ -33,7 +33,7 @@ struct ContentView: View {
         CodeEditor(text: $document.text,
                    position: $editPosition,
                    messages: $messages,
-                   language: .swift(),
+                   language: .elaborate(),
                    layout: CodeEditor.LayoutConfiguration(showMinimap: true, wrapText: true))
         .focused($editorIsFocused)
         .environment(\.codeEditorTheme, colorScheme == .dark ? Theme.defaultDark : Theme.defaultLight)
