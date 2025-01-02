@@ -78,44 +78,10 @@ struct ContentView: View {
                     throw error
                 }
                 // Run the thing
-                let response = try Elaborate_Response(serializedBytes: data)
-                // Get the messages map
-                let messages: [TextLocated<Message>] = response.results.compactMap { (result: Elaborate_Result) in
-                    let category: Message.Category
-                    let summary: String
-                    let description: String?
-                    switch result.status {
-                    case .error:
-                        category = .error
-                        summary = "Error"
-                        description = result.output
-                    case .value:
-                        category = .live
-                        summary = result.output
-                        description = nil
-                    case .info:
-                        category = .informational
-                        summary = "Info"
-                        description = result.output
-                    case .eof, .UNRECOGNIZED(_):
-                        return nil
-                    }
-                    let line = Int(result.line)
-                    return TextLocated<Message>(
-                        location: TextLocation(oneBasedLine: line, column: 1),
-                        entity: Message(
-                            category: category,
-                            length: 1,
-                            summary: summary,
-                            description: description.map(AttributedString.init)
-                        )
-                    )
-                }
-                let loc = Set(messages)
-                
+                let messages = try Elaborate_Response(serializedBytes: data).messages
                 // Call back to main to update the stuff
                 await Task { @MainActor in
-                    self.messages = loc
+                    self.messages = messages
                     self.running = false
                 }.value
             } catch {
