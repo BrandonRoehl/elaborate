@@ -16,7 +16,7 @@ extension Elaborate_Result : Identifiable {
 
 extension Elaborate_Result {
     var textLocation: TextLocated<Message>? {
-        guard let category: Message.Category? = switch self.status {
+        guard let category: Message.Category = switch self.status {
         case .error: .error
         case .info: .informational
         case .value: .live
