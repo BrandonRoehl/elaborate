@@ -67,9 +67,16 @@ struct ContentView: View {
                     print("helpme")
                 }
             }
+            ToolbarItem(placement: .primaryAction) {
+                Button("Run", systemImage: "play.fill") {
+                    Task.detached(priority: .background) {
+                        await run(self.document)
+                    }
+                }
+            }
         }
         .onAppear {
-            self.task = Task.detached(priority: .high) {
+            self.task = Task.detached(priority: .background) {
                 for await doc in stream {
                     await Self.logger.debug("Running")
                     await run(doc)
@@ -83,7 +90,7 @@ struct ContentView: View {
             self.stream.finish()
         }
         .onChange(of: self.document.text, initial: true) {
-            Task.detached {
+            Task.detached(priority: .background) {
                 await Self.logger.debug("Sending")
                 await self.stream.send(self.document)
                 await Self.logger.debug("Sent")
@@ -91,8 +98,8 @@ struct ContentView: View {
         }
     }
     
-    nonisolated func run(_ document: ElaborateDocument) async {
-        await Task.detached { @MainActor in
+    nonisolated func run(_ document: borrowing ElaborateDocument) async {
+        await Task.detached(priority: .high) { @MainActor in
             running = true
         }.value
         await withTaskGroup(of: Void.self) { taskGroup in
@@ -108,17 +115,16 @@ struct ContentView: View {
                 // Run the thing
                 let messages = try Elaborate_Response(serializedBytes: data).messages
                 // Call back to main to update the stuff
-                taskGroup.addTask { @MainActor in
+                taskGroup.addTask(priority: .high) { @MainActor in
                     self.messages = messages
                 }
             } catch {
                 await Self.logger.error("Error: \(error)")
             }
-            taskGroup.addTask { @MainActor in
+            taskGroup.addTask(priority: .high) { @MainActor in
                 self.running = false
                 Self.logger.debug("Done updating the main actor")
             }
-            
             await taskGroup.waitForAll()
         }
     }
