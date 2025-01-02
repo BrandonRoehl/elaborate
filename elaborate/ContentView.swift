@@ -15,7 +15,6 @@ struct ContentView: View {
     static let logger = Logger(subsystem: "elb", category: "content")
 
     @Binding var document: ElaborateDocument
-    @State var results: [Elaborate_Result] = []
     @State var running: Bool = false
 
     @Environment(\.colorScheme) private var colorScheme: ColorScheme
@@ -24,11 +23,8 @@ struct ContentView: View {
     //     the update occurs, but only one cycle later. That can lead to back and forth bouncing values and other
     //     problems in views that take multiple bindings as arguments.
     @State private var editPosition: CodeEditor.Position = .init()
-
     @SceneStorage("editPosition") private var editPositionStorage: CodeEditor.Position?
-
     @State private var messages: Set<TextLocated<Message>> = Set()
-    
     @FocusState private var editorIsFocused: Bool
 
     @State var task: Task<Void, Never>? = nil
@@ -72,6 +68,17 @@ struct ContentView: View {
                     return
                 }
                 let response = try Elaborate_Response(serializedBytes: data)
+                let messages: Set<TextLocated<Message>> = Set(
+                    response.results.map { result in
+                        let location = TextLocation(oneBasedLine: result.line, oneBasedColumn: 1)
+                        let entity = Message(category: category,
+                            length: 1,
+                            summary: finalSummary,
+                            description: AttributedString(message)
+                        )
+                        return TextLocated<Message>(location: location, entity: entity)
+                    }
+                )
                 
                 await Task { @MainActor in
                     self.results = response.results
