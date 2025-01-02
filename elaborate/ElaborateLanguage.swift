@@ -8,25 +8,24 @@
 import Foundation
 import RegexBuilder
 import LanguageSupport
+import Elb
 
 extension LanguageConfiguration {
 
   /// Language configuration for Swift
   ///
   public static func elaborate(_ languageService: LanguageService? = nil) -> LanguageConfiguration {
-      let elbReservedIdentifiers =
-      ["Any", "actor", "associatedtype", "async", "await", "as", "break", "case", "catch", "class", "continue", "default",
-       "defer", "deinit", "do", "else", "enum", "extension", "fallthrough", "false", "fileprivate", "for", "func", "guard",
-       "if", "in", "is", "import", "init", "inout", "internal", "in", "is", "let", "nil", "open", "operator",
-       "precedencegroup", "private", "protocol", "public", "repeat", "rethrows", "return", "Self", "self", "static",
-       "struct", "subscript", "super", "switch", "throw", "throws", "true", "try", "typealias", "var", "where", "while",
-       "_", "#available", "#colorLiteral", "#else", "#elseif", "#endif", "#fileLiteral", "#if", "#imageLiteral", "#keyPath",
-       "#selector", "#sourceLocation", "#unavailable"]
-      let elbReservedOperators =
-      [".", ",", ":", ";", "=", "@", "#", "&", "->", "`", "?", "!"]
+      var error: NSError?
+      let response = ElbGetSymbols(&error)
+      guard
+        error == nil,
+        let response,
+        let symbols = try? Elaborate_Symbols(serializedBytes: response)
+      else {
+          return .none
+      }
       
-
-    let numberRegex: Regex<Substring> = Regex {
+      let numberRegex: Regex<Substring> = Regex {
       optNegation
       ChoiceOf {
         Regex { /0b/; binaryLit }
@@ -70,7 +69,7 @@ extension LanguageConfiguration {
         }
       }
     }
-    return LanguageConfiguration(name: "Swift",
+    return LanguageConfiguration(name: "Ivy",
                                  supportsSquareBrackets: true,
                                  supportsCurlyBrackets: false,
                                  stringRegex: /\"(?:\\\"|[^\"])*+\"/,
@@ -80,8 +79,8 @@ extension LanguageConfiguration {
                                  nestedComment: (open: "/*", close: "*/"),
                                  identifierRegex: identifierRegex,
                                  operatorRegex: operatorRegex,
-                                 reservedIdentifiers: elbReservedIdentifiers,
-                                 reservedOperators: elbReservedOperators,
+                                 reservedIdentifiers: symbols.unary,
+                                 reservedOperators: symbols.binary,
                                  languageService: languageService)
   }
 }

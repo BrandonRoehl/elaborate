@@ -29,12 +29,18 @@ struct ContentView: View {
 
     @State var task: Task<Void, Never>? = nil
     
+#if os(iOS)
+    let layout: CodeEditor.LayoutConfiguration = .init(showMinimap: false, wrapText: true)
+#elseif os(macOS) || os(visionOS)
+    let layout: CodeEditor.LayoutConfiguration = .init(showMinimap: true, wrapText: true)
+#endif
+    
     var body: some View {
         CodeEditor(text: $document.text,
                    position: $editPosition,
                    messages: $messages,
                    language: .elaborate(),
-                   layout: CodeEditor.LayoutConfiguration(showMinimap: true, wrapText: true))
+                   layout: layout)
         .focused($editorIsFocused)
         .environment(\.codeEditorTheme, colorScheme == .dark ? Theme.defaultDark : Theme.defaultLight)
         .toolbarRole(.editor)
@@ -63,9 +69,13 @@ struct ContentView: View {
         task = Task.detached(priority: .background) { [text = document.text] in
             do {
                 print("=== Running ===")
-                guard let data = ElbExecute(text) else {
+                var error: NSError?
+                guard let data = ElbExecute(text, &error) else {
                     // TODO Throw an actual response
                     return
+                }
+                if let error {
+                    throw error
                 }
                 // Run the thing
                 let response = try Elaborate_Response(serializedBytes: data)
