@@ -27,11 +27,7 @@ struct ContentView: View {
 
     @SceneStorage("editPosition") private var editPositionStorage: CodeEditor.Position?
 
-    @State private var messages:         Set<TextLocated<Message>> = Set ()
-    @State private var language:         Language                  = .swift
-    @State private var showMessageEntry: Bool                      = false
-    @State private var showMinimap:      Bool                      = true
-    @State private var wrapText:         Bool                      = true
+    @State private var messages: Set<TextLocated<Message>> = Set()
 
     @FocusState private var editorIsFocused: Bool
 
@@ -42,8 +38,8 @@ struct ContentView: View {
         CodeEditor(text: $document.text,
                    position: $editPosition,
                    messages: $messages,
-                   language: language.configuration,
-                   layout: CodeEditor.LayoutConfiguration(showMinimap: showMinimap, wrapText: wrapText))
+                   language: .swift(),
+                   layout: CodeEditor.LayoutConfiguration(showMinimap: true, wrapText: true))
           .focused($editorIsFocused)
         .toolbarRole(.editor)
         .toolbar {
