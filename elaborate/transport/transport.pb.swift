@@ -91,6 +91,20 @@ struct Elaborate_Response: Sendable {
   init() {}
 }
 
+struct Elaborate_Symbols: Sendable {
+  // SwiftProtobuf.Message conformance is added in an extension below. See the
+  // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
+  // methods supported on all messages.
+
+  var unary: [String] = []
+
+  var binary: [String] = []
+
+  var unknownFields = SwiftProtobuf.UnknownStorage()
+
+  init() {}
+}
+
 // MARK: - Code below here is support for the SwiftProtobuf runtime.
 
 fileprivate let _protobuf_package = "elaborate"
@@ -175,6 +189,44 @@ extension Elaborate_Response: SwiftProtobuf.Message, SwiftProtobuf._MessageImple
 
   static func ==(lhs: Elaborate_Response, rhs: Elaborate_Response) -> Bool {
     if lhs.results != rhs.results {return false}
+    if lhs.unknownFields != rhs.unknownFields {return false}
+    return true
+  }
+}
+
+extension Elaborate_Symbols: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
+  static let protoMessageName: String = _protobuf_package + ".Symbols"
+  static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
+    1: .same(proto: "unary"),
+    2: .same(proto: "binary"),
+  ]
+
+  mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
+    while let fieldNumber = try decoder.nextFieldNumber() {
+      // The use of inline closures is to circumvent an issue where the compiler
+      // allocates stack space for every case branch when no optimizations are
+      // enabled. https://github.com/apple/swift-protobuf/issues/1034
+      switch fieldNumber {
+      case 1: try { try decoder.decodeRepeatedStringField(value: &self.unary) }()
+      case 2: try { try decoder.decodeRepeatedStringField(value: &self.binary) }()
+      default: break
+      }
+    }
+  }
+
+  func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
+    if !self.unary.isEmpty {
+      try visitor.visitRepeatedStringField(value: self.unary, fieldNumber: 1)
+    }
+    if !self.binary.isEmpty {
+      try visitor.visitRepeatedStringField(value: self.binary, fieldNumber: 2)
+    }
+    try unknownFields.traverse(visitor: &visitor)
+  }
+
+  static func ==(lhs: Elaborate_Symbols, rhs: Elaborate_Symbols) -> Bool {
+    if lhs.unary != rhs.unary {return false}
+    if lhs.binary != rhs.binary {return false}
     if lhs.unknownFields != rhs.unknownFields {return false}
     return true
   }

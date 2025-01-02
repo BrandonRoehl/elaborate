@@ -18,3 +18,8 @@ message Result {
 
 // The array of results you should expect as a response from the server
 message Response { repeated Result results = 1; }
+
+message Symbols {
+  repeated string unary = 1;
+  repeated string binary = 2;
+}

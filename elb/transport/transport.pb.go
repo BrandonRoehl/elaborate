@@ -177,6 +177,58 @@ func (x *Response) GetResults() []*Result {
 	return nil
 }
 
+type Symbols struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Unary         []string               `protobuf:"bytes,1,rep,name=unary,proto3" json:"unary,omitempty"`
+	Binary        []string               `protobuf:"bytes,2,rep,name=binary,proto3" json:"binary,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *Symbols) Reset() {
+	*x = Symbols{}
+	mi := &file_transport_proto_msgTypes[2]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *Symbols) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*Symbols) ProtoMessage() {}
+
+func (x *Symbols) ProtoReflect() protoreflect.Message {
+	mi := &file_transport_proto_msgTypes[2]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use Symbols.ProtoReflect.Descriptor instead.
+func (*Symbols) Descriptor() ([]byte, []int) {
+	return file_transport_proto_rawDescGZIP(), []int{2}
+}
+
+func (x *Symbols) GetUnary() []string {
+	if x != nil {
+		return x.Unary
+	}
+	return nil
+}
+
+func (x *Symbols) GetBinary() []string {
+	if x != nil {
+		return x.Binary
+	}
+	return nil
+}
+
 var File_transport_proto protoreflect.FileDescriptor
 
 var file_transport_proto_rawDesc = []byte{
@@ -195,8 +247,12 @@ var file_transport_proto_rawDesc = []byte{
 	0x6f, 0x6e, 0x73, 0x65, 0x12, 0x2b, 0x0a, 0x07, 0x72, 0x65, 0x73, 0x75, 0x6c, 0x74, 0x73, 0x18,
 	0x01, 0x20, 0x03, 0x28, 0x0b, 0x32, 0x11, 0x2e, 0x65, 0x6c, 0x61, 0x62, 0x6f, 0x72, 0x61, 0x74,
 	0x65, 0x2e, 0x52, 0x65, 0x73, 0x75, 0x6c, 0x74, 0x52, 0x07, 0x72, 0x65, 0x73, 0x75, 0x6c, 0x74,
-	0x73, 0x42, 0x11, 0x5a, 0x0f, 0x2e, 0x2f, 0x65, 0x6c, 0x62, 0x2f, 0x74, 0x72, 0x61, 0x6e, 0x73,
-	0x70, 0x6f, 0x72, 0x74, 0x62, 0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
+	0x73, 0x22, 0x37, 0x0a, 0x07, 0x53, 0x79, 0x6d, 0x62, 0x6f, 0x6c, 0x73, 0x12, 0x14, 0x0a, 0x05,
+	0x75, 0x6e, 0x61, 0x72, 0x79, 0x18, 0x01, 0x20, 0x03, 0x28, 0x09, 0x52, 0x05, 0x75, 0x6e, 0x61,
+	0x72, 0x79, 0x12, 0x16, 0x0a, 0x06, 0x62, 0x69, 0x6e, 0x61, 0x72, 0x79, 0x18, 0x02, 0x20, 0x03,
+	0x28, 0x09, 0x52, 0x06, 0x62, 0x69, 0x6e, 0x61, 0x72, 0x79, 0x42, 0x11, 0x5a, 0x0f, 0x2e, 0x2f,
+	0x65, 0x6c, 0x62, 0x2f, 0x74, 0x72, 0x61, 0x6e, 0x73, 0x70, 0x6f, 0x72, 0x74, 0x62, 0x06, 0x70,
+	0x72, 0x6f, 0x74, 0x6f, 0x33,
 }
 
 var (
@@ -212,11 +268,12 @@ func file_transport_proto_rawDescGZIP() []byte {
 }
 
 var file_transport_proto_enumTypes = make([]protoimpl.EnumInfo, 1)
-var file_transport_proto_msgTypes = make([]protoimpl.MessageInfo, 2)
+var file_transport_proto_msgTypes = make([]protoimpl.MessageInfo, 3)
 var file_transport_proto_goTypes = []any{
 	(Result_Status)(0), // 0: elaborate.Result.Status
 	(*Result)(nil),     // 1: elaborate.Result
 	(*Response)(nil),   // 2: elaborate.Response
+	(*Symbols)(nil),    // 3: elaborate.Symbols
 }
 var file_transport_proto_depIdxs = []int32{
 	0, // 0: elaborate.Result.status:type_name -> elaborate.Result.Status
@@ -239,7 +296,7 @@ func file_transport_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: file_transport_proto_rawDesc,
 			NumEnums:      1,
-			NumMessages:   2,
+			NumMessages:   3,
 			NumExtensions: 0,
 			NumServices:   0,
 		},

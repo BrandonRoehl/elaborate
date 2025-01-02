@@ -4,7 +4,6 @@ import (
 	"bytes"
 	"fmt"
 	"io"
-	"log"
 	"math/big"
 	"os"
 	"strconv"
@@ -57,7 +56,7 @@ func parseLine(parse *parse.Parser) int64 {
 	return out
 }
 
-func Execute(content string) []byte {
+func Execute(content string) ([]byte, error) {
 	// The results of the file execution.
 	results := innerExecute(content)
 	// Return the results.
@@ -66,10 +65,9 @@ func Execute(content string) []byte {
 	}
 	out, err := proto.Marshal(&response)
 	if err != nil {
-		log.Println("Error marshaling", err)
-		return make([]byte, 0)
+		return make([]byte, 0), err
 	}
-	return out
+	return out, nil
 }
 
 // printValues neatly prints the values returned from execution, followed by a newline.
@@ -187,4 +185,27 @@ func innerExecute(expr string) []*transport.Result {
 
 	// Run to the end or the first error
 	return Run(parser, context)
+}
+
+func GetSymbols() ([]byte, error) {
+	unas := make([]string, 0, len(value.UnaryOps))
+	for k := range value.UnaryOps {
+		unas = append(unas, k)
+	}
+
+	bins := make([]string, 0, len(value.BinaryOps))
+	for k := range value.BinaryOps {
+		bins = append(bins, k)
+	}
+
+	// Return the results.
+	response := transport.Symbols{
+		Unary:  unas,
+		Binary: bins,
+	}
+	out, err := proto.Marshal(&response)
+	if err != nil {
+		return make([]byte, 0), err
+	}
+	return out, nil
 }
