@@ -10,6 +10,16 @@ import LanguageSupport
 import CodeEditorView
 import Elb
 import os
+import AsyncAlgorithms
+
+
+func streamHack<T>(_: T.Type) -> (AsyncStream<T>, AsyncStream<T>.Continuation) {
+    var out: AsyncStream<T>.Continuation!
+    let stream = AsyncStream<T> { cont in
+        out = cont
+    }
+    return (stream, out)
+}
 
 struct ContentView: View {
     static let logger = Logger(subsystem: "elb", category: "content")
@@ -29,6 +39,8 @@ struct ContentView: View {
 
     @State var task: Task<Void, Never>? = nil
     
+    let stream = AsyncChannel<ElaborateDocument>()
+    
 #if os(iOS)
     let layout: CodeEditor.LayoutConfiguration = .init(showMinimap: false, wrapText: true)
 #elseif os(macOS) || os(visionOS)
@@ -45,51 +57,69 @@ struct ContentView: View {
         .environment(\.codeEditorTheme, colorScheme == .dark ? Theme.defaultDark : Theme.defaultLight)
         .toolbarRole(.editor)
         .toolbar {
-            ToolbarItem(placement: .primaryAction) {
-                Button("Help", systemImage: "questionmark.circle") {
-                    print("helpme")
-                }
-            }
-            ToolbarItem(placement: .primaryAction) {
-                Button("Run", systemImage: "play.fill", action: self.run)
-            }
             if running {
                 ToolbarItem(placement: .primaryAction) {
                     ProgressView()
                 }
             }
+            ToolbarItem(placement: .primaryAction) {
+                Button("Help", systemImage: "questionmark.circle") {
+                    print("helpme")
+                }
+            }
+        }
+        .onAppear {
+            self.task = Task.detached(priority: .background) {
+                for await doc in stream {
+                    print("detect")
+                    await run(doc)
+                    print("next")
+                }
+                print("done")
+            }
+        }
+        .onDisappear {
+            self.task?.cancel()
+            self.stream.finish()
+        }
+        .onChange(of: self.document.text, initial: true) {
+            Task {
+                await self.stream.send(self.document)
+            }
         }
     }
     
-    func run() {
+    nonisolated func run(_ document: ElaborateDocument) async {
+        await Task { @MainActor in
 #if os(iOS)
-        editorIsFocused = false
+            editorIsFocused = false
 #endif
-        running = true
-        // Just cancel and start the next
-        task?.cancel()
-        task = Task.detached(priority: .background) { [text = document.text] in
-            do {
-                print("=== Running ===")
-                var error: NSError?
-                guard let data = ElbExecute(text, &error) else {
-                    // TODO Throw an actual response
-                    return
-                }
-                if let error {
-                    throw error
-                }
-                // Run the thing
-                let messages = try Elaborate_Response(serializedBytes: data).messages
-                // Call back to main to update the stuff
-                await Task { @MainActor in
-                    self.messages = messages
-                    self.running = false
-                }.value
-            } catch {
-                await Self.logger.error("Error: \(error)")
+            running = true
+        }.value
+        do {
+            print("=== Running ===")
+            var error: NSError?
+            guard let data = ElbExecute(document.text, &error) else {
+                // TODO Throw an actual response
+                return
             }
+            if let error {
+                throw error
+            }
+            // Run the thing
+            let messages = try Elaborate_Response(serializedBytes: data).messages
+            // Call back to main to update the stuff
+            await Task { @MainActor in
+                self.messages = messages
+                self.running = false
+            }.value
+        } catch {
+            await Self.logger.error("Error: \(error)")
         }
+        await Task { @MainActor in
+            running = false
+        }.value
+        print("done")
     }
 }
 

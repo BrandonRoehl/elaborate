@@ -11,6 +11,7 @@
 		550A85EE2D26246A006D6DD5 /* LanguageSupport in Frameworks */ = {isa = PBXBuildFile; productRef = 550A85ED2D26246A006D6DD5 /* LanguageSupport */; };
 		5530459D2D234F42005CDD73 /* Transport+Extentions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5530459C2D234F38005CDD73 /* Transport+Extentions.swift */; };
 		553B93572D262D3E001397D7 /* ElaborateLanguage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 553B93562D262D3A001397D7 /* ElaborateLanguage.swift */; };
+		553B935A2D263F2C001397D7 /* AsyncAlgorithms in Frameworks */ = {isa = PBXBuildFile; productRef = 553B93592D263F2C001397D7 /* AsyncAlgorithms */; };
 		556ABF5F2D17A2C7004D6A05 /* ElaborateApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 556ABF5E2D17A2C7004D6A05 /* ElaborateApp.swift */; };
 		556ABF612D17A2C7004D6A05 /* ElaborateDocument.swift in Sources */ = {isa = PBXBuildFile; fileRef = 556ABF602D17A2C7004D6A05 /* ElaborateDocument.swift */; };
 		556ABF632D17A2C7004D6A05 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 556ABF622D17A2C7004D6A05 /* ContentView.swift */; };
@@ -106,6 +107,7 @@
 				550A85EC2D26246A006D6DD5 /* CodeEditorView in Frameworks */,
 				55EB143F2D2623FB003A8DE9 /* LanguageSupport in Frameworks */,
 				55EB143D2D2623FB003A8DE9 /* CodeEditorView in Frameworks */,
+				553B935A2D263F2C001397D7 /* AsyncAlgorithms in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -288,6 +290,7 @@
 			packageReferences = (
 				557A56942D1A6CAA00209EFF /* XCRemoteSwiftPackageReference "swift-protobuf" */,
 				550A85EA2D26246A006D6DD5 /* XCRemoteSwiftPackageReference "CodeEditorView" */,
+				553B93582D263F2C001397D7 /* XCRemoteSwiftPackageReference "swift-async-algorithms" */,
 			);
 			productRefGroup = 556ABF5C2D17A2C7004D6A05 /* Products */;
 			projectDirPath = "";
@@ -720,6 +723,14 @@
 				minimumVersion = 0.14.0;
 			};
 		};
+		553B93582D263F2C001397D7 /* XCRemoteSwiftPackageReference "swift-async-algorithms" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/apple/swift-async-algorithms.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.0.3;
+			};
+		};
 		557A56942D1A6CAA00209EFF /* XCRemoteSwiftPackageReference "swift-protobuf" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/apple/swift-protobuf.git";
@@ -748,6 +759,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 550A85EA2D26246A006D6DD5 /* XCRemoteSwiftPackageReference "CodeEditorView" */;
 			productName = LanguageSupport;
+		};
+		553B93592D263F2C001397D7 /* AsyncAlgorithms */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 553B93582D263F2C001397D7 /* XCRemoteSwiftPackageReference "swift-async-algorithms" */;
+			productName = AsyncAlgorithms;
 		};
 		557A56952D1A6CAA00209EFF /* SwiftProtobuf */ = {
 			isa = XCSwiftPackageProductDependency;
