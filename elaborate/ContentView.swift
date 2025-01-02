@@ -69,13 +69,13 @@ struct ContentView: View {
             }
         }
         .onAppear {
-            self.task = Task.detached(priority: .background) {
+            self.task = Task.detached(priority: .high) {
                 for await doc in stream {
-                    print("detect")
+                    await Self.logger.debug("Running")
                     await run(doc)
-                    print("next")
+                    await Self.logger.debug("Ran")
                 }
-                print("done")
+                await Self.logger.info("Closing task")
             }
         }
         .onDisappear {
@@ -83,43 +83,44 @@ struct ContentView: View {
             self.stream.finish()
         }
         .onChange(of: self.document.text, initial: true) {
-            Task {
+            Task.detached {
+                await Self.logger.debug("Sending")
                 await self.stream.send(self.document)
+                await Self.logger.debug("Sent")
             }
         }
     }
     
     nonisolated func run(_ document: ElaborateDocument) async {
-        await Task { @MainActor in
-#if os(iOS)
-            editorIsFocused = false
-#endif
+        await Task.detached { @MainActor in
             running = true
         }.value
-        do {
-            print("=== Running ===")
-            var error: NSError?
-            guard let data = ElbExecute(document.text, &error) else {
-                // TODO Throw an actual response
-                return
+        await withTaskGroup(of: Void.self) { taskGroup in
+            do {
+                var error: NSError?
+                guard let data = ElbExecute(document.text, &error) else {
+                    // TODO Throw an actual response
+                    return
+                }
+                if let error {
+                    throw error
+                }
+                // Run the thing
+                let messages = try Elaborate_Response(serializedBytes: data).messages
+                // Call back to main to update the stuff
+                taskGroup.addTask { @MainActor in
+                    self.messages = messages
+                }
+            } catch {
+                await Self.logger.error("Error: \(error)")
             }
-            if let error {
-                throw error
-            }
-            // Run the thing
-            let messages = try Elaborate_Response(serializedBytes: data).messages
-            // Call back to main to update the stuff
-            await Task { @MainActor in
-                self.messages = messages
+            taskGroup.addTask { @MainActor in
                 self.running = false
-            }.value
-        } catch {
-            await Self.logger.error("Error: \(error)")
+                Self.logger.debug("Done updating the main actor")
+            }
+            
+            await taskGroup.waitForAll()
         }
-        await Task { @MainActor in
-            running = false
-        }.value
-        print("done")
     }
 }
 
