@@ -68,20 +68,40 @@ struct ContentView: View {
                     return
                 }
                 let response = try Elaborate_Response(serializedBytes: data)
-                let messages: Set<TextLocated<Message>> = Set(
-                    response.results.map { result in
-                        let location = TextLocation(oneBasedLine: result.line, oneBasedColumn: 1)
-                        let entity = Message(category: category,
-                            length: 1,
-                            summary: finalSummary,
-                            description: AttributedString(message)
-                        )
-                        return TextLocated<Message>(location: location, entity: entity)
+                let messages: [TextLocated<Message>] = response.results.compactMap { (result: Elaborate_Result) in
+                    let category: Message.Category
+                    let summary: String
+                    let description: String
+                    switch result.status {
+                    case .error:
+                        category = .error
+                        summary = "Error"
+                        description = result.output
+                    case .value:
+                        category = .hole
+                        summary = result.output
+                        description = ""
+                    case .info:
+                        category = .informational
+                        summary = "Info"
+                        description = result.output
+                    case .eof, .UNRECOGNIZED(_):
+                        return nil
                     }
-                )
+                    let line = Int(result.line)
+                    let location = TextLocation(oneBasedLine: line, column: 1)
+                    let entity = Message(
+                        category: category,
+                        length: 1,
+                        summary: summary,
+                        description: AttributedString(description)
+                    )
+                    return TextLocated<Message>(location: location, entity: entity)
+                }
+                let loc = Set(messages)
                 
                 await Task { @MainActor in
-                    self.results = response.results
+                    self.messages = loc
                     self.running = false
                 }.value
             } catch {
