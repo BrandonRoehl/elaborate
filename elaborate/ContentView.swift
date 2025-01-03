@@ -52,10 +52,10 @@ struct ContentView: View {
         var theme: Theme = colorScheme == .dark ? Theme.defaultDark : Theme.defaultLight
         theme.backgroundColour = .clear
         theme.fontName = "SFMono"
-#if os(iOS)
-        theme.fontSize = 18
-#elseif os(macOS) || os(visionOS)
-        theme.fontSize = 13
+#if os(iOS) || os(visionOS)
+        theme.fontSize = UIFont.systemFontSize
+#elseif os(macOS)
+        theme.fontSize = NSFont.systemFontSize
 #endif
         return theme
     }
