@@ -84,7 +84,7 @@ struct ContentView: View {
         }
         .onAppear {
             self.task = Task.detached(priority: .background) {
-                let stream = await self.stream.debounce(for: .milliseconds(100))
+                let stream = await self.stream.debounce(for: .milliseconds(500))
                 for await doc in stream {
                     await Self.logger.debug("Running")
                     await run(doc)
