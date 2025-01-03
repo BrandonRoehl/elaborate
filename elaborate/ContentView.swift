@@ -24,6 +24,8 @@ func streamHack<T>(_: T.Type) -> (AsyncStream<T>, AsyncStream<T>.Continuation) {
 struct ContentView: View {
     static let logger = Logger(subsystem: "elb", category: "content")
 
+    let font = Font.system(.body).monospaced()
+
     @Binding var document: ElaborateDocument
     @State var running: Bool = false
 
@@ -51,9 +53,9 @@ struct ContentView: View {
         theme.backgroundColour = .clear
         theme.fontName = "SFMono"
 #if os(iOS)
-        theme.fontSize = 13
+        theme.fontSize = 18
 #elseif os(macOS) || os(visionOS)
-        theme.fontSize = 20
+        theme.fontSize = 13
 #endif
         return theme
     }
@@ -66,6 +68,7 @@ struct ContentView: View {
                    layout: layout)
         .focused($editorIsFocused)
         .environment(\.codeEditorTheme, self.theme)
+        .scrollDismissesKeyboard(.interactively)
         .toolbarRole(.editor)
         .toolbar {
             if running {
