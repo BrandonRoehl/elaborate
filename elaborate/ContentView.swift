@@ -6,8 +6,7 @@
 //
 
 import SwiftUI
-import LanguageSupport
-import CodeEditorView
+import LSPCodeView
 import Elb
 import os
 import AsyncAlgorithms
@@ -31,43 +30,21 @@ struct ContentView: View {
 
     @Environment(\.colorScheme) private var colorScheme: ColorScheme
 
-    // NB: Writes to a @SceneStorage backed variable are somestimes (always?) not availabe in the update cycle where
-    //     the update occurs, but only one cycle later. That can lead to back and forth bouncing values and other
-    //     problems in views that take multiple bindings as arguments.
-    @State private var editPosition: CodeEditor.Position = .init()
-    @SceneStorage("editPosition") private var editPositionStorage: CodeEditor.Position?
-    @State private var messages: Set<TextLocated<Message>> = Set()
+    @State private var messages: [Elaborate_Result] = [] {
+        didSet {
+            for value in messages {
+                let json = (try? value.jsonString()) ?? ""
+                Self.logger.debug("Received message \(value.line) : \(value.status.rawValue) : \(json)")
+            }
+        }
+    }
     @FocusState private var editorIsFocused: Bool
 
     @State var task: Task<Void, Never>? = nil
     @State var stream = AsyncChannel<ElaborateDocument>()
     
-#if os(iOS)
-    let layout: CodeEditor.LayoutConfiguration = .init(showMinimap: false, wrapText: true)
-#elseif os(macOS) || os(visionOS)
-    let layout: CodeEditor.LayoutConfiguration = .init(showMinimap: true, wrapText: true)
-#endif
-    
-    var theme: Theme {
-        var theme: Theme = colorScheme == .dark ? Theme.defaultDark : Theme.defaultLight
-        theme.backgroundColour = .clear
-        theme.fontName = "SFMono"
-#if os(iOS) || os(visionOS)
-        theme.fontSize = UIFont.systemFontSize
-#elseif os(macOS)
-        theme.fontSize = NSFont.systemFontSize
-#endif
-        return theme
-    }
-    
     var body: some View {
-        CodeEditor(text: $document.text,
-                   position: $editPosition,
-                   messages: $messages,
-                   language: .elaborate(),
-                   layout: layout)
-        .focused($editorIsFocused)
-        .environment(\.codeEditorTheme, self.theme)
+        CodeView(text: $document.text)
         .scrollDismissesKeyboard(.interactively)
         .toolbarRole(.editor)
         .toolbar {
@@ -121,7 +98,7 @@ struct ContentView: View {
                     throw error
                 }
                 // Run the thing
-                let messages = try Elaborate_Response(serializedBytes: data).messages
+                let messages = try Elaborate_Response(serializedBytes: data).results
                 // Call back to main to update the stuff
                 taskGroup.addTask(priority: .high) { @MainActor in
                     self.messages = messages

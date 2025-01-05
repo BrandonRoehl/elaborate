@@ -1,24 +1,6 @@
 {
-  "originHash" : "a2e4d15e2fa052195f8dcd7224af30d77277902873dad09cc1ff07a7b78e4b3d",
+  "originHash" : "8fe34f424ef26be5ed113cc6bcb8cc6166804209117e3ac37ffb2f237a01d3fc",
   "pins" : [
-    {
-      "identity" : "codeeditorview",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/mchakravarty/CodeEditorView",
-      "state" : {
-        "revision" : "3d2f385aa1583828cdb8e454aea8f1163df23be8",
-        "version" : "0.14.0"
-      }
-    },
-    {
-      "identity" : "rearrange",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/ChimeHQ/Rearrange.git",
-      "state" : {
-        "revision" : "5ff7f3363f7a08f77e0d761e38e6add31c2136e1",
-        "version" : "1.8.1"
-      }
-    },
     {
       "identity" : "swift-async-algorithms",
       "kind" : "remoteSourceControl",
