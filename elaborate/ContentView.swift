@@ -32,9 +32,16 @@ struct ContentView: View {
 
     @State private var messages: [Elaborate_Result] = [] {
         didSet {
-            for value in messages {
+            for value in self.messages {
                 let json = (try? value.jsonString()) ?? ""
-                Self.logger.debug("Received message \(value.line) : \(value.status.rawValue) : \(json)")
+                switch value.status {
+                case .error:
+                    Self.logger.error("\(value.line): \(json)")
+                case .value, .info:
+                    Self.logger.info("\(value.line): \(json)")
+                case .eof, .UNRECOGNIZED(_):
+                    Self.logger.debug("\(value.line): \(json)")
+                }
             }
         }
     }
