@@ -12,23 +12,15 @@ import os
 import AsyncAlgorithms
 
 
-func streamHack<T>(_: T.Type) -> (AsyncStream<T>, AsyncStream<T>.Continuation) {
-    var out: AsyncStream<T>.Continuation!
-    let stream = AsyncStream<T> { cont in
-        out = cont
-    }
-    return (stream, out)
-}
-
 struct ContentView: View {
     static let logger = Logger(subsystem: "elb", category: "content")
-
-    let font = Font.system(.body).monospaced()
+//
+//    let font = Font.system(.body).monospaced()
 
     @Binding var document: ElaborateDocument
     @State var running: Bool = false
 
-    @Environment(\.colorScheme) private var colorScheme: ColorScheme
+//    @Environment(\.colorScheme) private var colorScheme: ColorScheme
 
     @State private var messages: [Elaborate_Result] = [] {
         didSet {
@@ -45,7 +37,7 @@ struct ContentView: View {
             }
         }
     }
-    @FocusState private var editorIsFocused: Bool
+//    @FocusState private var editorIsFocused: Bool
 
     @State var task: Task<Void, Never>? = nil
     @State var stream = AsyncChannel<ElaborateDocument>()
@@ -66,17 +58,17 @@ struct ContentView: View {
                 }
             }
         }
-        .onAppear {
-            self.task = Task.detached(priority: .background) {
-                let stream = await self.stream.debounce(for: .milliseconds(500))
-                for await doc in stream {
-                    await Self.logger.debug("Running")
-                    await run(doc)
-                    await Self.logger.debug("Ran")
-                }
-                await Self.logger.info("Closing task")
-            }
-        }
+//        .onAppear {
+//            self.task = Task.detached(priority: .background) {
+//                let stream = await self.stream.debounce(for: .milliseconds(500))
+//                for await doc in stream {
+//                    await Self.logger.debug("Running")
+//                    await run(doc)
+//                    await Self.logger.debug("Ran")
+//                }
+//                await Self.logger.info("Closing task")
+//            }
+//        }
         .onDisappear {
             self.task?.cancel()
             self.stream.finish()
