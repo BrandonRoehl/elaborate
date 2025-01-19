@@ -58,17 +58,17 @@ struct ContentView: View {
                 }
             }
         }
-//        .onAppear {
-//            self.task = Task.detached(priority: .background) {
-//                let stream = await self.stream.debounce(for: .milliseconds(500))
-//                for await doc in stream {
-//                    await Self.logger.debug("Running")
-//                    await run(doc)
-//                    await Self.logger.debug("Ran")
-//                }
-//                await Self.logger.info("Closing task")
-//            }
-//        }
+        .onAppear {
+            self.task = Task.detached(priority: .background) {
+                let stream = await self.stream.debounce(for: .milliseconds(500))
+                for await doc in stream {
+                    await Self.logger.debug("Running")
+                    await run(doc)
+                    await Self.logger.debug("Ran")
+                }
+                await Self.logger.info("Closing task")
+            }
+        }
         .onDisappear {
             self.task?.cancel()
             self.stream.finish()
