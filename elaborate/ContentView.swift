@@ -22,17 +22,17 @@ struct ContentView: View {
 
 //    @Environment(\.colorScheme) private var colorScheme: ColorScheme
 
-    @State private var messages: [Elaborate_Result] = [] {
+    @State private var messages: [Int: ResultView] = [:] {
         didSet {
-            for value in self.messages {
-                let json = (try? value.jsonString()) ?? ""
-                switch value.status {
+            for (line, view) in self.messages {
+                let json = (try? view.result.jsonString()) ?? ""
+                switch view.result.status {
                 case .error:
-                    Self.logger.error("\(value.line): \(json)")
+                    Self.logger.error("\(line): \(json)")
                 case .value, .info:
-                    Self.logger.info("\(value.line): \(json)")
+                    Self.logger.info("\(line): \(json)")
                 case .eof, .UNRECOGNIZED(_):
-                    Self.logger.debug("\(value.line): \(json)")
+                    Self.logger.debug("\(line): \(json)")
                 }
             }
         }
@@ -43,7 +43,7 @@ struct ContentView: View {
     @State var stream = AsyncChannel<ElaborateDocument>()
     
     var body: some View {
-        CodeView(text: $document.text)
+        CodeView(text: $document.text, results: $messages)
         .scrollDismissesKeyboard(.interactively)
         .toolbarRole(.editor)
         .toolbar {
@@ -97,7 +97,10 @@ struct ContentView: View {
                     throw error
                 }
                 // Run the thing
-                let messages = try Elaborate_Response(serializedBytes: data).results
+                let responses = try Elaborate_Response(serializedBytes: data).results
+                let messages = Dictionary(uniqueKeysWithValues: responses.map { result in
+                    return (Int(clamping: result.line), ResultView(result: result))
+                })
                 // Call back to main to update the stuff
                 taskGroup.addTask(priority: .high) { @MainActor in
                     self.messages = messages
