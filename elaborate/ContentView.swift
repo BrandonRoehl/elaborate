@@ -98,8 +98,11 @@ struct ContentView: View {
                 }
                 // Run the thing
                 let responses = try Elaborate_Response(serializedBytes: data).results
-                let messages = Dictionary(uniqueKeysWithValues: responses.map { result in
+                // TODO: Deal with this being one view and mapping these
+                let messages = Dictionary(responses.map { result in
                     return (Int(clamping: result.line), ResultView(result: result))
+                }, uniquingKeysWith: { (left, right) in
+                    return left
                 })
                 // Call back to main to update the stuff
                 taskGroup.addTask(priority: .high) { @MainActor in
