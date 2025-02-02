@@ -12,7 +12,7 @@ import os
 struct ResultView: View {
     static let logger = Logger(subsystem: "elb", category: "result")
 
-    @State var result: Elaborate_Result
+    let result: Elaborate_Result
     
     let mono = Font.system(.body).monospaced()
     let regular = Font.system(.body)

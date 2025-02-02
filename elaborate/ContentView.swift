@@ -22,17 +22,19 @@ struct ContentView: View {
 
 //    @Environment(\.colorScheme) private var colorScheme: ColorScheme
 
-    @State private var messages: [Int: ResultView] = [:] {
+    @State private var messages: [Int: ResultGroup] = [:] {
         didSet {
             for (line, view) in self.messages {
-                let json = (try? view.result.jsonString()) ?? ""
-                switch view.result.status {
-                case .error:
-                    Self.logger.error("\(line): \(json)")
-                case .value, .info:
-                    Self.logger.info("\(line): \(json)")
-                case .eof, .UNRECOGNIZED(_):
-                    Self.logger.debug("\(line): \(json)")
+                for result in view.results {
+                    let json = (try? result.jsonString()) ?? ""
+                    switch result.status {
+                    case .error:
+                        Self.logger.error("\(line): \(json)")
+                    case .value, .info:
+                        Self.logger.info("\(line): \(json)")
+                    case .eof, .UNRECOGNIZED(_):
+                        Self.logger.debug("\(line): \(json)")
+                    }
                 }
             }
         }
@@ -98,12 +100,9 @@ struct ContentView: View {
                 }
                 // Run the thing
                 let responses = try Elaborate_Response(serializedBytes: data).results
-                // TODO: Deal with this being one view and mapping these
-                let messages = Dictionary(responses.map { result in
-                    return (Int(clamping: result.line), ResultView(result: result))
-                }, uniquingKeysWith: { (left, right) in
-                    return left
-                })
+                let messages = Dictionary(grouping: responses) { result in
+                    Int(clamping: result.line)
+                }.mapValues(ResultGroup.init(results:))
                 // Call back to main to update the stuff
                 taskGroup.addTask(priority: .high) { @MainActor in
                     self.messages = messages
