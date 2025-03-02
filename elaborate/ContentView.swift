@@ -6,7 +6,7 @@
 //
 
 import SwiftUI
-import LSPCodeView
+import CodeView
 import Elb
 import os
 import AsyncAlgorithms
