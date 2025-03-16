@@ -72,19 +72,29 @@ public class CodeViewCoordinator: NSObject {
 //        // Make sure the selection and cursor doesn't move
 //        let selections = self.textLayoutManager.textSelections
 //        defer { self.textLayoutManager.textSelections = selections }
-//
-        for (line, _) in self.results {
-            guard
-                line < self.paragraphRanges.count,
-                let range = self.paragraphRanges[line].convertToTextRange(in: self.textLayoutManager)
-            else { continue }
-            print("Invalidating", range)
-            self.textLayoutManager.invalidateLayout(for: range)
-            self.textLayoutManager.ensureLayout(for: range)
-            
-        }
+        
+//        for (line, _) in self.results {
+//            guard
+//                line < self.paragraphRanges.count,
+//                let range = self.paragraphRanges[line].convertToTextRange(in: self.textLayoutManager)
+//            else { continue }
+//            print("Invalidating", range)
+//            self.textLayoutManager.invalidateLayout(for: range)
+//            self.textLayoutManager.ensureLayout(for: range)
+//            
+//        }
         // Re-load the text without formatting
 //        self.textStorage.setAttributedString(NSAttributedString(string: self.text.wrappedValue))
+        // Notify that the content has changed
+        
+        for (line, _) in self.results {
+            guard line < self.paragraphRanges.count else { continue }
+            let range = self.paragraphRanges[line]
+            textContentStorage.processEditing(for: self.textStorage, edited: .editedAttributes, range: range, changeInLength: range.length, invalidatedRange: range)
+        }
+
+        // For views using TextKit 2
+//        textView.layoutManager.ensureLayout(for: textView.visibleRect)
         
         // get the reverse sort of the lines so we don't mess up the indexes
         // somehow do this without editing the view

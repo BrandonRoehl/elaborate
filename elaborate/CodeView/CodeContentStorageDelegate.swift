@@ -21,6 +21,7 @@ extension CodeViewCoordinator: NSTextContentStorageDelegate {
 
         print("Called for", range, "in", line ?? "nil")
 
+//        return nil
         guard let line, let result = self.results[line] else {
             // No line or result was found so return this unmodified
             // in the future we still need to do text highlighting
@@ -31,29 +32,10 @@ extension CodeViewCoordinator: NSTextContentStorageDelegate {
 
         let attachment = CodeAttachment(view: result)
         attachment.coordinator = self
-        let attachmentAttributedString = NSAttributedString(attachment: attachment)
         
-        let newText = NSMutableAttributedString(attributedString: originalText)
-        newText.append(attachmentAttributedString)
+        let newText = NSMutableAttributedString(attachment: attachment)
+        newText.append(originalText)
 
         return NSTextParagraph(attributedString: newText)
-
-        //        if originalText.attribute(.commentDepth, at: 0, effectiveRange: nil) != nil {
-        //            // Use white colored text to make our comments visible against the bright background.
-        //            let displayAttributes: [NSAttributedString.Key: AnyObject] = [.font: commentFont, .foregroundColor: commentColor]
-        //            let textWithDisplayAttributes = NSMutableAttributedString(attributedString: originalText)
-        //            // Use the display attributes for the text of the comment itself, without the reaction.
-        //            // The last character is the newline, second to last is the attachment character for the reaction.
-        //            let rangeForDisplayAttributes = NSRange(location: 0, length: textWithDisplayAttributes.length - 2)
-        //            textWithDisplayAttributes.addAttributes(displayAttributes, range: rangeForDisplayAttributes)
-        //
-        //            // Create our new paragraph with our display attributes.
-        //            paragraphWithDisplayAttributes = NSTextParagraph(attributedString: textWithDisplayAttributes)
-        //        } else {
-        //            return nil
-        //        }
-        //        // If the original paragraph wasn't a comment, this return value will be nil.
-        //        // The text content storage will use the original paragraph in this case.
-        //        return paragraphWithDisplayAttributes
     }
 }
