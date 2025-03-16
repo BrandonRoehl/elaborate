@@ -73,6 +73,11 @@ public class CodeViewCoordinator: NSObject {
 //        let selections = self.textLayoutManager.textSelections
 //        defer { self.textLayoutManager.textSelections = selections }
 //
+        for (line, _) in self.results {
+            guard line < self.paragraphRanges.count else { continue }
+            self.textLayoutManager.invalidateLayout(for: self.paragraphRanges[line])
+            
+        }
         // Re-load the text without formatting
 //        self.textStorage.setAttributedString(NSAttributedString(string: self.text.wrappedValue))
         
