@@ -21,34 +21,7 @@ extension CodeViewCoordinator: NSTextLayoutManagerDelegate {
         //            return layoutFragment
         //        } else {
         //        }
-        let offset: Int = textLayoutManager.offset(from: textLayoutManager.documentRange.location, to: location)
-        let line = self.paragraphRanges.firstIndex(where: { range in
-            range.contains(offset)
-        })
-
-        print("Called for", location, "in", line, "with", textElement)
-
-        guard let line, let result = self.results[line] else {
-            // No line or result was found so return this unmodified
-            // in the future we still need to do text highlighting
-            return NSTextLayoutFragment(textElement: textElement, range: textElement.elementRange)
-        }
-
-        // TODO make this not this
-        let attachment = DispatchQueue.main.sync {
-            CodeAttachment(view: result)
-        }
-//        let attachment = CodeAttachment(view: result)
-        attachment.coordinator = self
-        let attachmentAttributedString = NSAttributedString(attachment: attachment)
-        let attachmentPG = NSTextParagraph(attributedString: attachmentAttributedString)
-//
-//        if line >= pgs {
-//            self.textStorage.append(attachmentAttributedString)
-//        } else {
-//            self.textStorage.paragraphs[line].append(attachmentAttributedString)
-//        }
-        return NSTextLayoutFragment(textElement: attachmentPG, range: textElement.elementRange)
+        return NSTextLayoutFragment(textElement: textElement, range: textElement.elementRange)
     }
 }
 

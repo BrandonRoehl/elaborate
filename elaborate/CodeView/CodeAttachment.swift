@@ -7,13 +7,21 @@
 
 import SwiftUI
 
+//class CodeAttachmentViewProvider: NSTextAttachmentViewProvider {
+//    var uiView: AnyView? = nil
+//
+//    @MainActor
+//    override func loadView() {
+//        view = uiView?.platformView()
+//    }
+//}
+
 class CodeAttachment: NSTextAttachment {
     let view: OSView
-    weak var coordinator: CodeViewCoordinator?
+    weak var coordinator: CodeViewCoordinator? = nil
 
-    @MainActor
-    public init(view: AnyView) {
-        self.view = view.platformView()
+    public init(view: OSView) {
+        self.view = view
         super.init(data: nil, ofType: nil)
     }
     

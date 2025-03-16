@@ -15,10 +15,29 @@ extension CodeViewCoordinator: NSTextContentStorageDelegate {
         //        var paragraphWithDisplayAttributes: NSTextParagraph? = nil
         //
         //        // First, get a copy of the paragraph from the original text storage.
-        //        let originalText = textContentStorage.textStorage!.attributedSubstring(from: range)
-        print("textcontentstorage", textContentStorage, range)
+        let line = self.paragraphRanges.firstIndex(where: { pRange in
+            pRange.intersection(range) != nil
+        })
 
-        return nil
+        print("Called for", range, "in", line ?? "nil")
+
+        guard let line, let result = self.results[line] else {
+            // No line or result was found so return this unmodified
+            // in the future we still need to do text highlighting
+            return nil
+        }
+        
+        let originalText = textContentStorage.textStorage!.attributedSubstring(from: range)
+
+        let attachment = CodeAttachment(view: result)
+        attachment.coordinator = self
+        let attachmentAttributedString = NSAttributedString(attachment: attachment)
+        
+        let newText = NSMutableAttributedString(attributedString: originalText)
+        newText.append(attachmentAttributedString)
+
+        return NSTextParagraph(attributedString: newText)
+
         //        if originalText.attribute(.commentDepth, at: 0, effectiveRange: nil) != nil {
         //            // Use white colored text to make our comments visible against the bright background.
         //            let displayAttributes: [NSAttributedString.Key: AnyObject] = [.font: commentFont, .foregroundColor: commentColor]
