@@ -31,15 +31,19 @@ extension CodeViewCoordinator: NSTextContentStorageDelegate {
         }
         
         let attachment = CodeAttachment(view: result)
-        attachment.coordinator = self
+//        attachment.coordinator = self
+//        let attributedString = AttributedString("\(UnicodeScalar(NSTextAttachment.character)!)", attributes: AttributeContainer.attachment(attachment))
         
-        let newText = NSMutableAttributedString(attachment: attachment)
+        let newText = NSMutableAttributedString(attributedString: originalText)
+        newText.append(NSAttributedString(attachment: attachment))
+//        let newText = NSMutableAttributedString(attachment: attachment)
 //        newText.append(NSAttributedString(string: "\n"))
 //        newText.insert(originalText, at: 0)
-        newText.append(originalText)
+//        newText.append(originalText)
 //        newText.append(NSAttributedString(attachment: attachment))
 //        newText.endEditing()
 
-        return NSTextParagraph(attributedString: newText)
+        let pg = NSTextParagraph(attributedString: newText)
+        return pg
     }
 }

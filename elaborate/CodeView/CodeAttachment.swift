@@ -16,9 +16,8 @@ import SwiftUI
 //    }
 //}
 
-class CodeAttachment: NSTextAttachment {
+final class CodeAttachment: NSTextAttachment {
     let view: OSView
-    weak var coordinator: CodeViewCoordinator? = nil
 
     public init(view: OSView) {
         self.view = view

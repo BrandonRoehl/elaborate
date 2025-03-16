@@ -87,31 +87,33 @@ public class CodeViewCoordinator: NSObject {
 //        self.textStorage.setAttributedString(NSAttributedString(string: self.text.wrappedValue))
         // Notify that the content has changed
         
-        var start: Int = Int.max
-        var end: Int = Int.min
-        for (line, _) in self.results {
+//        var start: Int = Int.max
+//        var end: Int = Int.min
+        for line in self.results.keys.sorted(by: <) {
             let line = line + 1
             guard line < self.paragraphRanges.count else { continue }
             let range = self.paragraphRanges[line]
-            if range.lowerBound < start {
-                start = range.lowerBound
-            }
-            if range.upperBound > end {
-                end = range.upperBound
-            }
-        }
-        if start < end {
-            if end > self.textStorage.length {
-                end = self.textStorage.length
-            }
-            let range = NSRange(location: start, length: end-start)
-            print("updating range", range)
-            
+            print("update", range)
             self.textStorage.edited(.editedCharacters, range: range, changeInLength: 0)
-//            if let tr = range.convertToTextRange(in: self.textLayoutManager) {
-//                self.textLayoutManager.ensureLayout(for: tr)
+//            if range.lowerBound < start {
+//                start = range.lowerBound
+//            }
+//            if range.upperBound > end {
+//                end = range.upperBound
 //            }
         }
+//        if start < end {
+//            if end > self.textStorage.length {
+//                end = self.textStorage.length
+//            }
+//            let range = NSRange(location: start, length: end-start)
+//            print("updating range", range)
+//            
+//            self.textStorage.edited(.editedCharacters, range: range, changeInLength: 0)
+////            if let tr = range.convertToTextRange(in: self.textLayoutManager) {
+////                self.textLayoutManager.ensureLayout(for: tr)
+////            }
+//        }
 
         // For views using TextKit 2
 //        textView.layoutManager.ensureLayout(for: textView.visibleRect)
