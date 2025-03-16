@@ -78,23 +78,26 @@ public class CodeViewCoordinator: NSObject {
         
         // get the reverse sort of the lines so we don't mess up the indexes
         // somehow do this without editing the view
-        let pgs = self.textStorage.paragraphs.count
-        let lines = self.results.keys.sorted(by: >)
-        self.performSuppressedEditingTransaction {
-            for line in lines {
-                let attachment = CodeAttachment(view: self.results[line]!)
-                attachment.coordinator = self
-                let attachmentAttributedString = NSAttributedString(attachment: attachment)
-                
-                if line >= pgs {
-                    self.textStorage.append(attachmentAttributedString)
-                } else {
-                    self.textStorage.paragraphs[line].append(attachmentAttributedString)
-                }
-            }
-        }
+//        let pgs = self.textStorage.paragraphs.count
+//        let lines = self.results.keys.sorted(by: >)
+//        self.performSuppressedEditingTransaction {
+//            for line in lines {
+//                let attachment = CodeAttachment(view: self.results[line]!)
+//                attachment.coordinator = self
+//                let attachmentAttributedString = NSAttributedString(attachment: attachment)
+//                let newPG = NSTextParagraph(attributedString: attachmentAttributedString)
+//                
+//                if line >= pgs {
+//                    self.textStorage.append(attachmentAttributedString)
+//                } else {
+//                    self.textStorage.paragraphs[line].append(attachmentAttributedString)
+//                }
+//            }
+//        }
     }
     
+    var paragraphRanges: [NSRange] = []
+
     let editing = NSLock()
 
     @MainActor
