@@ -20,10 +20,15 @@ extension CodeViewCoordinator: NSTextStorageDelegate {
         range editedRange: NSRange,
         changeInLength delta: Int
     ) {
-        guard editedMask.contains(.editedCharacters) else { return }
+        guard editedMask.contains(.editedCharacters) && self.editing.try() else { return }
+        // Yes this unlocks before the task finishes. That is fine we just need
+        // to ensure its on the queue and then unlock it
+        defer { self.editing.unlock() }
 
         Task { @MainActor [binding = self.text, text = textStorage.string] in
-            binding.wrappedValue = text
+            self.performSuppressedEditingTransaction {
+                binding.wrappedValue = text
+            }
         }
     }
 }

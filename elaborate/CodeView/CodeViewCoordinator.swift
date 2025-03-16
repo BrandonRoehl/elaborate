@@ -80,7 +80,7 @@ public class CodeViewCoordinator: NSObject {
         // somehow do this without editing the view
         let pgs = self.textStorage.paragraphs.count
         let lines = self.results.keys.sorted(by: >)
-        self.textContentStorage.performEditingTransaction {
+        self.performSuppressedEditingTransaction {
             for line in lines {
                 let attachment = CodeAttachment(view: self.results[line]!)
                 attachment.coordinator = self
@@ -91,6 +91,17 @@ public class CodeViewCoordinator: NSObject {
                 } else {
                     self.textStorage.paragraphs[line].append(attachmentAttributedString)
                 }
+            }
+        }
+    }
+    
+    let editing = NSLock()
+
+    @MainActor
+    func performSuppressedEditingTransaction(_ transaction: () -> Void) {
+        self.editing.withLock {
+            self.textContentStorage.performEditingTransaction {
+                transaction()
             }
         }
     }
