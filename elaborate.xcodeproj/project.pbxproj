@@ -37,6 +37,7 @@
 		559354F32D8712D700FCFE4A /* CodeAttachment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 559354E42D8712D700FCFE4A /* CodeAttachment.swift */; };
 		559354F42D8712D700FCFE4A /* NSCodeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 559354EA2D8712D700FCFE4A /* NSCodeView.swift */; };
 		559354F62D871B0900FCFE4A /* PlatformView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 559354F52D871B0300FCFE4A /* PlatformView.swift */; };
+		559355002D87457600FCFE4A /* NSRange+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 559354FF2D87456F00FCFE4A /* NSRange+Extension.swift */; };
 		55C583392D2B501200AFB1C8 /* Elb.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 557A56972D1A6DD800209EFF /* Elb.xcframework */; };
 		55C5833A2D2B501200AFB1C8 /* Elb.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 557A56972D1A6DD800209EFF /* Elb.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
@@ -102,6 +103,7 @@
 		559354EA2D8712D700FCFE4A /* NSCodeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NSCodeView.swift; sourceTree = "<group>"; };
 		559354EB2D8712D700FCFE4A /* UICodeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UICodeView.swift; sourceTree = "<group>"; };
 		559354F52D871B0300FCFE4A /* PlatformView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlatformView.swift; sourceTree = "<group>"; };
+		559354FF2D87456F00FCFE4A /* NSRange+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSRange+Extension.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -240,6 +242,7 @@
 				559354E72D8712D700FCFE4A /* CodeStorageDelegate.swift */,
 				559354E82D8712D700FCFE4A /* CodeView.swift */,
 				559354E92D8712D700FCFE4A /* CodeViewCoordinator.swift */,
+				559354FF2D87456F00FCFE4A /* NSRange+Extension.swift */,
 				559354EA2D8712D700FCFE4A /* NSCodeView.swift */,
 				559354EB2D8712D700FCFE4A /* UICodeView.swift */,
 				559354F52D871B0300FCFE4A /* PlatformView.swift */,
@@ -404,6 +407,7 @@
 				552E75282D49B98C00F34A32 /* ResultView.swift in Sources */,
 				5519F93F2D50105000823450 /* Transport+Extentions.swift in Sources */,
 				556ABF632D17A2C7004D6A05 /* ContentView.swift in Sources */,
+				559355002D87457600FCFE4A /* NSRange+Extension.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
