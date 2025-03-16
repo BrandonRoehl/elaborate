@@ -15,11 +15,13 @@ extension CodeViewCoordinator: NSTextContentStorageDelegate {
         //        var paragraphWithDisplayAttributes: NSTextParagraph? = nil
         //
         //        // First, get a copy of the paragraph from the original text storage.
+        let originalText = textContentStorage.textStorage!.attributedSubstring(from: range)
+
         let line = self.paragraphRanges.firstIndex(where: { pRange in
             pRange.intersection(range) != nil
         }).map { $0 + 1 }
 
-        print("Called for", range, "in", line ?? "nil")
+        print("Called for", range, "in", line ?? "nil", originalText.string)
 
 //        return nil
         guard let line, let result = self.results[line] else {
@@ -28,17 +30,15 @@ extension CodeViewCoordinator: NSTextContentStorageDelegate {
             return nil
         }
         
-        let newRange = NSRange(location: range.location, length: range.length)
-        let originalText = textContentStorage.textStorage!.attributedSubstring(from: newRange)
-
         let attachment = CodeAttachment(view: result)
         attachment.coordinator = self
         
-        let newText = NSMutableAttributedString()
-        newText.beginEditing()
+        let newText = NSMutableAttributedString(attachment: attachment)
+//        newText.append(NSAttributedString(string: "\n"))
+//        newText.insert(originalText, at: 0)
         newText.append(originalText)
-        newText.append(NSAttributedString(string: "\n"))
-        newText.append(NSAttributedString(attachment: attachment))
+//        newText.append(NSAttributedString(attachment: attachment))
+//        newText.endEditing()
 
         return NSTextParagraph(attributedString: newText)
     }

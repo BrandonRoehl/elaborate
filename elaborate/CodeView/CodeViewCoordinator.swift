@@ -90,6 +90,7 @@ public class CodeViewCoordinator: NSObject {
         var start: Int = Int.max
         var end: Int = Int.min
         for (line, _) in self.results {
+            let line = line + 1
             guard line < self.paragraphRanges.count else { continue }
             let range = self.paragraphRanges[line]
             if range.lowerBound < start {
@@ -105,11 +106,11 @@ public class CodeViewCoordinator: NSObject {
             }
             let range = NSRange(location: start, length: end-start)
             print("updating range", range)
-            self.textContentStorage.processEditing(for: self.textStorage, edited: .editedAttributes, range: range, changeInLength: range.length, invalidatedRange: range)
             
-            if let tr = range.convertToTextRange(in: self.textLayoutManager) {
-                self.textLayoutManager.ensureLayout(for: tr)
-            }
+            self.textStorage.edited(.editedCharacters, range: range, changeInLength: 0)
+//            if let tr = range.convertToTextRange(in: self.textLayoutManager) {
+//                self.textLayoutManager.ensureLayout(for: tr)
+//            }
         }
 
         // For views using TextKit 2
