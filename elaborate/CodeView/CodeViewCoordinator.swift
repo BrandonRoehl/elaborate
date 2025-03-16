@@ -75,30 +75,22 @@ public class CodeViewCoordinator: NSObject {
 //
         // Re-load the text without formatting
 //        self.textStorage.setAttributedString(NSAttributedString(string: self.text.wrappedValue))
-        for (line, view) in self.results {
-            let insertIndex = textLayoutManager.documentRange.location
-            
-            let view = view.platformView()
-            let attachment = NSTextAttachment(data: nil, ofType: nil)
-            let provider = NSTextAttachmentViewProvider(textAttachment: attachment, parentView: view, textLayoutManager: self.textLayoutManager, location: insertIndex)
-//            self.textContentStorage.performEditingTransaction {
-//                self.textStorage.insert(attachment, at: insertIndex as! Int)
-//            }
+        
+        // get the reverse sort of the lines so we don't mess up the indexes
+        // somehow do this without editing the view
+        let lines = self.results.keys.sorted(by: >)
+        self.textContentStorage.performEditingTransaction {
+            for line in lines {
+                let attachment = CodeAttachment(view: self.results[line]!)
+                attachment.coordinator = self
+                let attachmentAttributedString = NSAttributedString(attachment: attachment)
+//                self.textStorage.paragraphs[line].append(attachmentAttributedString)
+                self.textStorage.append(attachmentAttributedString)
+            }
         }
     }
 }
 
-fileprivate extension View {
-#if os(macOS)
-    @MainActor @inline(__always) func platformView() -> some NSView {
-        return NSHostingView(rootView: self)
-    }
-#elseif os(iOS) || targetEnvironment(macCatalyst)
-    @MainActor @inline(__always) func platformView() -> some UIView {
-        return UIHostingController(rootView: self).view
-    }
-#endif
-}
 
 extension CodeView {
     @MainActor public func makeCoordinator() -> CodeViewCoordinator {

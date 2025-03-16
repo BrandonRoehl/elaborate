@@ -11,7 +11,6 @@
 		5519F93F2D50105000823450 /* Transport+Extentions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5519F93E2D50105000823450 /* Transport+Extentions.swift */; };
 		552E75282D49B98C00F34A32 /* ResultView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 552E75272D49B98600F34A32 /* ResultView.swift */; };
 		553B935A2D263F2C001397D7 /* AsyncAlgorithms in Frameworks */ = {isa = PBXBuildFile; productRef = 553B93592D263F2C001397D7 /* AsyncAlgorithms */; };
-		555805C22D74C01500209D00 /* CodeView in Frameworks */ = {isa = PBXBuildFile; productRef = 555805C12D74C01500209D00 /* CodeView */; };
 		556ABF5F2D17A2C7004D6A05 /* ElaborateApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 556ABF5E2D17A2C7004D6A05 /* ElaborateApp.swift */; };
 		556ABF612D17A2C7004D6A05 /* ElaborateDocument.swift in Sources */ = {isa = PBXBuildFile; fileRef = 556ABF602D17A2C7004D6A05 /* ElaborateDocument.swift */; };
 		556ABF632D17A2C7004D6A05 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 556ABF622D17A2C7004D6A05 /* ContentView.swift */; };
@@ -37,6 +36,7 @@
 		559354F22D8712D700FCFE4A /* CodeStorageDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 559354E72D8712D700FCFE4A /* CodeStorageDelegate.swift */; };
 		559354F32D8712D700FCFE4A /* CodeAttachment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 559354E42D8712D700FCFE4A /* CodeAttachment.swift */; };
 		559354F42D8712D700FCFE4A /* NSCodeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 559354EA2D8712D700FCFE4A /* NSCodeView.swift */; };
+		559354F62D871B0900FCFE4A /* PlatformView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 559354F52D871B0300FCFE4A /* PlatformView.swift */; };
 		55C583392D2B501200AFB1C8 /* Elb.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 557A56972D1A6DD800209EFF /* Elb.xcframework */; };
 		55C5833A2D2B501200AFB1C8 /* Elb.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 557A56972D1A6DD800209EFF /* Elb.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
@@ -101,6 +101,7 @@
 		559354E92D8712D700FCFE4A /* CodeViewCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CodeViewCoordinator.swift; sourceTree = "<group>"; };
 		559354EA2D8712D700FCFE4A /* NSCodeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NSCodeView.swift; sourceTree = "<group>"; };
 		559354EB2D8712D700FCFE4A /* UICodeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UICodeView.swift; sourceTree = "<group>"; };
+		559354F52D871B0300FCFE4A /* PlatformView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlatformView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -131,7 +132,6 @@
 			files = (
 				557A56962D1A6CAA00209EFF /* SwiftProtobuf in Frameworks */,
 				55C583392D2B501200AFB1C8 /* Elb.xcframework in Frameworks */,
-				555805C22D74C01500209D00 /* CodeView in Frameworks */,
 				553B935A2D263F2C001397D7 /* AsyncAlgorithms in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -242,6 +242,7 @@
 				559354E92D8712D700FCFE4A /* CodeViewCoordinator.swift */,
 				559354EA2D8712D700FCFE4A /* NSCodeView.swift */,
 				559354EB2D8712D700FCFE4A /* UICodeView.swift */,
+				559354F52D871B0300FCFE4A /* PlatformView.swift */,
 			);
 			path = CodeView;
 			sourceTree = "<group>";
@@ -396,6 +397,7 @@
 				559354F12D8712D700FCFE4A /* CodeViewCoordinator.swift in Sources */,
 				559354F22D8712D700FCFE4A /* CodeStorageDelegate.swift in Sources */,
 				559354F32D8712D700FCFE4A /* CodeAttachment.swift in Sources */,
+				559354F62D871B0900FCFE4A /* PlatformView.swift in Sources */,
 				559354F42D8712D700FCFE4A /* NSCodeView.swift in Sources */,
 				556ABF5F2D17A2C7004D6A05 /* ElaborateApp.swift in Sources */,
 				557A56A32D1A6FF700209EFF /* transport.proto in Sources */,
@@ -797,10 +799,6 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 553B93582D263F2C001397D7 /* XCRemoteSwiftPackageReference "swift-async-algorithms" */;
 			productName = AsyncAlgorithms;
-		};
-		555805C12D74C01500209D00 /* CodeView */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = CodeView;
 		};
 		557A56952D1A6CAA00209EFF /* SwiftProtobuf */ = {
 			isa = XCSwiftPackageProductDependency;
