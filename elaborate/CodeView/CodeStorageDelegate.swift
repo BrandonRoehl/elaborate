@@ -22,19 +22,14 @@ extension CodeViewCoordinator: NSTextStorageDelegate {
     ) {
         guard editedMask.contains(.editedCharacters) else { return }
         
+        let text = textStorage.string
+        
         // Hate to do this but keep track of the ranges of each paragraph
         var paragraphRanges: [NSRange] = []
-        var currentLocation = 0
-        while currentLocation < textStorage.length {
-            // Get the effective paragraph style at the current location
-            var range = NSRange(location: currentLocation, length: 0)
-            let paragraphStyle = textStorage.attribute(.paragraphStyle, at: currentLocation, effectiveRange: &range) as? NSParagraphStyle
-            
-            // Add the range to our collection
-            paragraphRanges.append(range)
-            
-            // Move to the next paragraph
-            currentLocation = NSMaxRange(range)
+        text.enumerateSubstrings(in: text.startIndex..<text.endIndex, options: .byParagraphs) { (substring, substringRange, enclosingRange, stop) in
+            // Convert Swift range to NSRange
+            let nsRange = NSRange(enclosingRange, in: text)
+            paragraphRanges.append(nsRange)
         }
         self.paragraphRanges = paragraphRanges
 
