@@ -41,6 +41,7 @@ extension CodeView: NSViewRepresentable {
 //        let ranges = textView.selectedRanges
 //        defer { textView.selectedRanges = ranges }
         context.coordinator.update(self)
+//        scrollView.setNeedsDisplay(scrollView.bounds)
     }
 }
 #endif

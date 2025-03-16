@@ -28,12 +28,14 @@ extension CodeViewCoordinator: NSTextContentStorageDelegate {
             return nil
         }
         
-        let originalText = textContentStorage.textStorage!.attributedSubstring(from: range)
+        let newRange = NSRange(location: range.location, length: range.length)
+        let originalText = textContentStorage.textStorage!.attributedSubstring(from: newRange)
 
         let attachment = CodeAttachment(view: result)
         attachment.coordinator = self
         
         let newText = NSMutableAttributedString(attachment: attachment)
+        newText.append(NSAttributedString(string: "\n"))
         newText.append(originalText)
 
         return NSTextParagraph(attributedString: newText)

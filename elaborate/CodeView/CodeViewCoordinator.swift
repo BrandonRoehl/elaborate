@@ -87,10 +87,29 @@ public class CodeViewCoordinator: NSObject {
 //        self.textStorage.setAttributedString(NSAttributedString(string: self.text.wrappedValue))
         // Notify that the content has changed
         
+        var start: Int = Int.max
+        var end: Int = Int.min
         for (line, _) in self.results {
             guard line < self.paragraphRanges.count else { continue }
             let range = self.paragraphRanges[line]
-            textContentStorage.processEditing(for: self.textStorage, edited: .editedAttributes, range: range, changeInLength: range.length, invalidatedRange: range)
+            if range.lowerBound < start {
+                start = range.lowerBound
+            }
+            if range.upperBound > end {
+                end = range.upperBound
+            }
+        }
+        if start < end {
+            if end > self.textStorage.length {
+                end = self.textStorage.length
+            }
+            let range = NSRange(location: start, length: end-start)
+            print("updating range", range)
+            self.textContentStorage.processEditing(for: self.textStorage, edited: .editedAttributes, range: range, changeInLength: range.length, invalidatedRange: range)
+            
+            if let tr = range.convertToTextRange(in: self.textLayoutManager) {
+                self.textLayoutManager.ensureLayout(for: tr)
+            }
         }
 
         // For views using TextKit 2

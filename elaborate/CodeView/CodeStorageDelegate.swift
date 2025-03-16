@@ -28,7 +28,7 @@ extension CodeViewCoordinator: NSTextStorageDelegate {
         var paragraphRanges: [NSRange] = []
         text.enumerateSubstrings(in: text.startIndex..<text.endIndex, options: .byParagraphs) { (substring, substringRange, enclosingRange, stop) in
             // Convert Swift range to NSRange
-            let nsRange = NSRange(substringRange, in: text)
+            let nsRange = NSRange(enclosingRange, in: text)
             paragraphRanges.append(nsRange)
         }
         self.paragraphRanges = paragraphRanges
