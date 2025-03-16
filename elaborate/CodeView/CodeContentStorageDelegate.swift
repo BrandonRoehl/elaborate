@@ -17,7 +17,7 @@ extension CodeViewCoordinator: NSTextContentStorageDelegate {
         //        // First, get a copy of the paragraph from the original text storage.
         let line = self.paragraphRanges.firstIndex(where: { pRange in
             pRange.intersection(range) != nil
-        })
+        }).map { $0 + 1 }
 
         print("Called for", range, "in", line ?? "nil")
 
@@ -34,9 +34,11 @@ extension CodeViewCoordinator: NSTextContentStorageDelegate {
         let attachment = CodeAttachment(view: result)
         attachment.coordinator = self
         
-        let newText = NSMutableAttributedString(attachment: attachment)
-        newText.append(NSAttributedString(string: "\n"))
+        let newText = NSMutableAttributedString()
+        newText.beginEditing()
         newText.append(originalText)
+        newText.append(NSAttributedString(string: "\n"))
+        newText.append(NSAttributedString(attachment: attachment))
 
         return NSTextParagraph(attributedString: newText)
     }
