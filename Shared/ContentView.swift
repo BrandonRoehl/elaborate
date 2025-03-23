@@ -44,7 +44,7 @@ struct ContentView: View {
     @State var stream = AsyncChannel<ElaborateDocument>()
     
     var body: some View {
-        CodeView(text: $document.text, results: $messages)
+        EmptyView()
         .scrollDismissesKeyboard(.interactively)
         .toolbarRole(.editor)
         .toolbar {

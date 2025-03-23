@@ -33,15 +33,15 @@ extension CodeViewCoordinator: NSTextStorageDelegate {
         }
         self.paragraphRanges = paragraphRanges
 
-        guard self.editing.try() else { return }
-        // Yes this unlocks before the task finishes. That is fine we just need
-        // to ensure its on the queue and then unlock it
-        defer { self.editing.unlock() }
-
-        Task { @MainActor [binding = self.text, text = textStorage.string] in
-            self.performSuppressedEditingTransaction {
-                binding.wrappedValue = text
-            }
-        }
+//        guard self.editing.try() else { return }
+//        // Yes this unlocks before the task finishes. That is fine we just need
+//        // to ensure its on the queue and then unlock it
+//        self.editing.unlock()
+//
+//        Task { @MainActor [binding = self.text, text = textStorage.string] in
+//            self.performSuppressedEditingTransaction {
+//                binding.wrappedValue = text
+//            }
+//        }
     }
 }

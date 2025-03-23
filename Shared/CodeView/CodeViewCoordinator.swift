@@ -27,12 +27,10 @@ public class CodeViewCoordinator: NSObject {
     let textLayoutManager: NSTextLayoutManager
     let textContentStorage: NSTextContentStorage
 
-    var text: Binding<String>
     var results: [Int: OSView]
 
-    @MainActor init<T>(_ codeView: borrowing CodeView<T>) {
-        self.text = codeView.$text
-        self.results = codeView.results.mapValues { $0.platformView() }
+    override init() {
+        self.results = [:]
 
         // Initilize the container first
         self.textStorage = NSTextStorage()
@@ -57,15 +55,7 @@ public class CodeViewCoordinator: NSObject {
         self.textLayoutManager.textContainer = self.textContainer
         
         // At the end refresh the contents
-        self.refreshView()
-    }
-
-    @MainActor func update<T>(_ codeView: borrowing CodeView<T>) {
-        self.text = codeView.$text
-        self.results = codeView.results.mapValues { $0.platformView() }
-
-        // At the end refresh the contents
-        self.refreshView()
+//        self.refreshView()
     }
     
     @MainActor private func refreshView() {
@@ -153,8 +143,3 @@ public class CodeViewCoordinator: NSObject {
 }
 
 
-extension CodeView {
-    @MainActor public func makeCoordinator() -> CodeViewCoordinator {
-        return CodeViewCoordinator(self)
-    }
-}

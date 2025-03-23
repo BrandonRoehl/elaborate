@@ -66,27 +66,35 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		555A408F2D90A640002EDCBA /* PBXFileSystemSynchronizedBuildFileExceptionSet */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				NSCodeView.swift,
+			);
+			target = 5587D18B2D9053CE00FC75F8 /* iOS */;
+		};
+		555A40902D90A653002EDCBA /* PBXFileSystemSynchronizedBuildFileExceptionSet */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				UICodeView.swift,
+			);
+			target = 5587D1742D90539F00FC75F8 /* macOS */;
+		};
 		5587D1E92D90586A00FC75F8 /* PBXFileSystemSynchronizedBuildFileExceptionSet */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				Assets.xcassets,
-				CodeView/CodeAttachment.swift,
 				CodeView/CodeContentStorageDelegate.swift,
 				CodeView/CodeLayoutManagerDelegate.swift,
 				CodeView/CodeStorageDelegate.swift,
-				CodeView/CodeView.swift,
 				CodeView/CodeViewCoordinator.swift,
-				CodeView/NSCodeView.swift,
 				"CodeView/NSRange+Extension.swift",
-				CodeView/PlatformView.swift,
-				CodeView/UICodeView.swift,
+				Content.swift,
 				ContentView.swift,
 				ElaborateApp.swift,
 				ElaborateDocument.swift,
 				Info.plist,
 				"PreviewContent/Preview Assets.xcassets",
-				ResultGroup.swift,
-				ResultView.swift,
 				"Transport+Extentions.swift",
 			);
 			target = 556ABF6E2D17A2CA004D6A05 /* elaborateTests */;
@@ -95,23 +103,17 @@
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				Assets.xcassets,
-				CodeView/CodeAttachment.swift,
 				CodeView/CodeContentStorageDelegate.swift,
 				CodeView/CodeLayoutManagerDelegate.swift,
 				CodeView/CodeStorageDelegate.swift,
-				CodeView/CodeView.swift,
 				CodeView/CodeViewCoordinator.swift,
-				CodeView/NSCodeView.swift,
 				"CodeView/NSRange+Extension.swift",
-				CodeView/PlatformView.swift,
-				CodeView/UICodeView.swift,
+				Content.swift,
 				ContentView.swift,
 				ElaborateApp.swift,
 				ElaborateDocument.swift,
 				Info.plist,
 				"PreviewContent/Preview Assets.xcassets",
-				ResultGroup.swift,
-				ResultView.swift,
 				"Transport+Extentions.swift",
 			);
 			target = 556ABF782D17A2CA004D6A05 /* elaborateUITests */;
@@ -119,8 +121,8 @@
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
-		5587D1762D90539F00FC75F8 /* macOS */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = macOS; sourceTree = "<group>"; };
-		5587D18D2D9053CE00FC75F8 /* iOS */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = iOS; sourceTree = "<group>"; };
+		5587D1762D90539F00FC75F8 /* macOS */ = {isa = PBXFileSystemSynchronizedRootGroup; exceptions = (555A408F2D90A640002EDCBA /* PBXFileSystemSynchronizedBuildFileExceptionSet */, ); explicitFileTypes = {}; explicitFolders = (); path = macOS; sourceTree = "<group>"; };
+		5587D18D2D9053CE00FC75F8 /* iOS */ = {isa = PBXFileSystemSynchronizedRootGroup; exceptions = (555A40902D90A653002EDCBA /* PBXFileSystemSynchronizedBuildFileExceptionSet */, ); explicitFileTypes = {}; explicitFolders = (); path = iOS; sourceTree = "<group>"; };
 		5587D1E02D90585500FC75F8 /* Shared */ = {isa = PBXFileSystemSynchronizedRootGroup; exceptions = (5587D1E92D90586A00FC75F8 /* PBXFileSystemSynchronizedBuildFileExceptionSet */, 5587D1EA2D90586A00FC75F8 /* PBXFileSystemSynchronizedBuildFileExceptionSet */, ); explicitFileTypes = {}; explicitFolders = (); path = Shared; sourceTree = "<group>"; };
 /* End PBXFileSystemSynchronizedRootGroup section */
 
