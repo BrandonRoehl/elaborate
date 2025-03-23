@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-@main
+//@main
 struct ElaborateApp: App {
     var body: some Scene {
         DocumentGroup(newDocument: ElaborateDocument()) { file in
