@@ -16,6 +16,8 @@
 		557A569D2D1A6FB800209EFF /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = 557A569B2D1A6FB800209EFF /* README.md */; };
 		557A56A42D1A6FF700209EFF /* transport.proto in Sources */ = {isa = PBXBuildFile; fileRef = 557A56A22D1A6FF700209EFF /* transport.proto */; };
 		557A56A52D1A6FF700209EFF /* transport.proto in Sources */ = {isa = PBXBuildFile; fileRef = 557A56A22D1A6FF700209EFF /* transport.proto */; };
+		5587D1C02D90570100FC75F8 /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 556ABF662D17A2C9004D6A05 /* Info.plist */; };
+		5587D1C12D90570100FC75F8 /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 556ABF662D17A2C9004D6A05 /* Info.plist */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -53,20 +55,6 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
-		5587D1842D90539F00FC75F8 /* PBXFileSystemSynchronizedBuildFileExceptionSet */ = {
-			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
-			membershipExceptions = (
-				Info.plist,
-			);
-			target = 5587D1742D90539F00FC75F8 /* macOS */;
-		};
-		5587D19C2D9053CF00FC75F8 /* PBXFileSystemSynchronizedBuildFileExceptionSet */ = {
-			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
-			membershipExceptions = (
-				Info.plist,
-			);
-			target = 5587D18B2D9053CE00FC75F8 /* iOS */;
-		};
 		55E0FEAB2D1B6F1E00344C57 /* PBXFileSystemSynchronizedBuildFileExceptionSet */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
@@ -84,8 +72,8 @@
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
-		5587D1762D90539F00FC75F8 /* macOS */ = {isa = PBXFileSystemSynchronizedRootGroup; exceptions = (5587D1842D90539F00FC75F8 /* PBXFileSystemSynchronizedBuildFileExceptionSet */, ); explicitFileTypes = {}; explicitFolders = (); path = macOS; sourceTree = "<group>"; };
-		5587D18D2D9053CE00FC75F8 /* iOS */ = {isa = PBXFileSystemSynchronizedRootGroup; exceptions = (5587D19C2D9053CF00FC75F8 /* PBXFileSystemSynchronizedBuildFileExceptionSet */, ); explicitFileTypes = {}; explicitFolders = (); path = iOS; sourceTree = "<group>"; };
+		5587D1762D90539F00FC75F8 /* macOS */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = macOS; sourceTree = "<group>"; };
+		5587D18D2D9053CE00FC75F8 /* iOS */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = iOS; sourceTree = "<group>"; };
 		55E0FEAA2D1B6F1800344C57 /* transport */ = {isa = PBXFileSystemSynchronizedRootGroup; exceptions = (55E0FEAB2D1B6F1E00344C57 /* PBXFileSystemSynchronizedBuildFileExceptionSet */, 55E0FEAC2D1B6F1E00344C57 /* PBXFileSystemSynchronizedBuildFileExceptionSet */, ); explicitFileTypes = {}; explicitFolders = (); path = transport; sourceTree = "<group>"; };
 /* End PBXFileSystemSynchronizedRootGroup section */
 
@@ -137,7 +125,7 @@
 				557A56972D1A6DD800209EFF /* Elb.xcframework */,
 				5587D1762D90539F00FC75F8 /* macOS */,
 				5587D18D2D9053CE00FC75F8 /* iOS */,
-				556ABF5D2D17A2C7004D6A05 /* elaborate */,
+				556ABF5D2D17A2C7004D6A05 /* Shared */,
 				556ABF722D17A2CA004D6A05 /* elaborateTests */,
 				556ABF7C2D17A2CA004D6A05 /* elaborateUITests */,
 				556ABF5C2D17A2C7004D6A05 /* Products */,
@@ -158,7 +146,7 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
-		556ABF5D2D17A2C7004D6A05 /* elaborate */ = {
+		556ABF5D2D17A2C7004D6A05 /* Shared */ = {
 			isa = PBXGroup;
 			children = (
 				55E0FEAA2D1B6F1800344C57 /* transport */,
@@ -174,7 +162,7 @@
 				556ABF672D17A2C9004D6A05 /* elaborate.entitlements */,
 				556ABF682D17A2C9004D6A05 /* Preview Content */,
 			);
-			path = elaborate;
+			path = Shared;
 			sourceTree = "<group>";
 		};
 		556ABF682D17A2C9004D6A05 /* Preview Content */ = {
@@ -343,10 +331,10 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				556ABF6E2D17A2CA004D6A05 /* elaborateTests */,
-				556ABF782D17A2CA004D6A05 /* elaborateUITests */,
 				5587D1742D90539F00FC75F8 /* macOS */,
 				5587D18B2D9053CE00FC75F8 /* iOS */,
+				556ABF6E2D17A2CA004D6A05 /* elaborateTests */,
+				556ABF782D17A2CA004D6A05 /* elaborateUITests */,
 			);
 		};
 /* End PBXProject section */
@@ -372,6 +360,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				5587D1C02D90570100FC75F8 /* Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -379,6 +368,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				5587D1C12D90570100FC75F8 /* Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -626,14 +616,15 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_ENTITLEMENTS = macOS/macOS.entitlements;
+				CODE_SIGN_ENTITLEMENTS = Shared/elaborate.entitlements;
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = V7JGZY6Z4Z;
 				ENABLE_HARDENED_RUNTIME = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = macOS/Info.plist;
+				INFOPLIST_FILE = Shared/Info.plist;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				INFOPLIST_KEY_NSMainStoryboardFile = Main;
 				INFOPLIST_KEY_NSPrincipalClass = NSApplication;
@@ -656,14 +647,15 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_ENTITLEMENTS = macOS/macOS.entitlements;
+				CODE_SIGN_ENTITLEMENTS = Shared/elaborate.entitlements;
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = V7JGZY6Z4Z;
 				ENABLE_HARDENED_RUNTIME = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = macOS/Info.plist;
+				INFOPLIST_FILE = Shared/Info.plist;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				INFOPLIST_KEY_NSMainStoryboardFile = Main;
 				INFOPLIST_KEY_NSPrincipalClass = NSApplication;
@@ -690,7 +682,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = V7JGZY6Z4Z;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = iOS/Info.plist;
+				INFOPLIST_FILE = Shared/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
@@ -720,7 +712,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = V7JGZY6Z4Z;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = iOS/Info.plist;
+				INFOPLIST_FILE = Shared/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
