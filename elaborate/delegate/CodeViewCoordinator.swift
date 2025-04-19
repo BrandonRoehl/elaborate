@@ -39,7 +39,12 @@ public class CodeViewCoordinator: NSObject {
         self.textStorage = NSTextStorage()
         self.textContainer = NSTextContainer()
         self.textLayoutManager = NSTextLayoutManager()
+        // customize NSTextContentManager.textElement(for:) on the
+        // NSTextContentStorage to return vitrual elements
         self.textContentStorage = NSTextContentStorage()
+        
+//        NSTextContentManager
+//        text content manager to add stuff that isn't in storage
 
         super.init()
 
