@@ -11,6 +11,7 @@ extension CodeViewCoordinator: NSTextContentStorageDelegate {
     public func textContentStorage(
         _ textContentStorage: NSTextContentStorage, textParagraphWith range: NSRange
     ) -> NSTextParagraph? {
+        return nil
         //        // In this method, we'll inject some attributes for display, without modifying the text storage directly.
         //        var paragraphWithDisplayAttributes: NSTextParagraph? = nil
         //

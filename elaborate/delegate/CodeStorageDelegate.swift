@@ -13,8 +13,8 @@
     public typealias OSTextStorageEditActions = NSTextStorage.EditActions
 #endif
 
-extension CodeViewCoordinator: NSTextStorageDelegate {
-    public func textStorage(
+extension CodeViewCoordinator: @preconcurrency NSTextStorageDelegate {
+    @MainActor public func textStorage(
         _ textStorage: NSTextStorage,
         didProcessEditing editedMask: OSTextStorageEditActions,
         range editedRange: NSRange,
@@ -32,16 +32,5 @@ extension CodeViewCoordinator: NSTextStorageDelegate {
             paragraphRanges.append(nsRange)
         }
         self.paragraphRanges = paragraphRanges
-
-        guard self.editing.try() else { return }
-        // Yes this unlocks before the task finishes. That is fine we just need
-        // to ensure its on the queue and then unlock it
-        defer { self.editing.unlock() }
-
-        Task { @MainActor [binding = self.text, text = textStorage.string] in
-            self.performSuppressedEditingTransaction {
-                binding.wrappedValue = text
-            }
-        }
     }
 }

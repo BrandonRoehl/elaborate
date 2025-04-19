@@ -31,8 +31,9 @@ public class CodeViewCoordinator: NSObject {
     var results: [Int: OSView]
 
     @MainActor init<T>(_ codeView: borrowing CodeView<T>) {
-        self.text = codeView.$text
-        self.results = codeView.results.mapValues { $0.platformView() }
+        // Set to defaults to void dump until we get an initialized binding
+        self.text = .init(get: { "" }, set: { _ in })
+        self.results = [:]
 
         // Initilize the container first
         self.textStorage = NSTextStorage()
@@ -57,22 +58,20 @@ public class CodeViewCoordinator: NSObject {
         self.textLayoutManager.textContainer = self.textContainer
         
         // At the end refresh the contents
-        self.refreshView()
+        self.update(codeView)
     }
 
     @MainActor func update<T>(_ codeView: borrowing CodeView<T>) {
         self.text = codeView.$text
-        self.results = codeView.results.mapValues { $0.platformView() }
-
-        // At the end refresh the contents
-        self.refreshView()
-    }
-    
-    @MainActor private func refreshView() {
-//        // Make sure the selection and cursor doesn't move
-//        let selections = self.textLayoutManager.textSelections
-//        defer { self.textLayoutManager.textSelections = selections }
+        let newResults = codeView.results.mapValues { $0.platformView() }
+        defer { self.results = newResults }
+        // Make sure the selection and cursor doesn't move
+        let selections = self.textLayoutManager.textSelections
+        defer { self.textLayoutManager.textSelections = selections }
         
+        // TODO Construct the new text and results and diff them
+        // apply the diff
+
 //        for (line, _) in self.results {
 //            guard
 //                line < self.paragraphRanges.count,
@@ -139,16 +138,9 @@ public class CodeViewCoordinator: NSObject {
     }
     
     var paragraphRanges: [NSRange] = []
-
-    let editing = NSLock()
-
-    @MainActor
-    func performSuppressedEditingTransaction(_ transaction: () -> Void) {
-        self.editing.withLock {
-            self.textContentStorage.performEditingTransaction {
-                transaction()
-            }
-        }
+    
+    @MainActor func syncText() {
+        self.text.wrappedValue = textStorage.string
     }
 }
 
