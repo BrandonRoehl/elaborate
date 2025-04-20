@@ -13,7 +13,6 @@ extension CVCoordinator: NSTextContentStorageDelegate {
     public func textContentStorage(
         _ textContentStorage: NSTextContentStorage, textParagraphWith range: NSRange
     ) -> NSTextParagraph? {
-        return nil
         //        // In this method, we'll inject some attributes for display, without modifying the text storage directly.
         //        var paragraphWithDisplayAttributes: NSTextParagraph? = nil
         //
@@ -66,7 +65,7 @@ extension CVCoordinator: NSTextContentStorageDelegate {
         // You can return nil to use the default text element, or create a custom one
         // For example, you might want to customize how certain paragraphs are displayed:
         
-//        let textStorage = (textContentManager as! NSTextContentStorage)
+//        let textContentManager = (textContentManager as! NSTextContentStorage)
         /*
          // Example of returning a custom text element:
          let range = NSRange(location: offset, length: 10) // Define appropriate range
@@ -91,6 +90,15 @@ extension CVCoordinator: NSTextContentStorageDelegate {
     public func textContentManager(_ textContentManager: NSTextContentManager,
                                    shouldEnumerate textElement: NSTextElement,
                                    options: NSTextContentManager.EnumerationOptions = []) -> Bool {
+        
+        guard let range = textElement.elementRange else {
+            return true
+        }
+
+        let start = textContentManager.offset(from: textContentManager.documentRange.location, to: range.location)
+        let end = textContentManager.offset(from: textContentManager.documentRange.location, to: range.endLocation)
+        print("TextKit2 is requesting layout for text element at offset: \(start) - \(end)")
+        
         // Control whether this text element should be included in layout
         return true
     }
