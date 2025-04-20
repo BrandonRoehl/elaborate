@@ -13,7 +13,7 @@
     public typealias OSTextStorageEditActions = NSTextStorage.EditActions
 #endif
 
-extension CodeViewCoordinator: @preconcurrency NSTextStorageDelegate {
+extension CVCoordinator: @preconcurrency NSTextStorageDelegate {
     @MainActor public func textStorage(
         _ textStorage: NSTextStorage,
         didProcessEditing editedMask: OSTextStorageEditActions,

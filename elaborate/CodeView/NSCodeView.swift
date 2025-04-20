@@ -10,7 +10,7 @@ import SwiftUI
 import AppKit
 
 extension CodeView: NSViewRepresentable {
-    public typealias Coordinator = CodeViewCoordinator
+    public typealias Coordinator = CVCoordinator
     
     @MainActor public func makeNSView(context: Context) -> NSScrollView {
         let textView = NSTextView(

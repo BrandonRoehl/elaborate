@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-extension CodeViewCoordinator: NSTextLayoutManagerDelegate {
+extension CVCoordinator: NSTextLayoutManagerDelegate {
     public func textLayoutManager(
         _ textLayoutManager: NSTextLayoutManager,
         textLayoutFragmentFor location: NSTextLocation,

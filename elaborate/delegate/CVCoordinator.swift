@@ -21,7 +21,7 @@ import SwiftUI
 //    static let all: BindingUpdates = [.text, .results]
 //}
 
-public class CodeViewCoordinator: NSObject {
+public class CVCoordinator: NSObject {
     let textStorage: NSTextStorage
     let textContainer: NSTextContainer
     let textLayoutManager: NSTextLayoutManager
@@ -151,7 +151,7 @@ public class CodeViewCoordinator: NSObject {
 
 
 extension CodeView {
-    @MainActor public func makeCoordinator() -> CodeViewCoordinator {
-        return CodeViewCoordinator(self)
+    @MainActor public func makeCoordinator() -> CVCoordinator {
+        return CVCoordinator(self)
     }
 }
