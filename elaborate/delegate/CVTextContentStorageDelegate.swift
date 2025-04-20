@@ -52,7 +52,7 @@ extension CVCoordinator: NSTextContentStorageDelegate {
     
     // MARK: - NSTextContentManagerDelegate
     
-    func textContentManager(_ textContentManager: NSTextContentManager,
+    public func textContentManager(_ textContentManager: NSTextContentManager,
                                textElementAt location: NSTextLocation) -> NSTextElement? {
             // This method is called when TextKit 2 needs a text element at a specific location
             // You can customize and return a different NSTextElement than the default
@@ -87,7 +87,7 @@ extension CVCoordinator: NSTextContentStorageDelegate {
             return nil
         }
         
-        func textContentManager(_ textContentManager: NSTextContentManager,
+    public func textContentManager(_ textContentManager: NSTextContentManager,
                                shouldEnumerate textElement: NSTextElement,
                                options: NSTextContentManager.EnumerationOptions = []) -> Bool {
             // Control whether this text element should be included in layout
