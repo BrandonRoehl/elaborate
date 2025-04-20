@@ -68,28 +68,12 @@ public class CVCoordinator: NSObject {
 
     @MainActor func update<T>(_ codeView: borrowing CodeView<T>) {
         self.text = codeView.$text
-        let newResults = codeView.results.mapValues { $0.platformView() }
-        defer { self.results = newResults }
+        self.results = codeView.results.mapValues { $0.platformView() }
+//        defer { self.results = newResults }
+        
         // Make sure the selection and cursor doesn't move
         let selections = self.textLayoutManager.textSelections
         defer { self.textLayoutManager.textSelections = selections }
-        
-        // TODO Construct the new text and results and diff them
-        // apply the diff
-
-//        for (line, _) in self.results {
-//            guard
-//                line < self.paragraphRanges.count,
-//                let range = self.paragraphRanges[line].convertToTextRange(in: self.textLayoutManager)
-//            else { continue }
-//            print("Invalidating", range)
-//            self.textLayoutManager.invalidateLayout(for: range)
-//            self.textLayoutManager.ensureLayout(for: range)
-//            
-//        }
-        // Re-load the text without formatting
-//        self.textStorage.setAttributedString(NSAttributedString(string: self.text.wrappedValue))
-        // Notify that the content has changed
         
 //        var start: Int = Int.max
 //        var end: Int = Int.min
