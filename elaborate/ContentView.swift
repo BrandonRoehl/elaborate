@@ -13,13 +13,9 @@ import AsyncAlgorithms
 
 struct ContentView: View {
     static let logger = Logger(subsystem: "elb", category: "content")
-//
-//    let font = Font.system(.body).monospaced()
 
     @Binding var document: ElaborateDocument
     @State var running: Bool = false
-
-//    @Environment(\.colorScheme) private var colorScheme: ColorScheme
 
     @State private var messages: [Int: ResultGroup] = [:] {
         didSet {
@@ -38,7 +34,6 @@ struct ContentView: View {
             }
         }
     }
-//    @FocusState private var editorIsFocused: Bool
 
     @State var task: Task<Void, Never>? = nil
     @State var stream = AsyncChannel<ElaborateDocument>()

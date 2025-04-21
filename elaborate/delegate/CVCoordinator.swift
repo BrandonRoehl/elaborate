@@ -32,11 +32,12 @@ public class CVCoordinator: NSObject {
 
     @MainActor init<T>(_ codeView: borrowing CodeView<T>) {
         // Set to defaults to void dump until we get an initialized binding
-        self.text = .init(get: { "" }, set: { _ in })
+        self.text = codeView.$text
         self.results = [:]
 
         // Initilize the container first
-        self.textStorage = NSTextStorage()
+        self.textStorage = NSTextStorage(string: self.text.wrappedValue)
+        self.textStorage.foregroundColor = .labelColor
         self.textContainer = NSTextContainer()
         self.textLayoutManager = NSTextLayoutManager()
         // customize NSTextContentManager.textElement(for:) on the
@@ -49,13 +50,13 @@ public class CVCoordinator: NSObject {
         super.init()
 
         // MARK: NSTextStorageDelegate
-        self.textStorage.delegate = self
+//        self.textStorage.delegate = self
 
         // MARK: NSTextLayoutManagerDelegate
-        self.textLayoutManager.delegate = self
+//        self.textLayoutManager.delegate = self
 
         // MARK: NSTextContentStorageDelegate
-        self.textContentStorage.delegate = self
+//        self.textContentStorage.delegate = self
         self.textContentStorage.textStorage = self.textStorage
         self.textContentStorage.addTextLayoutManager(self.textLayoutManager)
 
@@ -75,62 +76,25 @@ public class CVCoordinator: NSObject {
         let selections = self.textLayoutManager.textSelections
         defer { self.textLayoutManager.textSelections = selections }
         
-//        var start: Int = Int.max
-//        var end: Int = Int.min
+        var start: Int = Int.max
+        var end: Int = Int.min
         for line in self.results.keys.sorted(by: <) {
             let line = line + 1
             guard line < self.paragraphRanges.count else { continue }
             let range = self.paragraphRanges[line]
             print("update", range)
             self.textStorage.edited(.editedCharacters, range: range, changeInLength: 0)
-//            if range.lowerBound < start {
-//                start = range.lowerBound
-//            }
-//            if range.upperBound > end {
-//                end = range.upperBound
-//            }
+            if range.lowerBound < start {
+                start = range.lowerBound
+            }
+            if range.upperBound > end {
+                end = range.upperBound
+            }
         }
-//        if start < end {
-//            if end > self.textStorage.length {
-//                end = self.textStorage.length
-//            }
-//            let range = NSRange(location: start, length: end-start)
-//            print("updating range", range)
-//            
-//            self.textStorage.edited(.editedCharacters, range: range, changeInLength: 0)
-////            if let tr = range.convertToTextRange(in: self.textLayoutManager) {
-////                self.textLayoutManager.ensureLayout(for: tr)
-////            }
-//        }
-
-        // For views using TextKit 2
-//        textView.layoutManager.ensureLayout(for: textView.visibleRect)
         
-        // get the reverse sort of the lines so we don't mess up the indexes
-        // somehow do this without editing the view
-//        let pgs = self.textStorage.paragraphs.count
-//        let lines = self.results.keys.sorted(by: >)
-//        self.performSuppressedEditingTransaction {
-//            for line in lines {
-//                let attachment = CodeAttachment(view: self.results[line]!)
-//                attachment.coordinator = self
-//                let attachmentAttributedString = NSAttributedString(attachment: attachment)
-//                let newPG = NSTextParagraph(attributedString: attachmentAttributedString)
-//                
-//                if line >= pgs {
-//                    self.textStorage.append(attachmentAttributedString)
-//                } else {
-//                    self.textStorage.paragraphs[line].append(attachmentAttributedString)
-//                }
-//            }
-//        }
     }
     
     var paragraphRanges: [NSRange] = []
-    
-    @MainActor func syncText() {
-        self.text.wrappedValue = textStorage.string
-    }
 }
 
 

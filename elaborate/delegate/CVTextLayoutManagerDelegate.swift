@@ -21,7 +21,8 @@ extension CVCoordinator: NSTextLayoutManagerDelegate {
         //            return layoutFragment
         //        } else {
         //        }
-        return NSTextLayoutFragment(textElement: textElement, range: textElement.elementRange)
+        let fragment = NSTextLayoutFragment(textElement: textElement, range: textElement.elementRange)
+        return fragment
     }
 }
 

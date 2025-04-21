@@ -44,6 +44,11 @@ final class CodeAttachment: NSTextAttachment {
         viewProvider.view = self.view
         return viewProvider
     }
+    
+//    override func attachmentBounds(for attributes: [NSAttributedString.Key : Any], location: any NSTextLocation, textContainer: NSTextContainer?, proposedLineFragment: CGRect, position: CGPoint) -> CGRect {
+////        return CGRect(origin: .zero, size: view.intrinsicContentSize)
+//        return CGRect(origin: .zero, size: CGSize(width: 100, height: 100))
+//    }
 
 //    func toggleHidden() {
 //        guard let textStorage: NSTextStorage = (textLayoutManager?.textContentManager as? NSTextContentStorage)?.textStorage else { return }

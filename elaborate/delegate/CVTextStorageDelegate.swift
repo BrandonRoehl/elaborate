@@ -13,8 +13,8 @@
     public typealias OSTextStorageEditActions = NSTextStorage.EditActions
 #endif
 
-extension CVCoordinator: @preconcurrency NSTextStorageDelegate {
-    @MainActor public func textStorage(
+extension CVCoordinator: NSTextStorageDelegate {
+    public func textStorage(
         _ textStorage: NSTextStorage,
         didProcessEditing editedMask: OSTextStorageEditActions,
         range editedRange: NSRange,
@@ -32,5 +32,11 @@ extension CVCoordinator: @preconcurrency NSTextStorageDelegate {
             paragraphRanges.append(nsRange)
         }
         self.paragraphRanges = paragraphRanges
+        
+        Task.detached { @MainActor in
+            if self.text.wrappedValue != text {
+                self.text.wrappedValue = text
+            }
+        }
     }
 }
