@@ -23,7 +23,7 @@ extension CVCoordinator: NSTextContentStorageDelegate {
             pRange.intersection(range) != nil
         }).map { $0 + 1 }
 
-        print("Called for", range, "in", line ?? "nil", originalText.string)
+        print("Called for", range, "in", line ?? "nil", originalText.string.debugDescription)
 
 //        return nil
         guard let line, let result = self.results[line] else {
@@ -35,7 +35,10 @@ extension CVCoordinator: NSTextContentStorageDelegate {
         let attachment = CodeAttachment(view: result)
         
         let newText = NSMutableAttributedString(attributedString: originalText)
+        newText.deleteCharacters(in: NSRange(location: originalText.length - 1, length: 1))
+//        newText.append(NSAttributedString(string: "-"))
         newText.append(NSAttributedString(attachment: attachment))
+//        newText.append(NSAttributedString(string: "\n"))
 
 //        if let textView = yourTextViewReference {
 //            textView.layoutManager.invalidateLayout(forCharacterRange: NSRange(location: 0, length: textView.textStorage?.length ?? 0), actualCharacterRange: nil)
