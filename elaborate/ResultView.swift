@@ -55,6 +55,7 @@ struct ResultView: View {
                 // Set the font to mono space if this is a value
                 Text(result.output)
                     .textSelection(.enabled)
+                    .fixedSize(horizontal: true, vertical: false)
                     .font(result.status == .value ? mono : regular)
             }
         }

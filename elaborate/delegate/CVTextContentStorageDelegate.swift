@@ -25,7 +25,6 @@ extension CVCoordinator: NSTextContentStorageDelegate {
 
         print("Called for", range, "in", line ?? "nil", originalText.string.debugDescription)
 
-//        return nil
         guard let line, let result = self.results[line] else {
             // No line or result was found so return this unmodified
             // in the future we still need to do text highlighting

@@ -21,6 +21,7 @@ final class CodeAttachment: NSTextAttachment {
 
     public init(view: OSView) {
         self.view = view
+        self.view.autoresizingMask = [.height]
         super.init(data: nil, ofType: nil)
     }
     
@@ -40,15 +41,19 @@ final class CodeAttachment: NSTextAttachment {
         let viewProvider = NSTextAttachmentViewProvider(textAttachment: self, parentView: parentView,
                                                         textLayoutManager: textContainer?.textLayoutManager,
                                                         location: location)
-        viewProvider.tracksTextAttachmentViewBounds = true
+//        viewProvider.tracksTextAttachmentViewBounds = true
         viewProvider.view = self.view
         return viewProvider
     }
     
-//    override func attachmentBounds(for attributes: [NSAttributedString.Key : Any], location: any NSTextLocation, textContainer: NSTextContainer?, proposedLineFragment: CGRect, position: CGPoint) -> CGRect {
-////        return CGRect(origin: .zero, size: view.intrinsicContentSize)
+    override func attachmentBounds(for attributes: [NSAttributedString.Key : Any], location: any NSTextLocation, textContainer: NSTextContainer?, proposedLineFragment: CGRect, position: CGPoint) -> CGRect {
+        var size = view.intrinsicContentSize
+        if let width = textContainer?.size.width {
+            size.width = width
+        }
+        return CGRect(origin: .zero, size: size)
 //        return CGRect(origin: .zero, size: CGSize(width: 100, height: 100))
-//    }
+    }
 
 //    func toggleHidden() {
 //        guard let textStorage: NSTextStorage = (textLayoutManager?.textContentManager as? NSTextContentStorage)?.textStorage else { return }
