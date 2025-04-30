@@ -48,6 +48,10 @@ final class CodeAttachment: NSTextAttachment {
     
     override func attachmentBounds(for attributes: [NSAttributedString.Key : Any], location: any NSTextLocation, textContainer: NSTextContainer?, proposedLineFragment: CGRect, position: CGPoint) -> CGRect {
         var size = view.intrinsicContentSize
+        if size.height < 100 {
+            size.height = 100
+        }
+//        textContainer?.textView?.frame.width
         if let width = textContainer?.size.width {
             size.width = width
         }

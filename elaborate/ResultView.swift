@@ -30,9 +30,9 @@ struct ResultView: View {
     var color: Color {
         return switch result.status {
         case .error: .red
-        case .value: .clear
+        case .value: .gray
         case .eof: .brown
-        case .info: .clear
+        case .info: .secondary
         case .UNRECOGNIZED(_): .blue
         }
     }
@@ -59,8 +59,11 @@ struct ResultView: View {
                     .font(result.status == .value ? mono : regular)
             }
         }
-        .padding()
-        .background(color)
+//        .padding()
+//        .background(.capsule)
+//        .background(in: .buttonBorder)
+        .padding(10)
+        .background(RoundedRectangle(cornerRadius: 8).fill(color))
     }
 }
 
