@@ -70,6 +70,8 @@ public class CVCoordinator: NSObject {
         let selections = self.textLayoutManager.textSelections
         defer { self.textLayoutManager.textSelections = selections }
         
+        // TODO: this check is very slow and also dumb but I don't have time
+        // to figure out the correct way to do this
         if self.text.wrappedValue != self.textStorage.string {
             self.textContentStorage.performEditingTransaction {
                 self.textStorage.setAttributedString(NSAttributedString(string: self.text.wrappedValue))
