@@ -21,7 +21,43 @@ extension CVCoordinator: NSTextStorageDelegate {
         range editedRange: NSRange,
         changeInLength delta: Int
     ) {
+        // The textStorage holds the string it will be and not the string it was
+        // so you have to determine where we were before here
         
+        // Grab how many pg markers are going to get replaced
+        let startIndex = self.newlineOffsets.firstIndex(where: { newLine in
+            return newLine >= editedRange.location
+        }) ?? self.newlineOffsets.startIndex
+
+        let finalIndex = self.newlineOffsets.firstIndex(where: { newLine in
+            return newLine >= (editedRange.location + editedRange.length)
+        }) ?? self.newlineOffsets.endIndex
+        
+        // Will this blow up?
+        self.newlineOffsets.removeSubrange(startIndex..<finalIndex)
+        
+        // The string to look at for changes
+        let substring = textStorage.attributedSubstring(from: editedRange)
+        // construct the array of the new lineends
+//        let newOffsets = (0..<substring.length).filter { i in
+//            substring.string[i].isNewline
+//            
+//            substring.string[substring.string.ind]
+//            return true
+//        }.map { i in
+//            return i + editedRange.location
+//        }
+        let newOffsets = substring.string.indices(where: \.isNewline).ranges.flatMap { range in
+        }
+        
+//        var paragraphRanges: [NSRange] = []
+//                text.enumerateSubstrings(in: text.startIndex..<text.endIndex, options: .byParagraphs) { (substring, substringRange, enclosingRange, stop) in
+//                    // Convert Swift range to NSRange
+//                    let nsRange = NSRange(enclosingRange, in: text)
+//                    paragraphRanges.append(nsRange)
+//                }
+        
+        self.newlineOffsets.insert(contentsOf: [], at: startIndex)
     }
     
     public func textStorage(

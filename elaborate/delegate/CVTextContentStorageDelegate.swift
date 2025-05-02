@@ -10,44 +10,44 @@ import SwiftUI
 extension CVCoordinator: NSTextContentStorageDelegate {
     // MARK: - NSTextContentStorageDelegate
     
-    public func textContentStorage(
-        _ textContentStorage: NSTextContentStorage, textParagraphWith range: NSRange
-    ) -> NSTextParagraph? {
-        //        // In this method, we'll inject some attributes for display, without modifying the text storage directly.
-        //        var paragraphWithDisplayAttributes: NSTextParagraph? = nil
-        //
-        //        // First, get a copy of the paragraph from the original text storage.
-        let originalText = textContentStorage.textStorage!.attributedSubstring(from: range)
-
-        let line = self.paragraphRanges.firstIndex(where: { pRange in
-            pRange.intersection(range) != nil
-        }).map { $0 + 1 }
-
-        print("Called for", range, "in", line ?? "nil", originalText.string.debugDescription)
-
-        guard let line, let result = self.results[line] else {
-            // No line or result was found so return this unmodified
-            // in the future we still need to do text highlighting
-            return nil
-        }
-        
-        let attachment = CodeAttachment(view: result)
-        
-        let newText = NSMutableAttributedString(attributedString: originalText)
-        newText.deleteCharacters(in: NSRange(location: originalText.length - 1, length: 1))
-//        newText.append(NSAttributedString(string: "-"))
-        newText.append(NSAttributedString(attachment: attachment))
-//        newText.append(NSAttributedString(string: "\n"))
-
-//        if let textView = yourTextViewReference {
-//            textView.layoutManager.invalidateLayout(forCharacterRange: NSRange(location: 0, length: textView.textStorage?.length ?? 0), actualCharacterRange: nil)
-//            textView.setNeedsDisplay(textView.bounds)
+//    public func textContentStorage(
+//        _ textContentStorage: NSTextContentStorage, textParagraphWith range: NSRange
+//    ) -> NSTextParagraph? {
+//        //        // In this method, we'll inject some attributes for display, without modifying the text storage directly.
+//        //        var paragraphWithDisplayAttributes: NSTextParagraph? = nil
+//        //
+//        //        // First, get a copy of the paragraph from the original text storage.
+//        let originalText = textContentStorage.textStorage!.attributedSubstring(from: range)
+//
+//        let line = self.paragraphRanges.firstIndex(where: { pRange in
+//            pRange.intersection(range) != nil
+//        }).map { $0 + 1 }
+//
+//        print("Called for", range, "in", line ?? "nil", originalText.string.debugDescription)
+//
+//        guard let line, let result = self.results[line] else {
+//            // No line or result was found so return this unmodified
+//            // in the future we still need to do text highlighting
+//            return nil
 //        }
-        // just invalidate the entire thing should do it better but for now
-        self.textLayoutManager.invalidateLayout(for: self.textLayoutManager.documentRange)
-        let pg = NSTextParagraph(attributedString: newText)
-        return pg
-    }
+//        
+//        let attachment = CodeAttachment(view: result)
+//        
+//        let newText = NSMutableAttributedString(attributedString: originalText)
+//        newText.deleteCharacters(in: NSRange(location: originalText.length - 1, length: 1))
+////        newText.append(NSAttributedString(string: "-"))
+//        newText.append(NSAttributedString(attachment: attachment))
+////        newText.append(NSAttributedString(string: "\n"))
+//
+////        if let textView = yourTextViewReference {
+////            textView.layoutManager.invalidateLayout(forCharacterRange: NSRange(location: 0, length: textView.textStorage?.length ?? 0), actualCharacterRange: nil)
+////            textView.setNeedsDisplay(textView.bounds)
+////        }
+//        // just invalidate the entire thing should do it better but for now
+//        self.textLayoutManager.invalidateLayout(for: self.textLayoutManager.documentRange)
+//        let pg = NSTextParagraph(attributedString: newText)
+//        return pg
+//    }
 
     // MARK: - NSTextContentManagerDelegate
     
@@ -72,24 +72,7 @@ extension CVCoordinator: NSTextContentStorageDelegate {
         // For demonstration, we'll log the offset
         print("TextKit2 is requesting text element at offset: \(offset)")
 
-        
-        guard let line = self.paragraphRanges.firstIndex(where: { range in
-            return range.contains(offset)
-        }) else {
-            print("No line so something is a problem")
-            return nil
-        }
-        let range = self.paragraphRanges[line]
-        
-        guard let range = self.paragraphRanges.first(where: { range in
-            return range.contains(offset)
-        }) else {
-            return nil
-        }
-        
-        let text = textStorage.attributedSubstring(from: range)
-        let pg = NSTextParagraph(attributedString: text)
-        return pg
+        return nil
         // You can return nil to use the default text element, or create a custom one
         // For example, you might want to customize how certain paragraphs are displayed:
         

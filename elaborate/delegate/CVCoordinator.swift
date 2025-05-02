@@ -47,7 +47,7 @@ public class CVCoordinator: NSObject {
         self.textStorage.delegate = self
 
         // MARK: NSTextLayoutManagerDelegate
-        self.textLayoutManager.delegate = self
+//        self.textLayoutManager.delegate = self
 
         // MARK: NSTextContentStorageDelegate
         self.textContentStorage.delegate = self
