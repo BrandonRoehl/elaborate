@@ -51,68 +51,68 @@ extension CVCoordinator: NSTextContentStorageDelegate {
 
     // MARK: - NSTextContentManagerDelegate
     
-//    public func textContentManager(
-//        _ textContentManager: NSTextContentManager,
-//        textElementAt location: NSTextLocation
-//    ) -> NSTextElement? {
-//        guard
-//            let textContentManager = textContentManager as? NSTextContentStorage,
-//            let textStorage = textContentManager.textStorage
-//        else {
-//            print("TextKit2 this wasn't a text content manager")
-//            return nil
-//        }
-//
-//        // This method is called when TextKit 2 needs a text element at a specific location
-//        // You can customize and return a different NSTextElement than the default
-//
-//        // Get the offset from the start of the document to this location
-//        let offset = textContentManager.offset(from: textContentManager.documentRange.location, to: location)
-//        
-//        // For demonstration, we'll log the offset
-//        print("TextKit2 is requesting text element at offset: \(offset)")
-//
-//        
-//        guard let line = self.paragraphRanges.firstIndex(where: { range in
-//            return range.contains(offset)
-//        }) else {
-//            print("No line so something is a problem")
-//            return nil
-//        }
-//        let range = self.paragraphRanges[line]
-//        
-//        guard let range = self.paragraphRanges.first(where: { range in
-//            return range.contains(offset)
-//        }) else {
-//            return nil
-//        }
-//        
-//        let text = textStorage.attributedSubstring(from: range)
-//        let pg = NSTextParagraph(attributedString: text)
-//        return pg
-//        // You can return nil to use the default text element, or create a custom one
-//        // For example, you might want to customize how certain paragraphs are displayed:
-//        
-//        /*
-//         // Example of returning a custom text element:
-//         let range = NSRange(location: offset, length: 10) // Define appropriate range
-//         if let textStorage = (textContentManager as? NSTextContentStorage)?.textStorage,
-//         range.location + range.length <= textStorage.length {
-//         let customAttributedString = NSMutableAttributedString(attributedString:
-//         textStorage.attributedSubstring(from: range))
-//         
-//         // Apply custom attributes
-//         customAttributedString.addAttribute(.foregroundColor, value: NSColor.red,
-//         range: NSRange(location: 0, length: customAttributedString.length))
-//         
-//         // Create and return a custom paragraph
-//         return NSTextParagraph(attributedString: customAttributedString)
-//         }
-//         */
-//        
-//        // Return nil to use the default text element
-//    }
-//    
+    public func textContentManager(
+        _ textContentManager: NSTextContentManager,
+        textElementAt location: NSTextLocation
+    ) -> NSTextElement? {
+        guard
+            let textContentManager = textContentManager as? NSTextContentStorage,
+            let textStorage = textContentManager.textStorage
+        else {
+            print("TextKit2 this wasn't a text content manager")
+            return nil
+        }
+
+        // This method is called when TextKit 2 needs a text element at a specific location
+        // You can customize and return a different NSTextElement than the default
+
+        // Get the offset from the start of the document to this location
+        let offset = textContentManager.offset(from: textContentManager.documentRange.location, to: location)
+        
+        // For demonstration, we'll log the offset
+        print("TextKit2 is requesting text element at offset: \(offset)")
+
+        
+        guard let line = self.paragraphRanges.firstIndex(where: { range in
+            return range.contains(offset)
+        }) else {
+            print("No line so something is a problem")
+            return nil
+        }
+        let range = self.paragraphRanges[line]
+        
+        guard let range = self.paragraphRanges.first(where: { range in
+            return range.contains(offset)
+        }) else {
+            return nil
+        }
+        
+        let text = textStorage.attributedSubstring(from: range)
+        let pg = NSTextParagraph(attributedString: text)
+        return pg
+        // You can return nil to use the default text element, or create a custom one
+        // For example, you might want to customize how certain paragraphs are displayed:
+        
+        /*
+         // Example of returning a custom text element:
+         let range = NSRange(location: offset, length: 10) // Define appropriate range
+         if let textStorage = (textContentManager as? NSTextContentStorage)?.textStorage,
+         range.location + range.length <= textStorage.length {
+         let customAttributedString = NSMutableAttributedString(attributedString:
+         textStorage.attributedSubstring(from: range))
+         
+         // Apply custom attributes
+         customAttributedString.addAttribute(.foregroundColor, value: NSColor.red,
+         range: NSRange(location: 0, length: customAttributedString.length))
+         
+         // Create and return a custom paragraph
+         return NSTextParagraph(attributedString: customAttributedString)
+         }
+         */
+        
+        // Return nil to use the default text element
+    }
+
 //    public func textContentManager(_ textContentManager: NSTextContentManager,
 //                                   shouldEnumerate textElement: NSTextElement,
 //                                   options: NSTextContentManager.EnumerationOptions = []) -> Bool {

@@ -14,6 +14,16 @@
 #endif
 
 extension CVCoordinator: NSTextStorageDelegate {
+    
+    public func textStorage(
+        _ textStorage: NSTextStorage,
+        willProcessEditing editedMask: NSTextStorageEditActions,
+        range editedRange: NSRange,
+        changeInLength delta: Int
+    ) {
+        
+    }
+    
     public func textStorage(
         _ textStorage: NSTextStorage,
         didProcessEditing editedMask: OSTextStorageEditActions,
@@ -22,17 +32,9 @@ extension CVCoordinator: NSTextStorageDelegate {
     ) {
         guard editedMask.contains(.editedCharacters) else { return }
         
+        // Add in the new paragraph markers
+        
         let text = textStorage.string
-        
-        // Hate to do this but keep track of the ranges of each paragraph
-        var paragraphRanges: [NSRange] = []
-        text.enumerateSubstrings(in: text.startIndex..<text.endIndex, options: .byParagraphs) { (substring, substringRange, enclosingRange, stop) in
-            // Convert Swift range to NSRange
-            let nsRange = NSRange(enclosingRange, in: text)
-            paragraphRanges.append(nsRange)
-        }
-        self.paragraphRanges = paragraphRanges
-        
         Task.detached { @MainActor in
             if self.text.wrappedValue != text {
                 self.text.wrappedValue = text

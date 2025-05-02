@@ -24,5 +24,11 @@ extension CVCoordinator: NSTextLayoutManagerDelegate {
         let fragment = NSTextLayoutFragment(textElement: textElement, range: textElement.elementRange)
         return fragment
     }
+    
+//    public func textLayoutManager(_ textLayoutManager: NSTextLayoutManager, shouldBreakLineBefore location: any NSTextLocation, hyphenating: Bool) -> Bool {
+//        let offset = textLayoutManager.offset(from: textLayoutManager.documentRange.location, to: location)
+//        print("shouldBreakLineBefore \(offset)")
+//        return false
+//    }
 }
 

@@ -36,17 +36,11 @@ public class CVCoordinator: NSObject {
         self.results = [:]
 
         // Initilize the container first
-        self.textStorage = NSTextStorage(string: self.text.wrappedValue)
-        self.textStorage.foregroundColor = .labelColor
+        self.textStorage = NSTextStorage()
         self.textContainer = NSTextContainer()
         self.textLayoutManager = NSTextLayoutManager()
-        // customize NSTextContentManager.textElement(for:) on the
-        // NSTextContentStorage to return vitrual elements
         self.textContentStorage = NSTextContentStorage()
         
-//        NSTextContentManager
-//        text content manager to add stuff that isn't in storage
-
         super.init()
 
         // MARK: NSTextStorageDelegate
@@ -76,25 +70,30 @@ public class CVCoordinator: NSObject {
         let selections = self.textLayoutManager.textSelections
         defer { self.textLayoutManager.textSelections = selections }
         
-        var start: Int = Int.max
-        var end: Int = Int.min
-        for line in self.results.keys.sorted(by: <) {
-            let line = line + 1
-            guard line < self.paragraphRanges.count else { continue }
-            let range = self.paragraphRanges[line]
-            print("update", range)
-            self.textStorage.edited(.editedCharacters, range: range, changeInLength: 0)
-            if range.lowerBound < start {
-                start = range.lowerBound
-            }
-            if range.upperBound > end {
-                end = range.upperBound
+        if self.text.wrappedValue != self.textStorage.string {
+            self.textContentStorage.performEditingTransaction {
+                self.textStorage.setAttributedString(NSAttributedString(string: self.text.wrappedValue))
+                self.textStorage.foregroundColor = .labelColor
             }
         }
+
+//        for line in self.results.keys.sorted(by: <) {
+//            let line = line + 1
+//            guard line < self.paragraphRanges.count else { continue }
+//            let range = self.paragraphRanges[line]
+//            print("update", range)
+//            self.textStorage.edited(.editedCharacters, range: range, changeInLength: 0)
+//            if range.lowerBound < start {
+//                start = range.lowerBound
+//            }
+//            if range.upperBound > end {
+//                end = range.upperBound
+//            }
+//        }
         
     }
     
-    var paragraphRanges: [NSRange] = []
+    var newlineOffsets: [Int] = []
 }
 
 
