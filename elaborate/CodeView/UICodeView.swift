@@ -14,10 +14,9 @@ extension CodeView: UIViewRepresentable {
     
     public func makeUIView(context: Context) -> UITextView {
         let textView = UITextView(
-            frame: CGRect(), textContainer: context.coordinator.textContainer)
-        textView.text = context.coordinator.text.wrappedValue
-        // TODO make this configurable
-        textView.font = .monospacedSystemFont(ofSize: 13, weight: .regular)
+            frame: CGRect(),
+            textContainer: context.coordinator.textContainer
+        )
         return textView
         
     }

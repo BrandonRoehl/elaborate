@@ -25,43 +25,35 @@ extension CVCoordinator: NSTextStorageDelegate {
         // so you have to determine where we were before here
         
         // Grab how many pg markers are going to get replaced
-        let startIndex = self.newlineOffsets.firstIndex(where: { newLine in
+        let startIndex: Int = self.newlineOffsets.firstIndex(where: { newLine in
             return newLine >= editedRange.location
-        }) ?? self.newlineOffsets.startIndex
-
-        let finalIndex = self.newlineOffsets.firstIndex(where: { newLine in
-            return newLine >= (editedRange.location + editedRange.length)
         }) ?? self.newlineOffsets.endIndex
-        
-        // Will this blow up?
+
+        let finalIndex: Int
+        if textStorage.length < self.newlineOffsets.last ?? 0 {
+            finalIndex = self.newlineOffsets.count
+        } else {
+            finalIndex = self.newlineOffsets.firstIndex(where: { newLine in
+                return newLine > (editedRange.location + editedRange.length)
+            }) ?? self.newlineOffsets.count
+        }
+
+        // update the offset for those that are at final index
+        for i in finalIndex..<self.newlineOffsets.count {
+            self.newlineOffsets[i] += delta
+        }
+
+        // Remove the ones we know are bad
         self.newlineOffsets.removeSubrange(startIndex..<finalIndex)
-        
         // The string to look at for changes
         let substring = textStorage.attributedSubstring(from: editedRange)
         // construct the array of the new lineends
-//        let newOffsets = (0..<substring.length).filter { i in
-//            substring.string[i].isNewline
-//            
-//            substring.string[substring.string.ind]
-//            return true
-//        }.map { i in
-//            return i + editedRange.location
-//        }
-//        let newOffsets = substring.string.indices(where: \.isNewline).ranges.flatMap { range in
-//        }
-        let newOffsets: [Int] = substring.string.enumerated().filter(\.element.isNewline).map { (index, char) in
+        let newOffsets: [Int] = substring.string.enumerated().filter(\.element.isNewline).map { (index, _) in
             return index + editedRange.location
         }
-            
-        
-//        var paragraphRanges: [NSRange] = []
-//                text.enumerateSubstrings(in: text.startIndex..<text.endIndex, options: .byParagraphs) { (substring, substringRange, enclosingRange, stop) in
-//                    // Convert Swift range to NSRange
-//                    let nsRange = NSRange(enclosingRange, in: text)
-//                    paragraphRanges.append(nsRange)
-//                }
-        
+        // Insert all the new stuff into here now
         self.newlineOffsets.insert(contentsOf: newOffsets, at: startIndex)
+        
         
         print(newlineOffsets)
     }

@@ -22,10 +22,6 @@ extension CodeView: NSViewRepresentable {
         textView.isVerticallyResizable = true
         textView.isHorizontallyResizable = false
         textView.autoresizingMask = [.width]
-        // Set initial text
-        textView.string = context.coordinator.text.wrappedValue
-        // TODO make this configurable
-        textView.font = .monospacedSystemFont(ofSize: 13, weight: .regular)
         
         let scrollView = NSScrollView()
         scrollView.documentView = textView

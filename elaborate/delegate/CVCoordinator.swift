@@ -50,7 +50,7 @@ public class CVCoordinator: NSObject {
 //        self.textLayoutManager.delegate = self
 
         // MARK: NSTextContentStorageDelegate
-        self.textContentStorage.delegate = self
+//        self.textContentStorage.delegate = self
         self.textContentStorage.textStorage = self.textStorage
         self.textContentStorage.addTextLayoutManager(self.textLayoutManager)
 
@@ -74,6 +74,7 @@ public class CVCoordinator: NSObject {
             self.textContentStorage.performEditingTransaction {
                 self.textStorage.setAttributedString(NSAttributedString(string: self.text.wrappedValue))
                 self.textStorage.foregroundColor = .labelColor
+                self.textStorage.font = .monospacedSystemFont(ofSize: 13, weight: .regular)
             }
         }
 
