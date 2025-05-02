@@ -47,8 +47,12 @@ extension CVCoordinator: NSTextStorageDelegate {
 //        }.map { i in
 //            return i + editedRange.location
 //        }
-        let newOffsets = substring.string.indices(where: \.isNewline).ranges.flatMap { range in
+//        let newOffsets = substring.string.indices(where: \.isNewline).ranges.flatMap { range in
+//        }
+        let newOffsets: [Int] = substring.string.enumerated().filter(\.element.isNewline).map { (index, char) in
+            return index + editedRange.location
         }
+            
         
 //        var paragraphRanges: [NSRange] = []
 //                text.enumerateSubstrings(in: text.startIndex..<text.endIndex, options: .byParagraphs) { (substring, substringRange, enclosingRange, stop) in
@@ -57,7 +61,9 @@ extension CVCoordinator: NSTextStorageDelegate {
 //                    paragraphRanges.append(nsRange)
 //                }
         
-        self.newlineOffsets.insert(contentsOf: [], at: startIndex)
+        self.newlineOffsets.insert(contentsOf: newOffsets, at: startIndex)
+        
+        print(newlineOffsets)
     }
     
     public func textStorage(
