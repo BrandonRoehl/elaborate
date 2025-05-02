@@ -71,8 +71,45 @@ extension CVCoordinator: NSTextContentStorageDelegate {
         
         // For demonstration, we'll log the offset
         print("TextKit2 is requesting text element at offset: \(offset)")
+        
+        // location is the start of this
+        let index = self.newlineOffsets.firstIndex(where: { $0 <= offset })
+        // return whatever is left if we don't have anything
+        guard let index else {
+            return nil
+        }
+        let range: NSRange
+        if self.newlineOffsets[index] == offset {
+            // Just return the charecter
+            range = NSRange(location: offset, length: 1)
+        } else if index < self.newlineOffsets.endIndex {
+            // return the range until the next newline and not including it
+            let length = self.newlineOffsets[index + 1] - offset
+            range = NSRange(location: offset, length: length - 1)
+        } else {
+            // Return what is left
+            range = NSRange(location: offset, length: textStorage.length - offset)
+        }
 
-        return nil
+        let attString = textStorage.attributedSubstring(from: range)
+        return NSTextParagraph(attributedString: attString)
+//        guard let line = self.paragraphRanges.firstIndex(where: { range in
+//            return range.contains(offset)
+//        }) else {
+//            print("No line so something is a problem")
+//            return nil
+//        }
+//        let range = self.paragraphRanges[line]
+//        
+//        guard let range = self.paragraphRanges.first(where: { range in
+//            return range.contains(offset)
+//        }) else {
+//            return nil
+//        }
+//        
+//        let text = textStorage.attributedSubstring(from: range)
+//        let pg = NSTextParagraph(attributedString: text)
+//        return pg
         // You can return nil to use the default text element, or create a custom one
         // For example, you might want to customize how certain paragraphs are displayed:
         
