@@ -10,37 +10,32 @@ import SwiftUI
 extension CVCoordinator: NSTextContentStorageDelegate {
     // MARK: - NSTextContentStorageDelegate
     
-//        //        // In this method, we'll inject some attributes for display, without modifying the text storage directly.
-//        //        var paragraphWithDisplayAttributes: NSTextParagraph? = nil
-//        //
-//        //        // First, get a copy of the paragraph from the original text storage.
-//        let originalText = textContentStorage.textStorage!.attributedSubstring(from: range)
-//
-//        let line = self.paragraphRanges.firstIndex(where: { pRange in
-//            pRange.intersection(range) != nil
-//        }).map { $0 + 1 }
-//
-//        print("Called for", range, "in", line ?? "nil", originalText.string.debugDescription)
-//
+//    public func textContentStorage(_ textContentStorage: NSTextContentStorage, textParagraphWith range: NSRange) -> NSTextParagraph? {
+//        guard let textStorage = textContentStorage.textStorage else {
+//            print("TextKit2 this wasn't a text content manager")
+//            return nil
+//        }
+//        let originalText = textStorage.attributedSubstring(from: range)
+        // this text might have attachments in it
+//        let pg = NSTextParagraph()
 //        guard let line, let result = self.results[line] else {
 //            // No line or result was found so return this unmodified
 //            // in the future we still need to do text highlighting
 //            return nil
 //        }
-//        
 //        let attachment = CodeAttachment(view: result)
 //        
 //        let newText = NSMutableAttributedString(attributedString: originalText)
 //        newText.deleteCharacters(in: NSRange(location: originalText.length - 1, length: 1))
 ////        newText.append(NSAttributedString(string: "-"))
 //        newText.append(NSAttributedString(attachment: attachment))
-////        newText.append(NSAttributedString(string: "\n"))
-//
-////        if let textView = yourTextViewReference {
-////            textView.layoutManager.invalidateLayout(forCharacterRange: NSRange(location: 0, length: textView.textStorage?.length ?? 0), actualCharacterRange: nil)
-////            textView.setNeedsDisplay(textView.bounds)
-////        }
-//        // just invalidate the entire thing should do it better but for now
+//        newText.append(NSAttributedString(string: "\n"))
+
+//        if let textView = yourTextViewReference {
+//            textView.layoutManager.invalidateLayout(forCharacterRange: NSRange(location: 0, length: textView.textStorage?.length ?? 0), actualCharacterRange: nil)
+//            textView.setNeedsDisplay(textView.bounds)
+//        }
+        // just invalidate the entire thing should do it better but for now
 //        self.textLayoutManager.invalidateLayout(for: self.textLayoutManager.documentRange)
 //        let pg = NSTextParagraph(attributedString: newText)
 //        return pg
@@ -96,8 +91,11 @@ extension CVCoordinator: NSTextContentStorageDelegate {
             } else {
                 startOffset = 0
             }
-//            assert(startOffset == offset)
-            range = NSRange(location: startOffset, length: endOffset - startOffset)
+            
+            // Why are these identical??? WHAT IS GOING ON WHY DON'T YOU
+            // DOCUMENT SHIT APPLE FUCK YOU
+            range = NSRange(startOffset...endOffset)
+//            range = NSRange(startOffset..<endOffset)
         } else if let last = self.newlineOffsets.last {
             // our offset is within the last element of the string
             range = NSRange((last + 1)..<textStorage.length)
@@ -110,9 +108,9 @@ extension CVCoordinator: NSTextContentStorageDelegate {
         print(attString.string.debugDescription)
         print("returning charecters", offset, "to", offset + range.length)
         let pg = NSTextParagraph(attributedString: attString)
-        let start = textContentManager.location(begining, offsetBy: range.lowerBound)!
-        let end = textContentManager.location(begining, offsetBy: range.upperBound)
-        pg.elementRange = NSTextRange(location: start, end: end)
+//        let start = textContentManager.location(begining, offsetBy: range.lowerBound)!
+//        let end = textContentManager.location(begining, offsetBy: range.upperBound)
+//        pg.elementRange = NSTextRange(location: start, end: end)
         return pg
     }
 

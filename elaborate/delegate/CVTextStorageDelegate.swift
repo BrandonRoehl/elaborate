@@ -21,6 +21,7 @@ extension CVCoordinator: NSTextStorageDelegate {
         range editedRange: NSRange,
         changeInLength delta: Int
     ) {
+        guard editedMask.contains(.editedCharacters) else { return }
         // The textStorage holds the string it will be and not the string it was
         // so you have to determine where we were before here
         
@@ -69,6 +70,7 @@ extension CVCoordinator: NSTextStorageDelegate {
         // Add in the new paragraph markers
         
         let text = textStorage.string
+        print(text)
         Task.detached { @MainActor in
             if self.text.wrappedValue != text {
                 self.text.wrappedValue = text
