@@ -56,6 +56,7 @@ extension CVCoordinator: NSTextStorageDelegate {
         // Insert all the new stuff into here now
         self.newlineOffsets.insert(contentsOf: newOffsets, at: startIndex)
         
+        // Good checks in dev but don't use this code in prod far to slow
         #if DEBUG
         let text = textStorage.string
         for offset in newlineOffsets {

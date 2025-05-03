@@ -16,6 +16,10 @@ import SwiftUI
 //    }
 //}
 
+final class CodeAttachmentCell: NSTextAttachmentCell {
+    
+}
+
 final class CodeAttachment: NSTextAttachment {
     let view: OSView
 
@@ -23,6 +27,8 @@ final class CodeAttachment: NSTextAttachment {
         self.view = view
         self.view.autoresizingMask = [.height]
         super.init(data: nil, ofType: nil)
+        let cell = CodeAttachmentCell()
+        self.attachmentCell = cell
     }
     
     required init?(coder: NSCoder) {
