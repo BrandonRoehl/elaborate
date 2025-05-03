@@ -47,7 +47,6 @@ final class CodeAttachment: NSTextAttachment {
     }
     
     override func attachmentBounds(for attributes: [NSAttributedString.Key : Any], location: any NSTextLocation, textContainer: NSTextContainer?, proposedLineFragment: CGRect, position: CGPoint) -> CGRect {
-        var size = view.intrinsicContentSize
 //        if size.height < 100 {
 //            size.height = 100
 //        }
@@ -55,7 +54,13 @@ final class CodeAttachment: NSTextAttachment {
 //        if let width = textContainer?.size.width {
 //            size.width = width
 //        }
-        return CGRect(origin: .zero, size: size)
+//        return CGRect(origin: .zero, size: size)
+        var result = CGRect()
+        let size = self.view.intrinsicContentSize
+//        size.width = proposedLineFragment.width
+        result.size = size
+        result.origin = CGPoint(x: proposedLineFragment.origin.x, y: proposedLineFragment.maxY)
+        return result
 //        return CGRect(origin: .zero, size: CGSize(width: 100, height: 100))
     }
 

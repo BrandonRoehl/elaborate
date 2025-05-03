@@ -34,8 +34,9 @@ extension CVCoordinator: NSTextStorageDelegate {
         if textStorage.length < self.newlineOffsets.last ?? 0 {
             finalIndex = self.newlineOffsets.count
         } else {
+            let endOffset = (editedRange.location + editedRange.length - delta)
             finalIndex = self.newlineOffsets.firstIndex(where: { newLine in
-                return newLine > (editedRange.location + editedRange.length)
+                return newLine >= endOffset
             }) ?? self.newlineOffsets.count
         }
 
@@ -55,8 +56,17 @@ extension CVCoordinator: NSTextStorageDelegate {
         // Insert all the new stuff into here now
         self.newlineOffsets.insert(contentsOf: newOffsets, at: startIndex)
         
-        
-        print(newlineOffsets)
+        #if DEBUG
+        let text = textStorage.string
+        for offset in newlineOffsets {
+            let idx = text.index(text.startIndex, offsetBy: offset)
+            assert(text[idx] == "\n")
+        }
+        let check: [Int] = text.enumerated().filter(\.element.isNewline).map { (index, _) in
+            return index
+        }
+        assert(check == newlineOffsets)
+        #endif
     }
     
     public func textStorage(
@@ -70,7 +80,6 @@ extension CVCoordinator: NSTextStorageDelegate {
         // Add in the new paragraph markers
         
         let text = textStorage.string
-        print(text)
         Task.detached { @MainActor in
             if self.text.wrappedValue != text {
                 self.text.wrappedValue = text
