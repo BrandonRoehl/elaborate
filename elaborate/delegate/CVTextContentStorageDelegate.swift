@@ -10,9 +10,6 @@ import SwiftUI
 extension CVCoordinator: NSTextContentStorageDelegate {
     // MARK: - NSTextContentStorageDelegate
     
-//    public func textContentStorage(
-//        _ textContentStorage: NSTextContentStorage, textParagraphWith range: NSRange
-//    ) -> NSTextParagraph? {
 //        //        // In this method, we'll inject some attributes for display, without modifying the text storage directly.
 //        //        var paragraphWithDisplayAttributes: NSTextParagraph? = nil
 //        //
@@ -73,25 +70,26 @@ extension CVCoordinator: NSTextContentStorageDelegate {
         print("TextKit2 is requesting text element at offset: \(offset)")
         
         // location is the start of this
-        let index = self.newlineOffsets.firstIndex(where: { $0 <= offset })
-        // return whatever is left if we don't have anything
+        let index = self.newlineOffsets.firstIndex(where: { $0 >= offset })
         guard let index else {
+            // we are are somewhere after the last return file is likely not
+            // delimiated
             return nil
         }
+        // if nil we are before the start
         let range: NSRange
         if self.newlineOffsets[index] == offset {
             // Just return the charecter
+            // this is a newline we have a couple options here
             range = NSRange(location: offset, length: 1)
-        } else if index < self.newlineOffsets.endIndex {
-            // return the range until the next newline and not including it
-            let length = self.newlineOffsets[index + 1] - offset
-            range = NSRange(location: offset, length: length - 1)
         } else {
-            // Return what is left
-            range = NSRange(location: offset, length: textStorage.length - offset)
+            // return the range until the next newline and not including it
+            let length = self.newlineOffsets[index] - offset
+            range = NSRange(location: offset, length: length)
         }
 
         let attString = textStorage.attributedSubstring(from: range)
+        print(attString.string.debugDescription)
         return NSTextParagraph(attributedString: attString)
 //        guard let line = self.paragraphRanges.firstIndex(where: { range in
 //            return range.contains(offset)
