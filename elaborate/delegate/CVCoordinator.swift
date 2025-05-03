@@ -57,6 +57,11 @@ public class CVCoordinator: NSObject {
         // Update the text container
         self.textLayoutManager.textContainer = self.textContainer
         
+        
+        // TODO: REMOVE
+        self.textStorage.setAttributedString(NSAttributedString(string: self.text.wrappedValue))
+        self.textStorage.foregroundColor = .labelColor
+        self.textStorage.font = .monospacedSystemFont(ofSize: 13, weight: .regular)
         // At the end refresh the contents
         self.update(codeView)
     }
@@ -67,33 +72,18 @@ public class CVCoordinator: NSObject {
 //        defer { self.results = newResults }
         
         // Make sure the selection and cursor doesn't move
-        let selections = self.textLayoutManager.textSelections
-        defer { self.textLayoutManager.textSelections = selections }
+//        let selections = self.textLayoutManager.textSelections
+//        defer { self.textLayoutManager.textSelections = selections }
         
         // TODO: this check is very slow and also dumb but I don't have time
         // to figure out the correct way to do this
-        if self.text.wrappedValue != self.textStorage.string {
-            self.textContentStorage.performEditingTransaction {
-                self.textStorage.setAttributedString(NSAttributedString(string: self.text.wrappedValue))
-                self.textStorage.foregroundColor = .labelColor
-                self.textStorage.font = .monospacedSystemFont(ofSize: 13, weight: .regular)
-            }
-        }
-
-//        for line in self.results.keys.sorted(by: <) {
-//            let line = line + 1
-//            guard line < self.paragraphRanges.count else { continue }
-//            let range = self.paragraphRanges[line]
-//            print("update", range)
-//            self.textStorage.edited(.editedCharacters, range: range, changeInLength: 0)
-//            if range.lowerBound < start {
-//                start = range.lowerBound
-//            }
-//            if range.upperBound > end {
-//                end = range.upperBound
+//        if self.text.wrappedValue != self.textStorage.string {
+//            self.textContentStorage.performEditingTransaction {
+//                self.textStorage.setAttributedString(NSAttributedString(string: self.text.wrappedValue))
+//                self.textStorage.foregroundColor = .labelColor
+//                self.textStorage.font = .monospacedSystemFont(ofSize: 13, weight: .regular)
 //            }
 //        }
-        
     }
     
     var newlineOffsets: [Int] = []

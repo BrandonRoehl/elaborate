@@ -64,6 +64,7 @@ extension CVCoordinator: NSTextContentStorageDelegate {
         // You can customize and return a different NSTextElement than the default
 
         // Get the offset from the start of the document to this location
+        let begining = textContentManager.documentRange.location
         let offset = textContentManager.offset(from: textContentManager.documentRange.location, to: location)
         
         // For demonstration, we'll log the offset
@@ -71,80 +72,63 @@ extension CVCoordinator: NSTextContentStorageDelegate {
         
         // location is the start of this
         let index = self.newlineOffsets.firstIndex(where: { $0 >= offset })
-        guard let index else {
-            // we are are somewhere after the last return file is likely not
-            // delimiated
-            return nil
+        
+        if let index, self.newlineOffsets[index] == offset {
+            // we are explicityly on an \n this is a special case
+            print("<\\n new line detected>")
+            let attString = NSAttributedString(string: "\n")
+            let pg = NSTextParagraph(attributedString: attString)
+            pg.elementRange = NSTextRange(location: location, end: location)
+            return pg
         }
-        // if nil we are before the start
+        
+        // For everything else
+        
+        // if nil we are after the end
+        // index is the next paragraph paragraph marker
         let range: NSRange
-        if self.newlineOffsets[index] == offset {
-            // Just return the charecter
-            // this is a newline we have a couple options here
-            range = NSRange(location: offset, length: 1)
+        // we are not at the end
+        if let index {
+            let startOffset: Int
+            let endOffset: Int = self.newlineOffsets[index]
+            if index > 0 {
+                startOffset = self.newlineOffsets[index - 1] + 1
+            } else {
+                startOffset = 0
+            }
+//            assert(startOffset == offset)
+            range = NSRange(location: startOffset, length: endOffset - startOffset)
+        } else if let last = self.newlineOffsets.last {
+            // our offset is within the last element of the string
+            range = NSRange((last + 1)..<textStorage.length)
         } else {
-            // return the range until the next newline and not including it
-            let length = self.newlineOffsets[index] - offset
-            range = NSRange(location: offset, length: length)
+            // return the entire thing
+            range = NSRange(location: 0, length: textStorage.length)
         }
-
+        
         let attString = textStorage.attributedSubstring(from: range)
         print(attString.string.debugDescription)
-        return NSTextParagraph(attributedString: attString)
-//        guard let line = self.paragraphRanges.firstIndex(where: { range in
-//            return range.contains(offset)
-//        }) else {
-//            print("No line so something is a problem")
-//            return nil
-//        }
-//        let range = self.paragraphRanges[line]
-//        
-//        guard let range = self.paragraphRanges.first(where: { range in
-//            return range.contains(offset)
-//        }) else {
-//            return nil
-//        }
-//        
-//        let text = textStorage.attributedSubstring(from: range)
-//        let pg = NSTextParagraph(attributedString: text)
-//        return pg
-        // You can return nil to use the default text element, or create a custom one
-        // For example, you might want to customize how certain paragraphs are displayed:
-        
-        /*
-         // Example of returning a custom text element:
-         let range = NSRange(location: offset, length: 10) // Define appropriate range
-         if let textStorage = (textContentManager as? NSTextContentStorage)?.textStorage,
-         range.location + range.length <= textStorage.length {
-         let customAttributedString = NSMutableAttributedString(attributedString:
-         textStorage.attributedSubstring(from: range))
-         
-         // Apply custom attributes
-         customAttributedString.addAttribute(.foregroundColor, value: NSColor.red,
-         range: NSRange(location: 0, length: customAttributedString.length))
-         
-         // Create and return a custom paragraph
-         return NSTextParagraph(attributedString: customAttributedString)
-         }
-         */
-        
-        // Return nil to use the default text element
+        print("returning charecters", offset, "to", offset + range.length)
+        let pg = NSTextParagraph(attributedString: attString)
+        let start = textContentManager.location(begining, offsetBy: range.lowerBound)!
+        let end = textContentManager.location(begining, offsetBy: range.upperBound)
+        pg.elementRange = NSTextRange(location: start, end: end)
+        return pg
     }
 
 //    public func textContentManager(_ textContentManager: NSTextContentManager,
 //                                   shouldEnumerate textElement: NSTextElement,
 //                                   options: NSTextContentManager.EnumerationOptions = []) -> Bool {
-//        
-//        guard let range = textElement.elementRange else {
-//            return true
-//        }
-//
-//        guard let textElement = textElement as? NSTextParagraph else {
-//            return true
-//        }
-//        let start = textContentManager.offset(from: textContentManager.documentRange.location, to: range.location)
-//        let end = textContentManager.offset(from: textContentManager.documentRange.location, to: range.endLocation)
-//        print("TextKit2 is requesting layout for text element at offset: \(start) - \(end)")
+////        guard let range = textElement.elementRange else {
+////            return true
+////        }
+////
+////        guard let textElement = textElement as? NSTextParagraph else {
+////            return true
+////        }
+////        let start = textContentManager.offset(from: textContentManager.documentRange.location, to: range.location)
+////        let end = textContentManager.offset(from: textContentManager.documentRange.location, to: range.endLocation)
+////        print("TextKit2 is requesting layout for text element at offset: \(start) - \(end)")
 //        
 //        // Control whether this text element should be included in layout
 //        return true
