@@ -7,9 +7,6 @@
 
 import SwiftUI
 
-public class CVTextParagraph: NSTextParagraph {
-}
-
 extension CVCoordinator: NSTextContentStorageDelegate {
     // MARK: - NSTextContentStorageDelegate
     
@@ -42,7 +39,7 @@ extension CVCoordinator: NSTextContentStorageDelegate {
             mutableText.insert(attrString, at: offset)
         }
         
-        return CVTextParagraph(attributedString: mutableText)
+        return NSTextParagraph(attributedString: mutableText)
     }
 
     // MARK: - NSTextContentManagerDelegate

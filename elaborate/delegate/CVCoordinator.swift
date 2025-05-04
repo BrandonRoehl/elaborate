@@ -41,6 +41,8 @@ public class CVCoordinator: NSObject {
         self.textLayoutManager = NSTextLayoutManager()
         self.textContentStorage = NSTextContentStorage()
         
+        self.textContainer.exclusionPaths = []
+        
         super.init()
 
         // MARK: NSTextStorageDelegate

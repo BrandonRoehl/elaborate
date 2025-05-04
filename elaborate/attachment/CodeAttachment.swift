@@ -16,9 +16,12 @@ import SwiftUI
 //    }
 //}
 
-final class CodeAttachmentCell: NSTextAttachmentCell {
-    
-}
+//var thumbnailImage: NSImage? = // some image
+//var attachmentCell: NSTextAttachmentCell = NSTextAttachmentCell.initImageCell(thumbnailImage!)
+//var attachment: NSTextAttachment = NSTextAttachment()
+//attachment.attachmentCell = attachmentCell
+//var attrString: NSAttributedString = NSAttributedString.attributedStringWithAttachment(attachment)
+//self.textView.textStorage().appendAttributedString(attrString)
 
 final class CodeAttachment: NSTextAttachment {
     let view: OSView
@@ -27,8 +30,6 @@ final class CodeAttachment: NSTextAttachment {
         self.view = view
         self.view.autoresizingMask = [.height]
         super.init(data: nil, ofType: nil)
-        let cell = CodeAttachmentCell()
-        self.attachmentCell = cell
     }
     
     required init?(coder: NSCoder) {
@@ -57,13 +58,15 @@ final class CodeAttachment: NSTextAttachment {
 //            size.height = 100
 //        }
 //        textContainer?.textView?.frame.width
-//        if let width = textContainer?.size.width {
-//            size.width = width
-//        }
+        
 //        return CGRect(origin: .zero, size: size)
         var result = CGRect()
-        let size = self.view.intrinsicContentSize
-//        size.width = proposedLineFragment.width
+        var size = self.view.intrinsicContentSize
+        if let width = textContainer?.size.width {
+            size.width = width
+        } else {
+            size.width = proposedLineFragment.width
+        }
         result.size = size
         result.origin = CGPoint(x: proposedLineFragment.origin.x, y: proposedLineFragment.maxY)
         return result
