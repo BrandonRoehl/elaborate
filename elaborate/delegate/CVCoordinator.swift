@@ -70,30 +70,31 @@ public class CVCoordinator: NSObject {
 
     @MainActor func update<T>(_ codeView: borrowing CodeView<T>) {
         self.text = codeView.$text
-//        let newResults = codeView.results.mapValues { $0.platformView() }
-//        defer { self.results = newResults }
+        let newResults = codeView.results.mapValues { $0.platformView() }
+        defer { self.results = newResults }
         
         self.results = codeView.results.mapValues { $0.platformView() }
         // Mark edit for the specific chars that need to be updated
-//        var lines: Set<Int> = Set(newResults.keys)
-//        lines.formUnion(self.results.keys)
-//        for lineNumber in lines {
+        var lines: Set<Int> = Set(newResults.keys)
+        lines.formUnion(self.results.keys)
         let begining = self.textLayoutManager.documentRange.location
-        for offset in self.newlineOffsets.reversed() {
-//            guard self.newlineOffsets.count > lineNumber - 1 else {
-//                continue
-//            }
+        for lineNumber in lines.sorted(by: >) {
+//        for offset in self.newlineOffsets.reversed() {
+            guard self.newlineOffsets.count > lineNumber - 1 else {
+                continue
+            }
 //            
-//            let offset = self.newlineOffsets[lineNumber - 1]
+            let offset = self.newlineOffsets[lineNumber - 1]
 //            self.textStorage.beginEditing()
             self.textStorage.edited(.editedCharacters, range: NSRange(location: offset, length: 1), changeInLength: 0)
             guard let loc = self.textLayoutManager.location(begining, offsetBy: offset) else {
                 continue
             }
-            self.textLayoutManager.invalidateLayout(for: NSTextRange(location: loc))
+//            self.textLayoutManager.invalidateLayout(for: NSTextRange(location: loc))
+            self.textLayoutManager.ensureLayout(for: NSTextRange(location: loc))
         }
         // relayout
-        self.textLayoutManager.ensureLayout(for: self.textLayoutManager.documentRange)
+//        self.textLayoutManager.ensureLayout(for: self.textLayoutManager.documentRange)
 
         // TODO: this check is very slow and also dumb but I don't have time
         // to figure out the correct way to do this
