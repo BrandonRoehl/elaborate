@@ -7,25 +7,15 @@
 
 import SwiftUI
 
-public struct CodeView<T> where T: View {
-    public typealias Results = [Int: T]
+public struct CodeView {
+    public var text: Binding<String>
+    public var lineHeight: Binding<[CGFloat]>?
+    public var exclusionPaths: [NSRect]
 
-    public var showLineNumbers: Bool = true
-    public var font: Font = .system(.body).monospaced()
-
-    @Binding public var text: String
-    @Binding public var results: Results
-
-    public init(text: Binding<String>, results: Binding<[Int: T]>) {
-        self._text = text
-        self._results = results
-    }
-}
-
-extension CodeView where T == EmptyView {
-    public init(text: Binding<String>) {
-        self._text = text
-        self._results = .constant([:])
+    public init(text: Binding<String>, lineHeight: Binding<[CGFloat]>? = nil, exclusionPaths: [NSRect] = []) {
+        self.text = text
+        self.lineHeight = lineHeight
+        self.exclusionPaths = exclusionPaths
     }
 }
 

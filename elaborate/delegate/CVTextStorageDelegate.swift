@@ -68,7 +68,6 @@ extension CVCoordinator: NSTextStorageDelegate {
         }
         assert(check == newlineOffsets)
         #endif
-        self.syncHeights()
     }
     
     public func textStorage(
@@ -83,6 +82,7 @@ extension CVCoordinator: NSTextStorageDelegate {
         
         let text = textStorage.string
         Task.detached { @MainActor in
+            self.syncHeights()
             if self.text.wrappedValue != text {
                 self.text.wrappedValue = text
             }

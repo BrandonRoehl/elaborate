@@ -28,18 +28,17 @@ public class CVCoordinator: NSObject {
     let textContentStorage: NSTextContentStorage
 
     var text: Binding<String>
-    var results: [Int: OSView]
-   
+    var lineHeight: Binding<[CGFloat]>?
+
     var exclusionPaths: [NSRect] = [] {
         didSet {
             self.textContainer.exclusionPaths = self.exclusionPaths.map(NSBezierPath.init(rect:))
         }
     }
 
-    @MainActor init<T>(_ codeView: borrowing CodeView<T>) {
+    @MainActor init(_ codeView: borrowing CodeView) {
         // Set to defaults to void dump until we get an initialized binding
-        self.text = codeView.$text
-        self.results = [:]
+        self.text = codeView.text
 
         // Initilize the container first
         self.textStorage = NSTextStorage()
@@ -47,19 +46,11 @@ public class CVCoordinator: NSObject {
         self.textLayoutManager = NSTextLayoutManager()
         self.textContentStorage = NSTextContentStorage()
 
-//        self.textContainer.exclusionPaths = self.exclusionPaths.map(NSBezierPath.init(rect:))
-//        self.exclusionPaths = [NSRect(x: 0, y: 16, width: CGFloat.greatestFiniteMagnitude, height: 100)]
-
         super.init()
 
         // MARK: NSTextStorageDelegate
         self.textStorage.delegate = self
 
-        // MARK: NSTextLayoutManagerDelegate
-//        self.textLayoutManager.delegate = self
-
-        // MARK: NSTextContentStorageDelegate
-//        self.textContentStorage.delegate = self
         self.textContentStorage.textStorage = self.textStorage
         self.textContentStorage.addTextLayoutManager(self.textLayoutManager)
 
@@ -74,14 +65,13 @@ public class CVCoordinator: NSObject {
         self.update(codeView)
     }
 
-    @MainActor func update<T>(_ codeView: borrowing CodeView<T>) {
-        self.exclusionPaths = [NSRect(x: 0, y: 16, width: CGFloat.greatestFiniteMagnitude, height: 100)]
-
-        self.text = codeView.$text
+    @MainActor func update(_ codeView: borrowing CodeView) {
+        self.exclusionPaths = codeView.exclusionPaths
+        self.text = codeView.text
+        self.lineHeight = codeView.lineHeight
 //        let newResults = codeView.results.mapValues { $0.platformView() }
 //        defer { self.results = newResults }
         
-        self.results = codeView.results.mapValues { $0.platformView() }
         // Mark edit for the specific chars that need to be updated
 //        var lines: Set<Int> = Set(newResults.keys)
 //        lines.formUnion(self.results.keys)
@@ -115,8 +105,8 @@ public class CVCoordinator: NSObject {
     
     var newlineOffsets: [Int] = []
     
-    func syncHeights() {
-        guard let layout = self.textContainer.layoutManager else {
+    @MainActor func syncHeights() {
+        guard let lineHeights = self.lineHeight, let layout = self.textContainer.layoutManager else {
             return
         }
         var heights: [CGFloat] = []
@@ -142,7 +132,9 @@ public class CVCoordinator: NSObject {
             let rect = layout.lineFragmentRect(forGlyphAt: lastOffset, effectiveRange: nil, withoutAdditionalLayout: false)
             heights.append(rect.maxY - runningOffset)
         }
-        return
+        lineHeights.wrappedValue = heights
+        // Pass
+        print(heights)
     }
 }
 

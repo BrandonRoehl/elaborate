@@ -15,7 +15,9 @@ struct ContentView: View {
     static let logger = Logger(subsystem: "elb", category: "content")
 
     @Binding var document: ElaborateDocument
+
     @State var running: Bool = false
+    @State var lineHeights: [CGFloat] = []
 
     @State private var messages: [Int: ResultGroup] = [:] {
         didSet {
@@ -41,7 +43,13 @@ struct ContentView: View {
     var body: some View {
         ScrollView([.vertical]) {
             ZStack(alignment: .topLeading) {
-                CodeView(text: $document.text)
+                CodeView(
+                    text: $document.text,
+                    lineHeight: $lineHeights,
+                    exclusionPaths: [
+                        NSRect(x: 0, y: 16, width: CGFloat.greatestFiniteMagnitude, height: 100),
+                    ],
+                )
             }
         }
 //        .background(Color(.textBackgroundColor))

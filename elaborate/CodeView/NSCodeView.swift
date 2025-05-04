@@ -46,7 +46,9 @@ extension CodeView: NSViewRepresentable {
         layout.ensureLayout(for: container)
         let usedRect = layout.usedRect(for: container)
         let newSize = proposal.replacingUnspecifiedDimensions(by: usedRect.size)
-        context.coordinator.syncHeights()
+        Task.detached { @MainActor in
+            context.coordinator.syncHeights()
+        }
         return newSize
     }
 }
