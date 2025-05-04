@@ -29,6 +29,12 @@ public class CVCoordinator: NSObject {
 
     var text: Binding<String>
     var results: [Int: OSView]
+   
+    var exclusionPaths: [NSRect] = [] {
+        didSet {
+            self.textContainer.exclusionPaths = self.exclusionPaths.map(NSBezierPath.init(rect:))
+        }
+    }
 
     @MainActor init<T>(_ codeView: borrowing CodeView<T>) {
         // Set to defaults to void dump until we get an initialized binding
@@ -40,9 +46,10 @@ public class CVCoordinator: NSObject {
         self.textContainer = NSTextContainer()
         self.textLayoutManager = NSTextLayoutManager()
         self.textContentStorage = NSTextContentStorage()
-        
-        self.textContainer.exclusionPaths = []
-        
+
+//        self.textContainer.exclusionPaths = self.exclusionPaths.map(NSBezierPath.init(rect:))
+//        self.exclusionPaths = [NSRect(x: 0, y: 16, width: CGFloat.greatestFiniteMagnitude, height: 100)]
+
         super.init()
 
         // MARK: NSTextStorageDelegate
@@ -59,7 +66,6 @@ public class CVCoordinator: NSObject {
         // Update the text container
         self.textLayoutManager.textContainer = self.textContainer
         
-        
         // TODO: REMOVE
 //        self.textStorage.setAttributedString(NSAttributedString(string: self.text.wrappedValue))
 //        self.textStorage.foregroundColor = .labelColor
@@ -69,6 +75,8 @@ public class CVCoordinator: NSObject {
     }
 
     @MainActor func update<T>(_ codeView: borrowing CodeView<T>) {
+        self.exclusionPaths = [NSRect(x: 0, y: 16, width: CGFloat.greatestFiniteMagnitude, height: 100)]
+
         self.text = codeView.$text
 //        let newResults = codeView.results.mapValues { $0.platformView() }
 //        defer { self.results = newResults }
@@ -106,6 +114,36 @@ public class CVCoordinator: NSObject {
     }
     
     var newlineOffsets: [Int] = []
+    
+    func syncHeights() {
+        guard let layout = self.textContainer.layoutManager else {
+            return
+        }
+        var heights: [CGFloat] = []
+        var runningOffset: CGFloat = 0
+        var j: Int = 0
+        for i in 0..<self.newlineOffsets.count {
+            let offset = self.newlineOffsets[i]
+            if offset > self.textStorage.length {
+                continue
+            }
+            let rect = layout.lineFragmentRect(forGlyphAt: self.newlineOffsets[i], effectiveRange: nil, withoutAdditionalLayout: false)
+            var height = rect.maxY - runningOffset
+            // What
+            if j < self.exclusionPaths.count && self.exclusionPaths[j].maxY <= rect.minY {
+                height -= self.exclusionPaths[j].height
+                j += 1
+            }
+            runningOffset += rect.maxY - runningOffset
+            heights.append(height)
+        }
+        let lastOffset = self.textStorage.length - 1
+        if lastOffset != self.newlineOffsets.last {
+            let rect = layout.lineFragmentRect(forGlyphAt: lastOffset, effectiveRange: nil, withoutAdditionalLayout: false)
+            heights.append(rect.maxY - runningOffset)
+        }
+        return
+    }
 }
 
 

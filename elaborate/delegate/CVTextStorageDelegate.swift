@@ -68,6 +68,7 @@ extension CVCoordinator: NSTextStorageDelegate {
         }
         assert(check == newlineOffsets)
         #endif
+        self.syncHeights()
     }
     
     public func textStorage(
