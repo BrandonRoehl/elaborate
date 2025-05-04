@@ -49,11 +49,11 @@ struct ContentView: View {
                     lineHeight: $lineHeights,
                     exclusionPaths: exclusionPaths,
                 )
-//                VStack(alignment: .leading) {
+                VStack(alignment: .leading) {
                     List(Array(messages.keys).sorted(), id: \.self) { line in
                         messages[line]!//.offset(x: 0, y: 0)
                     }
-//                }
+                }
             }
         }
 //        .background(Color(.textBackgroundColor))

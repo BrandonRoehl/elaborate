@@ -28,7 +28,9 @@ final class CodeAttachment: NSTextAttachment {
 
     public init(view: OSView) {
         self.view = view
+#if os(macOS)
         self.view.autoresizingMask = [.height]
+#endif
         super.init(data: nil, ofType: nil)
     }
     

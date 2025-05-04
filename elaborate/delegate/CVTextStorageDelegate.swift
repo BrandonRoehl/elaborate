@@ -17,7 +17,7 @@ extension CVCoordinator: NSTextStorageDelegate {
     
     public func textStorage(
         _ textStorage: NSTextStorage,
-        willProcessEditing editedMask: NSTextStorageEditActions,
+        willProcessEditing editedMask: OSTextStorageEditActions,
         range editedRange: NSRange,
         changeInLength delta: Int
     ) {

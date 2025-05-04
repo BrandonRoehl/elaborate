@@ -30,9 +30,13 @@ public class CVCoordinator: NSObject {
     var text: Binding<String>
     var lineHeight: Binding<[CGFloat]>?
 
-    var exclusionPaths: [NSRect] = [] {
+    var exclusionPaths: [CGRect] = [] {
         didSet {
+#if os(macOS)
             self.textContainer.exclusionPaths = self.exclusionPaths.map(NSBezierPath.init(rect:))
+#elseif os(iOS) || targetEnvironment(macCatalyst)
+            self.textContainer.exclusionPaths = self.exclusionPaths.map(UIBezierPath.init(rect:))
+#endif
         }
     }
 
@@ -97,8 +101,10 @@ public class CVCoordinator: NSObject {
         if self.text.wrappedValue != self.textStorage.string {
             self.textContentStorage.performEditingTransaction {
                 self.textStorage.setAttributedString(NSAttributedString(string: self.text.wrappedValue))
+#if os(macOS)
                 self.textStorage.foregroundColor = .labelColor
                 self.textStorage.font = .monospacedSystemFont(ofSize: 13, weight: .regular)
+#endif
             }
         }
     }

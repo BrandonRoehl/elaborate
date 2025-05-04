@@ -10,7 +10,7 @@ import SwiftUI
 import UIKit
 
 extension CodeView: UIViewRepresentable {
-    public typealias Coordinator = CodeViewCoordinator
+    public typealias Coordinator = CVCoordinator
     
     public func makeUIView(context: Context) -> UITextView {
         let textView = UITextView(
@@ -25,16 +25,16 @@ extension CodeView: UIViewRepresentable {
         context.coordinator.update(self)
     }
 
-    @MainActor public func sizeThatFits(_ proposal: ProposedViewSize, nsView textView: NSTextView, context: Context) -> CGSize? {
+    @MainActor public func sizeThatFits(_ proposal: ProposedViewSize, nsView textView: UITextView, context: Context) -> CGSize? {
         guard
-            let container = textView.textContainer,
-            let layout = textView.layoutManager,
             let width = proposal.width,
             width > 0
         else {
             return nil
         }
-        container.containerSize = CGSize(width: width, height: CGFloat.greatestFiniteMagnitude)
+        let container = textView.textContainer
+        let layout = textView.layoutManager
+        container.size = CGSize(width: width, height: .greatestFiniteMagnitude)
         layout.ensureLayout(for: container)
         let usedRect = layout.usedRect(for: container)
         let newSize = proposal.replacingUnspecifiedDimensions(by: usedRect.size)
