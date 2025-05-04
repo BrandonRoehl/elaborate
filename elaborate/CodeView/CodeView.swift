@@ -10,9 +10,9 @@ import SwiftUI
 public struct CodeView {
     public var text: Binding<String>
     public var lineHeight: Binding<[CGFloat]>?
-    public var exclusionPaths: [NSRect]
+    public var exclusionPaths: [CGRect]
 
-    public init(text: Binding<String>, lineHeight: Binding<[CGFloat]>? = nil, exclusionPaths: [NSRect] = []) {
+    public init(text: Binding<String>, lineHeight: Binding<[CGFloat]>? = nil, exclusionPaths: [CGRect] = []) {
         self.text = text
         self.lineHeight = lineHeight
         self.exclusionPaths = exclusionPaths

@@ -18,6 +18,7 @@ struct ContentView: View {
 
     @State var running: Bool = false
     @State var lineHeights: [CGFloat] = []
+    @State var exclusionPaths: [CGRect] = []
 
     @State private var messages: [Int: ResultGroup] = [:] {
         didSet {
@@ -46,10 +47,13 @@ struct ContentView: View {
                 CodeView(
                     text: $document.text,
                     lineHeight: $lineHeights,
-                    exclusionPaths: [
-                        NSRect(x: 0, y: 16, width: CGFloat.greatestFiniteMagnitude, height: 100),
-                    ],
+                    exclusionPaths: exclusionPaths,
                 )
+//                VStack(alignment: .leading) {
+                    List(Array(messages.keys).sorted(), id: \.self) { line in
+                        messages[line]!//.offset(x: 0, y: 0)
+                    }
+//                }
             }
         }
 //        .background(Color(.textBackgroundColor))

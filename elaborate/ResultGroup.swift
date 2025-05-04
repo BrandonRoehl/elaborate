@@ -11,8 +11,12 @@ struct ResultGroup: View {
     let results: [Elaborate_Result]
 
     var body: some View {
-        ForEach(results) { result in
-            ResultView(result: result)
+        GeometryReader { geometry in
+            List(results) { result in
+                ResultView(result: result)
+            }.onAppear {
+                print(geometry.size)
+            }
         }
     }
 }
