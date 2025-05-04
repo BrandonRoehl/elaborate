@@ -52,7 +52,7 @@ public class CVCoordinator: NSObject {
 //        self.textLayoutManager.delegate = self
 
         // MARK: NSTextContentStorageDelegate
-        self.textContentStorage.delegate = self
+//        self.textContentStorage.delegate = self
         self.textContentStorage.textStorage = self.textStorage
         self.textContentStorage.addTextLayoutManager(self.textLayoutManager)
 
@@ -78,22 +78,21 @@ public class CVCoordinator: NSObject {
 //        var lines: Set<Int> = Set(newResults.keys)
 //        lines.formUnion(self.results.keys)
 //        for lineNumber in lines {
-        let begining = self.textLayoutManager.documentRange.location
-        for offset in self.newlineOffsets.reversed() {
-//            guard self.newlineOffsets.count > lineNumber - 1 else {
+//        let begining = self.textLayoutManager.documentRange.location
+//        for offset in self.newlineOffsets.reversed() {
+////            guard self.newlineOffsets.count > lineNumber - 1 else {
+////                continue
+////            }
+////            
+////            let offset = self.newlineOffsets[lineNumber - 1]
+////            self.textStorage.beginEditing()
+//            self.textStorage.edited(.editedCharacters, range: NSRange(location: offset, length: 1), changeInLength: 0)
+//            guard let loc = self.textLayoutManager.location(begining, offsetBy: offset) else {
 //                continue
 //            }
-//            
-//            let offset = self.newlineOffsets[lineNumber - 1]
-//            self.textStorage.beginEditing()
-            self.textStorage.edited(.editedCharacters, range: NSRange(location: offset, length: 1), changeInLength: 0)
-            guard let loc = self.textLayoutManager.location(begining, offsetBy: offset) else {
-                continue
-            }
-            self.textLayoutManager.invalidateLayout(for: NSTextRange(location: loc))
-        }
+//            self.textLayoutManager.invalidateLayout(for: NSTextRange(location: loc))
+//        }
         // relayout
-        self.textLayoutManager.ensureLayout(for: self.textLayoutManager.documentRange)
 
         // TODO: this check is very slow and also dumb but I don't have time
         // to figure out the correct way to do this

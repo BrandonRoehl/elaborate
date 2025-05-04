@@ -40,9 +40,11 @@ struct ContentView: View {
     
     var body: some View {
         ScrollView([.vertical]) {
-            CodeView(text: $document.text, results: $messages)
-                .scaledToFill()
+            ZStack(alignment: .topLeading) {
+                CodeView(text: $document.text)
+            }
         }
+//        .background(Color(.textBackgroundColor))
         .defaultScrollAnchor(.top)
         .scrollDismissesKeyboard(.interactively)
         .toolbarRole(.editor)
