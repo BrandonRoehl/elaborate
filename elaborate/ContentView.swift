@@ -39,7 +39,11 @@ struct ContentView: View {
     @State var stream = AsyncChannel<ElaborateDocument>()
     
     var body: some View {
-        CodeView(text: $document.text, results: $messages)
+        ScrollView([.vertical]) {
+            CodeView(text: $document.text, results: $messages)
+                .scaledToFill()
+        }
+        .defaultScrollAnchor(.top)
         .scrollDismissesKeyboard(.interactively)
         .toolbarRole(.editor)
         .toolbar {
