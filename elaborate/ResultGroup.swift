@@ -16,7 +16,7 @@ struct ResultGroup: View {
                 ResultView(result: result)
             }.onAppear {
                 print(geometry.size)
-            }
+            }.padding(.all, 0)
         }
     }
 }
