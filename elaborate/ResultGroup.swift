@@ -11,12 +11,10 @@ struct ResultGroup: View {
     let results: [Elaborate_Result]
 
     var body: some View {
-        GeometryReader { geometry in
-            List(results) { result in
+        VStack {
+            ForEach(results) { result in
                 ResultView(result: result)
-            }.onAppear {
-                print(geometry.size)
-            }.padding(.all, 0)
+            }
         }
     }
 }
