@@ -38,7 +38,7 @@ struct ResultView: View {
     }
 
     var body: some View {
-        VStack(alignment: .leading) {
+        VStack(alignment: .leading, spacing: 1) {
             HStack {
                 Label("\(result.line)", systemImage: "list.dash")
                     .foregroundStyle(.secondary)
@@ -51,11 +51,11 @@ struct ResultView: View {
             }
             .font(.caption)
             if !result.output.isEmpty {
-                Spacer()
                 // Set the font to mono space if this is a value
                 Text(result.output)
                     .textSelection(.enabled)
                     .font(result.status == .value ? mono : regular)
+                    .padding(.top, 5)
             }
         }
 //        .padding()

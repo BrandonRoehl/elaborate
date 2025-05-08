@@ -25,7 +25,7 @@ struct CodeView: View {
 //            VStack {
                 ForEach(messages.keys.sorted(), id: \.self) { line in
                     messages[line]!
-                    //                    .offset(x: 0, y: CGFloat((200 * line) + 100))
+                                        .offset(x: 0, y: CGFloat((2 * line) + 100))
                 }
 //            }
         }
