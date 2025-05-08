@@ -40,7 +40,7 @@ public class CVCoordinator: NSObject {
         }
     }
 
-    @MainActor init(_ codeView: borrowing CodeView) {
+    @MainActor init(_ codeView: borrowing CodeTextView) {
         // Set to defaults to void dump until we get an initialized binding
         self.text = codeView.text
 
@@ -69,7 +69,7 @@ public class CVCoordinator: NSObject {
         self.update(codeView)
     }
 
-    @MainActor func update(_ codeView: borrowing CodeView) {
+    @MainActor func update(_ codeView: borrowing CodeTextView) {
         self.exclusionPaths = codeView.exclusionPaths
         self.text = codeView.text
         self.lineHeight = codeView.lineHeight
@@ -140,12 +140,12 @@ public class CVCoordinator: NSObject {
         }
         lineHeights.wrappedValue = heights
         // Pass
-        print(heights)
+//        print(heights)
     }
 }
 
 
-extension CodeView {
+extension CodeTextView {
     @MainActor public func makeCoordinator() -> CVCoordinator {
         return CVCoordinator(self)
     }

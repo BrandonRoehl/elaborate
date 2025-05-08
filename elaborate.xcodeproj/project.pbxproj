@@ -19,6 +19,7 @@
 		556ABF742D17A2CA004D6A05 /* elaborateTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 556ABF732D17A2CA004D6A05 /* elaborateTests.swift */; };
 		556ABF7E2D17A2CA004D6A05 /* elaborateUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 556ABF7D2D17A2CA004D6A05 /* elaborateUITests.swift */; };
 		556ABF802D17A2CA004D6A05 /* elaborateUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 556ABF7F2D17A2CA004D6A05 /* elaborateUITestsLaunchTests.swift */; };
+		55776DCC2DCD5BA200FFCA23 /* CodeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55776DCB2DCD5B9E00FFCA23 /* CodeView.swift */; };
 		557A56962D1A6CAA00209EFF /* SwiftProtobuf in Frameworks */ = {isa = PBXBuildFile; productRef = 557A56952D1A6CAA00209EFF /* SwiftProtobuf */; };
 		557A56982D1A6DD800209EFF /* Elb.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 557A56972D1A6DD800209EFF /* Elb.xcframework */; };
 		557A569A2D1A6DD800209EFF /* Elb.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 557A56972D1A6DD800209EFF /* Elb.xcframework */; };
@@ -81,6 +82,7 @@
 		556ABF792D17A2CA004D6A05 /* elaborateUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = elaborateUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		556ABF7D2D17A2CA004D6A05 /* elaborateUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = elaborateUITests.swift; sourceTree = "<group>"; };
 		556ABF7F2D17A2CA004D6A05 /* elaborateUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = elaborateUITestsLaunchTests.swift; sourceTree = "<group>"; };
+		55776DCB2DCD5B9E00FFCA23 /* CodeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CodeView.swift; sourceTree = "<group>"; };
 		557A56972D1A6DD800209EFF /* Elb.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; path = Elb.xcframework; sourceTree = "<group>"; };
 		557A569B2D1A6FB800209EFF /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		557A569F2D1A6FDC00209EFF /* Makefile */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.make; path = Makefile; sourceTree = "<group>"; };
@@ -107,7 +109,7 @@
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		551BEEE32DB41AE2000D13F6 /* attachment */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = attachment; sourceTree = "<group>"; };
-		551BEEE42DB41B02000D13F6 /* CodeView */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = CodeView; sourceTree = "<group>"; };
+		551BEEE42DB41B02000D13F6 /* CodeTextView */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = CodeTextView; sourceTree = "<group>"; };
 		551BEEE52DB41B2A000D13F6 /* delegate */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = delegate; sourceTree = "<group>"; };
 		55E0FEAA2D1B6F1800344C57 /* transport */ = {isa = PBXFileSystemSynchronizedRootGroup; exceptions = (55E0FEAB2D1B6F1E00344C57 /* PBXFileSystemSynchronizedBuildFileExceptionSet */, 55E0FEAC2D1B6F1E00344C57 /* PBXFileSystemSynchronizedBuildFileExceptionSet */, ); explicitFileTypes = {}; explicitFolders = (); path = transport; sourceTree = "<group>"; };
 /* End PBXFileSystemSynchronizedRootGroup section */
@@ -177,7 +179,7 @@
 		556ABF5D2D17A2C7004D6A05 /* elaborate */ = {
 			isa = PBXGroup;
 			children = (
-				551BEEE42DB41B02000D13F6 /* CodeView */,
+				551BEEE42DB41B02000D13F6 /* CodeTextView */,
 				551BEEE32DB41AE2000D13F6 /* attachment */,
 				55E0FEAA2D1B6F1800344C57 /* transport */,
 				556ABF5E2D17A2C7004D6A05 /* ElaborateApp.swift */,
@@ -188,6 +190,7 @@
 				5519F93C2D500E2F00823450 /* ResultGroup.swift */,
 				559354FF2D87456F00FCFE4A /* NSRange+Extension.swift */,
 				556ABF622D17A2C7004D6A05 /* ContentView.swift */,
+				55776DCB2DCD5B9E00FFCA23 /* CodeView.swift */,
 				556ABF642D17A2C9004D6A05 /* Assets.xcassets */,
 				556ABF662D17A2C9004D6A05 /* Info.plist */,
 				556ABF672D17A2C9004D6A05 /* elaborate.entitlements */,
@@ -239,7 +242,7 @@
 			);
 			fileSystemSynchronizedGroups = (
 				551BEEE32DB41AE2000D13F6 /* attachment */,
-				551BEEE42DB41B02000D13F6 /* CodeView */,
+				551BEEE42DB41B02000D13F6 /* CodeTextView */,
 				551BEEE52DB41B2A000D13F6 /* delegate */,
 				55E0FEAA2D1B6F1800344C57 /* transport */,
 			);
@@ -367,6 +370,7 @@
 			files = (
 				5519F93D2D500E3300823450 /* ResultGroup.swift in Sources */,
 				556ABF612D17A2C7004D6A05 /* ElaborateDocument.swift in Sources */,
+				55776DCC2DCD5BA200FFCA23 /* CodeView.swift in Sources */,
 				556ABF5F2D17A2C7004D6A05 /* ElaborateApp.swift in Sources */,
 				557A56A32D1A6FF700209EFF /* transport.proto in Sources */,
 				552E75282D49B98C00F34A32 /* ResultView.swift in Sources */,

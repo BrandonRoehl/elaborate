@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-public struct CodeView {
+public struct CodeTextView {
     public var text: Binding<String>
     public var lineHeight: Binding<[CGFloat]>?
     public var exclusionPaths: [CGRect]
@@ -21,5 +21,5 @@ public struct CodeView {
 
 #Preview {
     @Previewable @State var text: String = "Hello, World!"
-    CodeView(text: $text)
+    CodeTextView(text: $text)
 }

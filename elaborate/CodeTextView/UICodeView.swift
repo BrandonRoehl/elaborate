@@ -9,7 +9,7 @@
 import SwiftUI
 import UIKit
 
-extension CodeView: UIViewRepresentable {
+extension CodeTextView: UIViewRepresentable {
     public typealias Coordinator = CVCoordinator
     
     public func makeUIView(context: Context) -> UITextView {

@@ -17,8 +17,6 @@ struct ContentView: View {
     @Binding var document: ElaborateDocument
 
     @State var running: Bool = false
-    @State var lineHeights: [CGFloat] = []
-    @State var exclusionPaths: [CGRect] = []
 
     @State private var messages: [Int: ResultGroup] = [:] {
         didSet {
@@ -43,18 +41,10 @@ struct ContentView: View {
     
     var body: some View {
         ScrollView([.vertical]) {
-            ZStack(alignment: .topLeading) {
-                CodeView(
-                    text: $document.text,
-                    lineHeight: $lineHeights,
-                    exclusionPaths: exclusionPaths,
-                )
-                VStack(alignment: .leading) {
-                    List(Array(messages.keys).sorted(), id: \.self) { line in
-                        messages[line]!//.offset(x: 0, y: 0)
-                    }
-                }
-            }
+            CodeView(
+                text: $document.text,
+                messages: $messages,
+            )
         }
 //        .background(Color(.textBackgroundColor))
         .defaultScrollAnchor(.top)
