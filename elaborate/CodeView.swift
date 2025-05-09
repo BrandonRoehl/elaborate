@@ -39,16 +39,20 @@ struct CodeView: View {
                 lineHeight: $lineHeights,
                 exclusionPaths: exclusionPaths,
             )
-            LazyVStack {
+            LazyVStack(spacing: 0) {
                 ForEach(lineHeights.indices, id: \.self) { line in
+#if OUTLINES
+                    Rectangle().stroke(Color.blue, lineWidth: 1).frame(height: self.getLineHeight(at: line))
+#else
                     Spacer().frame(height: self.getLineHeight(at: line))
+#endif
                     if let message = messages[line + 1] {
                         message.overlay(alignment: .center) {
                             GeometryReader { proxy in
                                 Color.clear.onChange(of: proxy.exlusion(in: space), initial: true) { (_, new) in
                                     self.exclusionSizes[line + 1] = new
                                 }
-#if DEBUG
+#if OUTLINES
                                 .border(Color.red, width: 1)
 #endif
                             }

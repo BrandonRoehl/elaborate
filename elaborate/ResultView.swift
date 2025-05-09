@@ -38,37 +38,35 @@ struct ResultView: View {
     }
 
     var body: some View {
-        ZStack {
-            VStack(alignment: .leading) {
-                HStack {
-                    Label("\(result.line)", systemImage: "list.dash")
-                        .foregroundStyle(.secondary)
-                        .font(.headline)
-                    Spacer()
-                    Image(systemName: icon)
-                        .foregroundStyle(.primary)
-                        .font(.headline)
-                    
-                }
-                .font(.caption)
-                if !result.output.isEmpty {
-                    // Set the font to mono space if this is a value
-                    Text(result.output)
-                        .textSelection(.enabled)
-                        .font(result.status == .value ? mono : regular)
-                        .padding(.top, 4)
-                }
+        VStack(alignment: .leading) {
+            HStack {
+                Label("\(result.line)", systemImage: "list.dash")
+                    .foregroundStyle(.secondary)
+                    .font(.headline)
+                Spacer()
+                Image(systemName: icon)
+                    .foregroundStyle(.primary)
+                    .font(.headline)
+                
             }
-            //        .padding()
-            //        .background(.capsule)
-            //        .background(in: .buttonBorder)
-            .padding(.all, 8)
-            #if DEBUG
-            .background(RoundedRectangle(cornerRadius: 8).stroke(color, lineWidth: 1))
-            #else
-            .background(RoundedRectangle(cornerRadius: 8).fill(color))
-            #endif
-        }.padding(.all, 4)
+            .font(.caption)
+            if !result.output.isEmpty {
+                // Set the font to mono space if this is a value
+                Text(result.output)
+                    .textSelection(.enabled)
+                    .font(result.status == .value ? mono : regular)
+                    .padding(.top, 4)
+            }
+        }
+        //        .padding()
+        //        .background(.capsule)
+        //        .background(in: .buttonBorder)
+        .padding(.all, 8)
+#if OUTLINES
+        .background(RoundedRectangle(cornerRadius: 8).stroke(color, lineWidth: 1))
+#else
+        .background(RoundedRectangle(cornerRadius: 8).fill(color))
+#endif
     }
 }
 

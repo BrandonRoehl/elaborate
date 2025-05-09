@@ -11,11 +11,11 @@ struct ResultGroup: View {
     let results: [Elaborate_Result]
 
     var body: some View {
-        VStack(spacing: 0) {
+        VStack(spacing: 4) {
             ForEach(results) { result in
                 ResultView(result: result)
             }
-        }
+        }.padding(.all, 4)
     }
 }
 
