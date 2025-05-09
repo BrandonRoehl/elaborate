@@ -25,6 +25,13 @@ extension CVCoordinator: NSTextStorageDelegate {
         // The textStorage holds the string it will be and not the string it was
         // so you have to determine where we were before here
         
+#if DEBUG // these are here in this to help debug the code during development
+        let text = textStorage.string
+        let check: [Int] = text.enumerated().filter(\.element.isNewline).map { (index, _) in
+            return index
+        }
+#endif
+        
         // Grab how many pg markers are going to get replaced
         let startIndex: Int = self.newlineOffsets.firstIndex(where: { newLine in
             return newLine >= editedRange.location
@@ -58,13 +65,9 @@ extension CVCoordinator: NSTextStorageDelegate {
         
         // Good checks in dev but don't use this code in prod far to slow
         #if DEBUG
-        let text = textStorage.string
         for offset in newlineOffsets {
             let idx = text.index(text.startIndex, offsetBy: offset)
-            assert(text[idx] == "\n")
-        }
-        let check: [Int] = text.enumerated().filter(\.element.isNewline).map { (index, _) in
-            return index
+            assert(text[idx] == "\n", "our adjustments don't lead to a \n")
         }
         assert(check == newlineOffsets, "Somehow we lost count and newlines aren't aligned")
         #endif

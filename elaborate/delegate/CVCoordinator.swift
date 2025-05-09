@@ -70,9 +70,10 @@ public class CVCoordinator: NSObject {
     }
 
     @MainActor func update(_ codeView: borrowing CodeTextView) {
-        self.exclusionPaths = codeView.exclusionPaths
         self.text = codeView.text
         self.lineHeight = codeView.lineHeight
+        // Thse have to be sorted before they are set
+        self.exclusionPaths = codeView.exclusionPaths.sorted { $0.minY < $1.minY }
 //        let newResults = codeView.results.mapValues { $0.platformView() }
 //        defer { self.results = newResults }
         
@@ -139,13 +140,8 @@ public class CVCoordinator: NSObject {
             heights.append(rect.maxY - runningOffset)
         }
         // for now
-//        print("H", heights)
-        assert(heights.allSatisfy { $0 >= 0 }, "Check your math, lines cannot have negative height")
-
-//        let flat: [CGFloat] = heights.map { _ in 16.0 }
-//
+//        assert(heights.allSatisfy { $0 >= 0 }, "Check your math, lines cannot have negative height")
         lineHeights.wrappedValue = heights
-        // Pass
     }
 }
 
