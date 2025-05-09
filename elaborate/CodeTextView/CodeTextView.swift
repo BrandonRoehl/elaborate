@@ -8,6 +8,14 @@
 import SwiftUI
 
 public struct CodeTextView {
+    static let fontSize: CGFloat = {
+#if os(macOS)
+        return NSFont.systemFontSize(for: .regular)
+#elseif os(iOS) || targetEnvironment(macCatalyst)
+        return UIFont.preferredFont(forTextStyle: .body).pointSize
+#endif
+    }()
+
     public var text: Binding<String>
     public var lineHeight: Binding<[CGFloat]>?
     public var exclusionPaths: [CGRect]

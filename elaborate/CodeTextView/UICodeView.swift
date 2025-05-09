@@ -17,7 +17,7 @@ extension CodeTextView: UIViewRepresentable {
             frame: CGRect(),
             textContainer: context.coordinator.textContainer
         )
-        textView.font = .monospacedSystemFont(ofSize: 13, weight: .regular)
+        textView.font = .monospacedSystemFont(ofSize: Self.fontSize, weight: .regular)
         textView.textColor = .label
         textView.isScrollEnabled = false
         textView.textContainerInset = .zero

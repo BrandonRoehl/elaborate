@@ -104,7 +104,7 @@ public class CVCoordinator: NSObject {
                 self.textStorage.setAttributedString(NSAttributedString(string: self.text.wrappedValue))
 #if os(macOS)
                 self.textStorage.foregroundColor = .labelColor
-                self.textStorage.font = .monospacedSystemFont(ofSize: 13, weight: .regular)
+                self.textStorage.font = .monospacedSystemFont(ofSize: CodeTextView.fontSize, weight: .regular)
 #endif
             }
         }
@@ -132,7 +132,9 @@ public class CVCoordinator: NSObject {
                 j += 1
             }
             runningOffset += rect.maxY - runningOffset
+
             heights.append(height)
+//            heights.append(height.rounded(.awayFromZero))
         }
         let lastOffset = self.textStorage.length - 1
         if lastOffset != self.newlineOffsets.last {
