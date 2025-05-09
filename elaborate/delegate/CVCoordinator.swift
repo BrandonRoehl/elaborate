@@ -138,9 +138,13 @@ public class CVCoordinator: NSObject {
             let rect = layout.lineFragmentRect(forGlyphAt: lastOffset, effectiveRange: nil, withoutAdditionalLayout: false)
             heights.append(rect.maxY - runningOffset)
         }
-        lineHeights.wrappedValue = heights
+        // for now
+        print("H", heights)
+
+        let flat: [CGFloat] = heights.map { _ in 16.0 }
+
+        lineHeights.wrappedValue = flat
         // Pass
-//        print(heights)
     }
 }
 

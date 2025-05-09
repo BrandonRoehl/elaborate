@@ -7,6 +7,16 @@
 
 import SwiftUI
 
+fileprivate let space: NamedCoordinateSpace = .named("codeview")
+
+fileprivate extension GeometryProxy {
+    var exlusion: CGRect {
+        var frame = self.frame(in: space)
+        frame.size.width = .infinity
+        return frame
+    }
+}
+
 struct CodeView: View {
     @Binding var text: String
     @Binding var messages: [Int: ResultGroup]
@@ -32,19 +42,18 @@ struct CodeView: View {
                     if let message = messages[line + 1] {
                         message.overlay(alignment: .center) {
                             GeometryReader { proxy in
-                                Color.clear.onChange(of: proxy.size.height, initial: true) {
-                                    let frame: CGRect = proxy.frame(in: .global)
-                                    self.updateExclusionSize(line: line + 1, frame: frame)
+                                Color.clear.onChange(of: proxy.exlusion, initial: true) { (_, new) in
+                                    self.exclusionSizes[line + 1] = new
                                 }
-                                #if DEBUG
+#if DEBUG
                                 .border(Color.red, width: 4)
-                                #endif
+#endif
                             }
                         }
                     }
                 }
             }
-        }
+        }.coordinateSpace(space)
     }
     
     private func getLineHeight(at index: Int) -> CGFloat {
@@ -52,12 +61,6 @@ struct CodeView: View {
             return self.lineHeights[index]
         }
         return 0
-    }
-    
-    private func updateExclusionSize(line: Int, frame: CGRect) {
-        var frame = frame
-        frame.size.width = .infinity
-        self.exclusionSizes[line] = frame
     }
 }
 

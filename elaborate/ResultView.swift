@@ -62,7 +62,7 @@ struct ResultView: View {
 //        .background(.capsule)
 //        .background(in: .buttonBorder)
         .padding(.all, 10)
-        .background(RoundedRectangle(cornerRadius: 8).fill(color))
+//        .background(RoundedRectangle(cornerRadius: 8).fill(color))
     }
 }
 
