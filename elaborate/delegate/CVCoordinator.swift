@@ -134,7 +134,6 @@ public class CVCoordinator: NSObject {
             runningOffset += rect.maxY - runningOffset
 
             heights.append(height)
-//            heights.append(height.rounded(.awayFromZero))
         }
         let lastOffset = self.textStorage.length - 1
         if lastOffset != self.newlineOffsets.last {
