@@ -20,6 +20,7 @@ extension CodeTextView: UIViewRepresentable {
         textView.font = .monospacedSystemFont(ofSize: 13, weight: .regular)
         textView.textColor = .label
         textView.isScrollEnabled = false
+        textView.textContainerInset = .zero
         return textView
         
     }
