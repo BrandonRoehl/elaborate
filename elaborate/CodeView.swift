@@ -13,7 +13,11 @@ struct CodeView: View {
     
     // Internal state to recalculate the offsets
     @State var lineHeights: [CGFloat] = []
-    @State var exclusionPaths: [CGRect] = []
+    @State var exclusionSizes: [Int: CGRect] = [:]
+    
+    var exclusionPaths: [CGRect] {
+        return messages.keys.compactMap { line in exclusionSizes[line] }
+    }
     
     var body: some View {
         ZStack(alignment: .topLeading) {
@@ -22,15 +26,38 @@ struct CodeView: View {
                 lineHeight: $lineHeights,
                 exclusionPaths: exclusionPaths,
             )
-            LazyVStack {
+            VStack {
                 ForEach(lineHeights.indices, id: \.self) { line in
-                    Spacer().frame(height: lineHeights[line])
+                    Spacer().frame(height: self.getLineHeight(at: line))
                     if let message = messages[line + 1] {
-                        message
+                        message.overlay(alignment: .center) {
+                            GeometryReader { proxy in
+                                Color.clear.onChange(of: proxy.size.height, initial: true) {
+                                    let frame: CGRect = proxy.frame(in: .global)
+                                    self.updateExclusionSize(line: line + 1, frame: frame)
+                                }
+                                #if DEBUG
+                                .border(Color.red, width: 4)
+                                #endif
+                            }
+                        }
                     }
                 }
             }
         }
+    }
+    
+    private func getLineHeight(at index: Int) -> CGFloat {
+        if self.lineHeights.count > index && self.lineHeights[index] > 0 {
+            return self.lineHeights[index]
+        }
+        return 0
+    }
+    
+    private func updateExclusionSize(line: Int, frame: CGRect) {
+        var frame = frame
+        frame.size.width = .infinity
+        self.exclusionSizes[line] = frame
     }
 }
 
