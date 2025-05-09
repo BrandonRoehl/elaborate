@@ -103,7 +103,7 @@ public class CVCoordinator: NSObject {
             self.textContentStorage.performEditingTransaction {
                 let attrString = NSMutableAttributedString(string: self.text.wrappedValue)
                 let attr: [NSAttributedString.Key: Any]
-                #if os(macOS)
+#if os(macOS)
                 attr = [
                     .font: NSFont.systemFont(ofSize: CodeTextView.fontSize, weight: .regular),
                     .foregroundColor: NSColor.labelColor
