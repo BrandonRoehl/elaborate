@@ -22,7 +22,7 @@ extension CodeTextView: NSViewRepresentable {
         textView.isVerticallyResizable = true
         textView.isHorizontallyResizable = false
         textView.autoresizingMask = [.width, .height]
-//        textView.backgroundColor = .clear
+        textView.backgroundColor = .clear
         return textView
     }
     

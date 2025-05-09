@@ -46,7 +46,7 @@ struct ContentView: View {
                 messages: $messages,
             )
         }
-//        .background(Color(.textBackgroundColor))
+        .background(Color(.textBackgroundColor))
         .defaultScrollAnchor(.top)
         .scrollDismissesKeyboard(.interactively)
         .toolbarRole(.editor)

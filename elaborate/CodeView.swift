@@ -7,11 +7,12 @@
 
 import SwiftUI
 
-fileprivate let space: NamedCoordinateSpace = .named("codeview")
-
 fileprivate extension GeometryProxy {
-    var exlusion: CGRect {
+    func exlusion(in space: some CoordinateSpaceProtocol) -> CGRect {
         var frame = self.frame(in: space)
+        // Setting both of these makes sure we only call recalculates on a
+        // change of line height
+        frame.origin.x = 0
         frame.size.width = .infinity
         return frame
     }
@@ -24,7 +25,9 @@ struct CodeView: View {
     // Internal state to recalculate the offsets
     @State var lineHeights: [CGFloat] = []
     @State var exclusionSizes: [Int: CGRect] = [:]
-    
+
+    let space: NamedCoordinateSpace = .named("codeview")
+
     var exclusionPaths: [CGRect] {
         return messages.keys.compactMap { line in exclusionSizes[line] }
     }
@@ -42,7 +45,7 @@ struct CodeView: View {
                     if let message = messages[line + 1] {
                         message.overlay(alignment: .center) {
                             GeometryReader { proxy in
-                                Color.clear.onChange(of: proxy.exlusion, initial: true) { (_, new) in
+                                Color.clear.onChange(of: proxy.exlusion(in: space), initial: true) { (_, new) in
                                     self.exclusionSizes[line + 1] = new
                                 }
 #if DEBUG

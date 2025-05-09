@@ -63,7 +63,11 @@ struct ResultView: View {
             //        .background(.capsule)
             //        .background(in: .buttonBorder)
             .padding(.all, 8)
+            #if DEBUG
+            .background(RoundedRectangle(cornerRadius: 8).stroke(color, lineWidth: 1))
+            #else
             .background(RoundedRectangle(cornerRadius: 8).fill(color))
+            #endif
         }.padding(.all, 4)
     }
 }
