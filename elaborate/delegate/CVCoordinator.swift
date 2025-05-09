@@ -139,11 +139,12 @@ public class CVCoordinator: NSObject {
             heights.append(rect.maxY - runningOffset)
         }
         // for now
-        print("H", heights)
+//        print("H", heights)
+        assert(heights.allSatisfy { $0 >= 0 }, "Check your math, lines cannot have negative height")
 
-        let flat: [CGFloat] = heights.map { _ in 16.0 }
-
-        lineHeights.wrappedValue = flat
+//        let flat: [CGFloat] = heights.map { _ in 16.0 }
+//
+        lineHeights.wrappedValue = heights
         // Pass
     }
 }

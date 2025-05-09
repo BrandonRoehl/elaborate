@@ -66,7 +66,7 @@ extension CVCoordinator: NSTextStorageDelegate {
         let check: [Int] = text.enumerated().filter(\.element.isNewline).map { (index, _) in
             return index
         }
-        assert(check == newlineOffsets)
+        assert(check == newlineOffsets, "Somehow we lost count and newlines aren't aligned")
         #endif
     }
     
