@@ -101,11 +101,21 @@ public class CVCoordinator: NSObject {
         // to figure out the correct way to do this
         if self.text.wrappedValue != self.textStorage.string {
             self.textContentStorage.performEditingTransaction {
-                self.textStorage.setAttributedString(NSAttributedString(string: self.text.wrappedValue))
-#if os(macOS)
-                self.textStorage.foregroundColor = .labelColor
-                self.textStorage.font = .monospacedSystemFont(ofSize: CodeTextView.fontSize, weight: .regular)
+                let attrString = NSMutableAttributedString(string: self.text.wrappedValue)
+                let attr: [NSAttributedString.Key: Any]
+                #if os(macOS)
+                attr = [
+                    .font: NSFont.systemFont(ofSize: CodeTextView.fontSize, weight: .regular),
+                    .foregroundColor: NSColor.labelColor
+                ]
+#elseif os(iOS) || targetEnvironment(macCatalyst)
+                attr = [
+                    .font: UIFont.systemFont(ofSize: CodeTextView.fontSize, weight: .regular),
+                    .foregroundColor: UIColor.label
+                ]
 #endif
+                attrString.setAttributes(attr, range: NSRange(location: 0, length: attrString.length))
+                self.textStorage.setAttributedString(attrString)
             }
         }
     }
@@ -141,6 +151,7 @@ public class CVCoordinator: NSObject {
             heights.append(rect.maxY - runningOffset)
         }
         // for now
+        print(heights)
 //        assert(heights.allSatisfy { $0 >= 0 }, "Check your math, lines cannot have negative height")
         lineHeights.wrappedValue = heights
     }

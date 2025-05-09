@@ -17,10 +17,10 @@ extension CodeTextView: UIViewRepresentable {
             frame: CGRect(),
             textContainer: context.coordinator.textContainer
         )
-        textView.font = .monospacedSystemFont(ofSize: Self.fontSize, weight: .regular)
-        textView.textColor = .label
         textView.isScrollEnabled = false
         textView.textContainerInset = .zero
+        textView.autocapitalizationType = .none
+        textView.autocorrectionType = .no
         return textView
         
     }
