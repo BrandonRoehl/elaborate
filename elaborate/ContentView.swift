@@ -46,7 +46,11 @@ struct ContentView: View {
                 messages: $messages,
             )
         }
-        .background(Color(.textBackgroundColor))
+#if os(macOS)
+        .background(Color(NSColor.textBackgroundColor))
+#elseif os(iOS) || targetEnvironment(macCatalyst)
+        .background(Color.init(UIColor.systemBackground))
+#endif
         .defaultScrollAnchor(.top)
         .scrollDismissesKeyboard(.interactively)
         .toolbarRole(.editor)

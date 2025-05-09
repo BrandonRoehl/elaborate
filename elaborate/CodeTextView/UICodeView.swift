@@ -17,6 +17,8 @@ extension CodeTextView: UIViewRepresentable {
             frame: CGRect(),
             textContainer: context.coordinator.textContainer
         )
+        textView.font = .monospacedSystemFont(ofSize: 13, weight: .regular)
+        textView.textColor = .label
         return textView
         
     }
@@ -25,11 +27,8 @@ extension CodeTextView: UIViewRepresentable {
         context.coordinator.update(self)
     }
 
-    @MainActor public func sizeThatFits(_ proposal: ProposedViewSize, nsView textView: UITextView, context: Context) -> CGSize? {
-        guard
-            let width = proposal.width,
-            width > 0
-        else {
+    @MainActor public func sizeThatFits(_ proposal: ProposedViewSize, uiView textView: UITextView, context: Context) -> CGSize? {
+        guard let width = proposal.width, width > 0 else {
             return nil
         }
         let container = textView.textContainer
