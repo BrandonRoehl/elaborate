@@ -34,18 +34,13 @@ extension CVCoordinator: NSTextStorageDelegate {
         
         // Grab how many pg markers are going to get replaced
         let startIndex: Int = self.newlineOffsets.firstIndex(where: { newLine in
-            return newLine >= editedRange.location
+            return newLine >= editedRange.lowerBound
         }) ?? self.newlineOffsets.endIndex
 
-        let finalIndex: Int
-        if textStorage.length < self.newlineOffsets.last ?? 0 {
-            finalIndex = self.newlineOffsets.count
-        } else {
-            let endOffset = (editedRange.location + editedRange.length - delta)
-            finalIndex = self.newlineOffsets.firstIndex(where: { newLine in
-                return newLine >= endOffset
-            }) ?? self.newlineOffsets.count
-        }
+        let endOffset = (editedRange.upperBound - delta)
+        let finalIndex = self.newlineOffsets.firstIndex(where: { newLine in
+            return newLine >= endOffset
+        }) ?? self.newlineOffsets.count
 
         // update the offset for those that are at final index
         for i in finalIndex..<self.newlineOffsets.count {
