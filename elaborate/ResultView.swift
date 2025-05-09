@@ -38,31 +38,33 @@ struct ResultView: View {
     }
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 1) {
-            HStack {
-                Label("\(result.line)", systemImage: "list.dash")
-                    .foregroundStyle(.secondary)
-                    .font(.headline)
-                Spacer()
-                Image(systemName: icon)
-                    .foregroundStyle(.primary)
-                    .font(.headline)
-                
+        ZStack {
+            VStack(alignment: .leading) {
+                HStack {
+                    Label("\(result.line)", systemImage: "list.dash")
+                        .foregroundStyle(.secondary)
+                        .font(.headline)
+                    Spacer()
+                    Image(systemName: icon)
+                        .foregroundStyle(.primary)
+                        .font(.headline)
+                    
+                }
+                .font(.caption)
+                if !result.output.isEmpty {
+                    // Set the font to mono space if this is a value
+                    Text(result.output)
+                        .textSelection(.enabled)
+                        .font(result.status == .value ? mono : regular)
+                        .padding(.top, 4)
+                }
             }
-            .font(.caption)
-            if !result.output.isEmpty {
-                // Set the font to mono space if this is a value
-                Text(result.output)
-                    .textSelection(.enabled)
-                    .font(result.status == .value ? mono : regular)
-                    .padding(.top, 5)
-            }
-        }
-//        .padding()
-//        .background(.capsule)
-//        .background(in: .buttonBorder)
-        .padding(.all, 10)
-//        .background(RoundedRectangle(cornerRadius: 8).fill(color))
+            //        .padding()
+            //        .background(.capsule)
+            //        .background(in: .buttonBorder)
+            .padding(.all, 8)
+            .background(RoundedRectangle(cornerRadius: 8).fill(color))
+        }.padding(.all, 4)
     }
 }
 

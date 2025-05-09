@@ -36,7 +36,7 @@ struct CodeView: View {
                 lineHeight: $lineHeights,
                 exclusionPaths: exclusionPaths,
             )
-            VStack {
+            LazyVStack {
                 ForEach(lineHeights.indices, id: \.self) { line in
                     Spacer().frame(height: self.getLineHeight(at: line))
                     if let message = messages[line + 1] {
@@ -46,7 +46,7 @@ struct CodeView: View {
                                     self.exclusionSizes[line + 1] = new
                                 }
 #if DEBUG
-                                .border(Color.red, width: 4)
+                                .border(Color.red, width: 1)
 #endif
                             }
                         }

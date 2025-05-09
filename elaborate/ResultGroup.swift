@@ -11,7 +11,7 @@ struct ResultGroup: View {
     let results: [Elaborate_Result]
 
     var body: some View {
-        VStack {
+        VStack(spacing: 0) {
             ForEach(results) { result in
                 ResultView(result: result)
             }
