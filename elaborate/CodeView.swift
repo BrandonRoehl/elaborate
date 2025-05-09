@@ -22,12 +22,14 @@ struct CodeView: View {
                 lineHeight: $lineHeights,
                 exclusionPaths: exclusionPaths,
             )
-//            VStack {
-                ForEach(messages.keys.sorted(), id: \.self) { line in
-                    messages[line]!
-                                        .offset(x: 0, y: CGFloat((2 * line) + 100))
+            LazyVStack {
+                ForEach(lineHeights.indices, id: \.self) { line in
+                    Spacer().frame(height: lineHeights[line])
+                    if let message = messages[line + 1] {
+                        message
+                    }
                 }
-//            }
+            }
         }
     }
 }
