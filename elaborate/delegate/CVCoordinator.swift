@@ -28,6 +28,7 @@ public class CVCoordinator: NSObject {
 #elseif os(iOS) || targetEnvironment(macCatalyst)
             self.textContainer.exclusionPaths = self.exclusionPaths.map(UIBezierPath.init(rect:))
 #endif
+            self.textLayoutManager.invalidateLayout(for: self.textLayoutManager.documentRange)
         }
     }
 
@@ -62,7 +63,6 @@ public class CVCoordinator: NSObject {
         self.lineHeight = codeView.lineHeight
         // Thse have to be sorted before they are set
         self.exclusionPaths = codeView.exclusionPaths.sorted { $0.minY < $1.minY }
-        self.textLayoutManager.invalidateLayout(for: self.textLayoutManager.documentRange)
 
         // TODO: this check is very slow and also dumb but I don't have time
         // to figure out the correct way to do this
@@ -81,8 +81,7 @@ public class CVCoordinator: NSObject {
             return
         }
         var heights: [CGFloat] = []
-        self.textLayoutManager.ensureLayout(for: self.textLayoutManager.documentRange)
-        
+
         self.textLayoutManager.enumerateTextLayoutFragments(from: self.textLayoutManager.documentRange.location) { fragement in
             var height: CGFloat = 0
             for line in fragement.textLineFragments {
@@ -90,13 +89,16 @@ public class CVCoordinator: NSObject {
             }
             let rounded = (height * 10).rounded(.awayFromZero) / 10
             heights.append(rounded)
-            return true
+            return rounded > 0
         }
-#if DEBUG
-        print("heights:", heights.count, heights)
-#endif
+        guard heights.last != 0 else {
+            return
+        }
         // assert(heights.allSatisfy { $0 >= 0 }, "Check your math, lines cannot have negative height")
-        lineHeights.wrappedValue = heights
+        if lineHeights.wrappedValue != heights {
+            print("heights:", heights.count, heights)
+            lineHeights.wrappedValue = heights
+        }
     }
 }
 

@@ -19,10 +19,11 @@ extension CodeTextView: NSViewRepresentable {
         )
         textView.minSize = NSSize(width: 0, height: 0)
         textView.maxSize = NSSize(width: CGFloat.infinity, height: CGFloat.infinity)
-        textView.isVerticallyResizable = true
+        textView.isVerticallyResizable = false
         textView.isHorizontallyResizable = false
-        textView.autoresizingMask = [.width, .height]
+        textView.autoresizingMask = []
         textView.backgroundColor = .clear
+        textView.textContainerInset = .zero
         return textView
     }
     
@@ -40,18 +41,13 @@ extension CodeTextView: NSViewRepresentable {
         let container = context.coordinator.textContainer
         container.containerSize = CGSize(width: width, height: CGFloat.greatestFiniteMagnitude)
         
-//        let layout = context.coordinator.textLayoutManager
-//        layout.ensureLayout(for: layout.documentRange)
-//        let usedRect = layout.usageBoundsForTextContainer
-////        layout.ensureLayout(for: container)
-////        let usedRect = layout.usedRect(for: container)
-//        let newSize = proposal.replacingUnspecifiedDimensions(by: usedRect.size)
+        let layout = context.coordinator.textLayoutManager
+        let usedRect = layout.usageBoundsForTextContainer
+        let newSize = proposal.replacingUnspecifiedDimensions(by: usedRect.size)
         Task.detached { @MainActor in
             context.coordinator.syncHeights()
         }
-//        print("size:",newSize)
-        return nil
-//        return newSize
+        return newSize
     }
 }
 #endif
