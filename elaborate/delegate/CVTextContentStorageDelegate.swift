@@ -25,6 +25,19 @@ extension CVCoordinator: NSTextContentStorageDelegate {
         }
 
         let mutableText = NSMutableAttributedString(attributedString: originalText)
+        let attr: [NSAttributedString.Key: Any]
+#if os(macOS)
+        attr = [
+            .font: OSMonoFont,
+            .foregroundColor: NSColor.labelColor
+        ]
+#elseif os(iOS) || targetEnvironment(macCatalyst)
+        attr = [
+            .font: OSMonoFont,
+            .foregroundColor: UIColor.label
+        ]
+#endif
+        mutableText.setAttributes(attr, range: NSRange(location: 0, length: mutableText.length))
         for (i, o) in lines {
             let offset = o - range.location
             guard let view = self.results[i + 1] else {

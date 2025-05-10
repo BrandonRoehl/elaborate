@@ -9,8 +9,10 @@ import SwiftUI
 
 #if os(macOS)
 typealias OSView = NSView
+typealias OSFont = NSFont
 #elseif os(iOS) || targetEnvironment(macCatalyst)
 typealias OSView = UIView
+typealias OSFont = UIFont
 #endif
 
 internal extension View {
@@ -25,3 +27,7 @@ internal extension View {
 #endif
 }
 
+let OSMonoFont: OSFont = {
+    let size = OSFont.systemFontSize
+    return OSFont.monospacedSystemFont(ofSize: size, weight: .regular)
+}()
