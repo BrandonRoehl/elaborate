@@ -89,14 +89,27 @@ public class CVCoordinator: NSObject {
 //        self.textLayoutManager.ensureLayout(for: self.textLayoutManager.documentRange)
 
         // TODO: this check is very slow and also dumb but I don't have time
-        // to figure out the correct way to do this
-        if self.text.wrappedValue != self.textStorage.string {
-            self.textContentStorage.performEditingTransaction {
-                self.textStorage.setAttributedString(NSAttributedString(string: self.text.wrappedValue))
-                self.textStorage.foregroundColor = .labelColor
-                self.textStorage.font = .monospacedSystemFont(ofSize: 13, weight: .regular)
-            }
-        }
+                // to figure out the correct way to do this
+                if self.text.wrappedValue != self.textStorage.string {
+                    self.textContentStorage.performEditingTransaction {
+                        let attrString = NSMutableAttributedString(string: self.text.wrappedValue)
+                        let attr: [NSAttributedString.Key: Any]
+        #if os(macOS)
+                        let size = NSFont.systemFontSize(for: .regular)
+                        attr = [
+                            .font: NSFont.monospacedSystemFont(ofSize: size, weight: .regular),
+                            .foregroundColor: NSColor.labelColor
+                        ]
+        #elseif os(iOS) || targetEnvironment(macCatalyst)
+                        attr = [
+                            .font: UIFont.systemFont(ofSize: 13, weight: .regular),
+                            .foregroundColor: UIColor.label
+                        ]
+        #endif
+                        attrString.setAttributes(attr, range: NSRange(location: 0, length: attrString.length))
+                        self.textStorage.setAttributedString(attrString)
+                    }
+                }
     }
     
     var newlineOffsets: [Int] = []
