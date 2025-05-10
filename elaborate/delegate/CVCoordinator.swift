@@ -82,27 +82,18 @@ public class CVCoordinator: NSObject {
         }
         var heights: [CGFloat] = []
         self.textLayoutManager.ensureLayout(for: self.textLayoutManager.documentRange)
+        
         self.textLayoutManager.enumerateTextLayoutFragments(from: self.textLayoutManager.documentRange.location) { fragement in
-            guard let line = fragement.textLineFragments.first else {
-                return true
+            var height: CGFloat = 0
+            for line in fragement.textLineFragments {
+                height += line.typographicBounds.height
             }
-            let rect = line.typographicBounds
-            print("rect:", rect)
-//            var height = rect.maxY - runningOffset
-            // What
-//            if j < self.exclusionPaths.count && self.exclusionPaths[j].maxY <= rect.minY {
-//                height -= self.exclusionPaths[j].height
-//                j += 1
-//            }
-//            runningOffset += rect.maxY - runningOffset
-            let height = rect.height
-            
             let rounded = (height * 10).rounded(.awayFromZero) / 10
             heights.append(rounded)
             return true
         }
 #if DEBUG
-        print("heights:", heights)
+        print("heights:", heights.count, heights)
 #endif
         // assert(heights.allSatisfy { $0 >= 0 }, "Check your math, lines cannot have negative height")
         lineHeights.wrappedValue = heights
