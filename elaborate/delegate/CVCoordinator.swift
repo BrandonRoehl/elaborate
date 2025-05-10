@@ -15,8 +15,7 @@ import SwiftUI
 public class CVCoordinator: NSObject {
     let textStorage: NSTextStorage
     let textContainer: NSTextContainer
-    let textLayoutManager: NSTextLayoutManager
-    let textContentStorage: NSTextContentStorage
+    let textLayoutManager: NSLayoutManager
 
     var text: Binding<String>
     var lineHeight: Binding<[CGFloat]>?
@@ -38,21 +37,15 @@ public class CVCoordinator: NSObject {
         // Initilize the container first
         self.textStorage = NSTextStorage()
         self.textContainer = NSTextContainer()
-        self.textLayoutManager = NSTextLayoutManager()
-        self.textContentStorage = NSTextContentStorage()
+        self.textLayoutManager = NSLayoutManager()
 
         super.init()
 
         // MARK: NSTextStorageDelegate
         self.textStorage.delegate = self
-
-//        self.textContentStorage.delegate = self
-        self.textContentStorage.textStorage = self.textStorage
-        self.textContentStorage.addTextLayoutManager(self.textLayoutManager)
-
         // Update the text container
-        self.textLayoutManager.textContainer = self.textContainer
-
+        self.textLayoutManager.replaceTextStorage(self.textStorage)
+        self.textContainer.replaceLayoutManager(self.textLayoutManager)
         // At the end refresh the contents
         self.update(codeView)
     }
@@ -66,7 +59,6 @@ public class CVCoordinator: NSObject {
         // TODO: this check is very slow and also dumb but I don't have time
         // to figure out the correct way to do this
         if self.text.wrappedValue != self.textStorage.string {
-            self.textContentStorage.performEditingTransaction {
                 let attrString = NSMutableAttributedString(string: self.text.wrappedValue)
                 let attr: [NSAttributedString.Key: Any]
 #if os(macOS)
@@ -82,7 +74,6 @@ public class CVCoordinator: NSObject {
 #endif
                 attrString.setAttributes(attr, range: NSRange(location: 0, length: attrString.length))
                 self.textStorage.setAttributedString(attrString)
-            }
         }
     }
     
