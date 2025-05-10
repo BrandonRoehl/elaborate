@@ -61,6 +61,7 @@ final class CodeAttachment: NSTextAttachment {
         
 //        return CGRect(origin: .zero, size: size)
         var result = CGRect()
+        self.view.autoresizingMask = [.height]
         var size = self.view.intrinsicContentSize
         if let width = textContainer?.size.width {
             size.width = width
