@@ -30,9 +30,9 @@ struct ResultView: View {
     var color: Color {
         return switch result.status {
         case .error: .red
-        case .value: .gray
+        case .value: .clear
         case .eof: .brown
-        case .info: .secondary
+        case .info: .blue
         case .UNRECOGNIZED(_): .blue
         }
     }
@@ -65,13 +65,14 @@ struct ResultView: View {
 #if OUTLINES
         .background(RoundedRectangle(cornerRadius: 8).stroke(color, lineWidth: 1))
 #else
-        .background(RoundedRectangle(cornerRadius: 8).fill(color))
+        .background(color.opacity(0.5))
 #endif
+        .background(.regularMaterial.secondary, in: RoundedRectangle(cornerRadius: 8, style: .circular))
     }
 }
 
 #Preview {
-    List() {
+    VStack(spacing: 8) {
         ResultView(result: {
             var result = Elaborate_Result()
             result.line = 1
