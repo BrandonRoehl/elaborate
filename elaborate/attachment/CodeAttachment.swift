@@ -62,11 +62,11 @@ final class CodeAttachment: NSTextAttachment {
 //        return CGRect(origin: .zero, size: size)
         var result = CGRect()
         var size = self.view.intrinsicContentSize
-//        if let width = textContainer?.size.width {
-//            size.width = width
-//        } else {
-//            size.width = proposedLineFragment.width
-//        }
+        if let width = textContainer?.size.width {
+            size.width = width
+        } else {
+            size.width = proposedLineFragment.width
+        }
         result.size = size
         result.origin = CGPoint(x: proposedLineFragment.origin.x, y: proposedLineFragment.maxY)
         return result

@@ -36,13 +36,12 @@ extension CodeView: NSViewRepresentable {
     @MainActor public func sizeThatFits(_ proposal: ProposedViewSize, nsView textView: NSTextView, context: Context) -> CGSize? {
         guard
             let container = textView.textContainer,
-            let layout = textView.layoutManager,
             let width = proposal.width,
             width > 0
         else {
             return nil
         }
-//        container.containerSize = CGSize(width: width, height: CGFloat.greatestFiniteMagnitude)
+        container.containerSize = CGSize(width: width, height: CGFloat.greatestFiniteMagnitude)
 //        layout.ensureLayout(for: container)
 //        let usedRect = layout.usedRect(for: container)
 //        let newSize = proposal.replacingUnspecifiedDimensions(by: usedRect.size)
