@@ -70,12 +70,12 @@ public class CVCoordinator: NSObject {
                 let attr: [NSAttributedString.Key: Any]
 #if os(macOS)
                 attr = [
-                    .font: NSFont.systemFont(ofSize: CodeTextView.fontSize, weight: .regular),
+                    .font: OSMonoFont,
                     .foregroundColor: NSColor.labelColor
                 ]
 #elseif os(iOS) || targetEnvironment(macCatalyst)
                 attr = [
-                    .font: UIFont.systemFont(ofSize: CodeTextView.fontSize, weight: .regular),
+                    .font: OSMonoFont,
                     .foregroundColor: UIColor.label
                 ]
 #endif
