@@ -63,8 +63,8 @@ struct ResultView: View {
         .background(RoundedRectangle(cornerRadius: 8).stroke(color, lineWidth: 1))
 #else
         .background(color.opacity(0.5))
-#endif
         .background(.regularMaterial.secondary, in: RoundedRectangle(cornerRadius: 8, style: .circular))
+#endif
 //        .shadow(radius: 4, x: 0, y: 2)
     }
 }
