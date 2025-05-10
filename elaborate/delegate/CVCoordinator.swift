@@ -62,6 +62,7 @@ public class CVCoordinator: NSObject {
         self.lineHeight = codeView.lineHeight
         // Thse have to be sorted before they are set
         self.exclusionPaths = codeView.exclusionPaths.sorted { $0.minY < $1.minY }
+        self.textLayoutManager.invalidateLayout(for: self.textLayoutManager.documentRange)
 
         // TODO: this check is very slow and also dumb but I don't have time
         // to figure out the correct way to do this
@@ -86,7 +87,7 @@ public class CVCoordinator: NSObject {
                 return true
             }
             let rect = line.typographicBounds
-            print(rect)
+            print("rect:", rect)
 //            var height = rect.maxY - runningOffset
             // What
 //            if j < self.exclusionPaths.count && self.exclusionPaths[j].maxY <= rect.minY {
@@ -101,7 +102,7 @@ public class CVCoordinator: NSObject {
             return true
         }
 #if DEBUG
-        print(heights)
+        print("heights:", heights)
 #endif
         // assert(heights.allSatisfy { $0 >= 0 }, "Check your math, lines cannot have negative height")
         lineHeights.wrappedValue = heights

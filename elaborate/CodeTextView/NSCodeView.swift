@@ -49,7 +49,7 @@ extension CodeTextView: NSViewRepresentable {
         Task.detached { @MainActor in
             context.coordinator.syncHeights()
         }
-        print(newSize)
+        print("size:",newSize)
         return newSize
     }
 }
