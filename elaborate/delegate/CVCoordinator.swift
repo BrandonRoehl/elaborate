@@ -46,6 +46,7 @@ public class CVCoordinator: NSObject {
         // MARK: NSTextStorageDelegate
         self.textStorage.delegate = self
 
+//        self.textContentStorage.delegate = self
         self.textContentStorage.textStorage = self.textStorage
         self.textContentStorage.addTextLayoutManager(self.textLayoutManager)
 
@@ -116,9 +117,10 @@ public class CVCoordinator: NSObject {
             let rect = layout.lineFragmentRect(forGlyphAt: lastOffset, effectiveRange: nil, withoutAdditionalLayout: false)
             heights.append(rect.maxY - runningOffset)
         }
-        // for now
+#if DEBUG
         print(heights)
-//        assert(heights.allSatisfy { $0 >= 0 }, "Check your math, lines cannot have negative height")
+#endif
+        // assert(heights.allSatisfy { $0 >= 0 }, "Check your math, lines cannot have negative height")
         lineHeights.wrappedValue = heights
     }
 }
