@@ -44,7 +44,7 @@ public class CVCoordinator: NSObject {
         // MARK: NSTextStorageDelegate
         self.textStorage.delegate = self
         // Update the text container
-        self.textLayoutManager.replaceTextStorage(self.textStorage)
+        self.textStorage.addLayoutManager(self.textLayoutManager)
         self.textContainer.replaceLayoutManager(self.textLayoutManager)
         // At the end refresh the contents
         self.update(codeView)
