@@ -12,7 +12,7 @@ import AppKit
 extension CodeView: NSViewRepresentable {
     public typealias Coordinator = CVCoordinator
     
-    @MainActor public func makeNSView(context: Context) -> NSScrollView {
+    @MainActor public func makeNSView(context: Context) -> NSTextView {
         let textView = NSTextView(
             frame: CGRect(),
             textContainer: context.coordinator.textContainer
@@ -21,23 +21,33 @@ extension CodeView: NSViewRepresentable {
         textView.maxSize = NSSize(width: CGFloat.infinity, height: CGFloat.infinity)
         textView.isVerticallyResizable = true
         textView.isHorizontallyResizable = false
-        textView.autoresizingMask = [.width]
-        
-        let scrollView = NSScrollView()
-        scrollView.documentView = textView
-        scrollView.borderType = .noBorder
-        scrollView.hasVerticalScroller = true
-        scrollView.hasHorizontalScroller = false
-        scrollView.autoresizingMask = [.width, .height]
-        return scrollView
+        textView.autoresizingMask = [.width, .height]
+        textView.backgroundColor = .clear
+        return textView
     }
     
-    @MainActor public func updateNSView(_ scrollView: NSScrollView, context: Context) {
-//        let textView = scrollView.documentView as! NSTextView
+    @MainActor public func updateNSView(_ textView: NSTextView, context: Context) {
 //        let ranges = textView.selectedRanges
 //        defer { textView.selectedRanges = ranges }
         context.coordinator.update(self)
 //        scrollView.setNeedsDisplay(scrollView.bounds)
+    }
+    
+    @MainActor public func sizeThatFits(_ proposal: ProposedViewSize, nsView textView: NSTextView, context: Context) -> CGSize? {
+        guard
+            let container = textView.textContainer,
+            let layout = textView.layoutManager,
+            let width = proposal.width,
+            width > 0
+        else {
+            return nil
+        }
+//        container.containerSize = CGSize(width: width, height: CGFloat.greatestFiniteMagnitude)
+//        layout.ensureLayout(for: container)
+//        let usedRect = layout.usedRect(for: container)
+//        let newSize = proposal.replacingUnspecifiedDimensions(by: usedRect.size)
+//        return newSize
+        return nil
     }
 }
 #endif

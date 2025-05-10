@@ -17,7 +17,7 @@ extension CVCoordinator: NSTextStorageDelegate {
     
     public func textStorage(
         _ textStorage: NSTextStorage,
-        willProcessEditing editedMask: NSTextStorageEditActions,
+        willProcessEditing editedMask: OSTextStorageEditActions,
         range editedRange: NSRange,
         changeInLength delta: Int
     ) {
@@ -25,20 +25,22 @@ extension CVCoordinator: NSTextStorageDelegate {
         // The textStorage holds the string it will be and not the string it was
         // so you have to determine where we were before here
         
+#if DEBUG // these are here in this to help debug the code during development
+        let text = textStorage.string
+        let check: [Int] = text.enumerated().filter(\.element.isNewline).map { (index, _) in
+            return index
+        }
+#endif
+        
         // Grab how many pg markers are going to get replaced
         let startIndex: Int = self.newlineOffsets.firstIndex(where: { newLine in
-            return newLine >= editedRange.location
+            return newLine >= editedRange.lowerBound
         }) ?? self.newlineOffsets.endIndex
 
-        let finalIndex: Int
-        if textStorage.length < self.newlineOffsets.last ?? 0 {
-            finalIndex = self.newlineOffsets.count
-        } else {
-            let endOffset = (editedRange.location + editedRange.length - delta)
-            finalIndex = self.newlineOffsets.firstIndex(where: { newLine in
-                return newLine >= endOffset
-            }) ?? self.newlineOffsets.count
-        }
+        let endOffset = (editedRange.upperBound - delta)
+        let finalIndex = self.newlineOffsets.firstIndex(where: { newLine in
+            return newLine >= endOffset
+        }) ?? self.newlineOffsets.count
 
         // update the offset for those that are at final index
         for i in finalIndex..<self.newlineOffsets.count {
@@ -58,15 +60,11 @@ extension CVCoordinator: NSTextStorageDelegate {
         
         // Good checks in dev but don't use this code in prod far to slow
         #if DEBUG
-        let text = textStorage.string
         for offset in newlineOffsets {
             let idx = text.index(text.startIndex, offsetBy: offset)
-            assert(text[idx] == "\n")
+            assert(text[idx] == "\n", "our adjustments don't lead to a \n")
         }
-        let check: [Int] = text.enumerated().filter(\.element.isNewline).map { (index, _) in
-            return index
-        }
-        assert(check == newlineOffsets)
+        assert(check == newlineOffsets, "Somehow we lost count and newlines aren't aligned")
         #endif
     }
     

@@ -39,7 +39,18 @@ struct ContentView: View {
     @State var stream = AsyncChannel<ElaborateDocument>()
     
     var body: some View {
-        CodeView(text: $document.text, results: $messages)
+//        ScrollView([.vertical]) {
+            CodeView(
+                text: $document.text,
+                results: $messages,
+            )
+//        }
+#if os(macOS)
+        .background(Color(NSColor.textBackgroundColor))
+#elseif os(iOS) || targetEnvironment(macCatalyst)
+        .background(Color.init(UIColor.systemBackground))
+#endif
+        .defaultScrollAnchor(.top)
         .scrollDismissesKeyboard(.interactively)
         .toolbarRole(.editor)
         .toolbar {

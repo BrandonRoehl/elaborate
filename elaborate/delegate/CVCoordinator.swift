@@ -75,16 +75,8 @@ public class CVCoordinator: NSObject {
         
         self.results = codeView.results.mapValues { $0.platformView() }
         // Mark edit for the specific chars that need to be updated
-        var lines: Set<Int> = Set(newResults.keys)
-        lines.formUnion(self.results.keys)
         let begining = self.textLayoutManager.documentRange.location
-        for lineNumber in lines.sorted(by: >) {
-//        for offset in self.newlineOffsets.reversed() {
-            guard self.newlineOffsets.count > lineNumber - 1 else {
-                continue
-            }
-//            
-            let offset = self.newlineOffsets[lineNumber - 1]
+        for offset in self.newlineOffsets.reversed() {
 //            self.textStorage.beginEditing()
             self.textStorage.edited(.editedCharacters, range: NSRange(location: offset, length: 1), changeInLength: 0)
             guard let loc = self.textLayoutManager.location(begining, offsetBy: offset) else {
