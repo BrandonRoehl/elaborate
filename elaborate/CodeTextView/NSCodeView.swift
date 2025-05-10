@@ -34,17 +34,17 @@ extension CodeTextView: NSViewRepresentable {
     }
     
     @MainActor public func sizeThatFits(_ proposal: ProposedViewSize, nsView textView: NSTextView, context: Context) -> CGSize? {
-        guard
-            let container = textView.textContainer,
-            let layout = textView.layoutManager,
-            let width = proposal.width,
-            width > 0
-        else {
+        guard let width = proposal.width, width > 0 else {
             return nil
         }
+        let container = context.coordinator.textContainer
         container.containerSize = CGSize(width: width, height: CGFloat.greatestFiniteMagnitude)
-        layout.ensureLayout(for: container)
-        let usedRect = layout.usedRect(for: container)
+        
+        let layout = context.coordinator.textLayoutManager
+        layout.ensureLayout(for: layout.documentRange)
+        let usedRect = layout.usageBoundsForTextContainer
+//        layout.ensureLayout(for: container)
+//        let usedRect = layout.usedRect(for: container)
         let newSize = proposal.replacingUnspecifiedDimensions(by: usedRect.size)
         Task.detached { @MainActor in
             context.coordinator.syncHeights()

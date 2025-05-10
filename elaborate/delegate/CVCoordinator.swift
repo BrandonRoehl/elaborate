@@ -46,7 +46,7 @@ public class CVCoordinator: NSObject {
         // MARK: NSTextStorageDelegate
         self.textStorage.delegate = self
 
-//        self.textContentStorage.delegate = self
+        self.textContentStorage.delegate = self
         self.textContentStorage.textStorage = self.textStorage
         self.textContentStorage.addTextLayoutManager(self.textLayoutManager)
 
@@ -67,20 +67,7 @@ public class CVCoordinator: NSObject {
         // to figure out the correct way to do this
         if self.text.wrappedValue != self.textStorage.string {
             self.textContentStorage.performEditingTransaction {
-                let attrString = NSMutableAttributedString(string: self.text.wrappedValue)
-                let attr: [NSAttributedString.Key: Any]
-#if os(macOS)
-                attr = [
-                    .font: OSMonoFont,
-                    .foregroundColor: NSColor.labelColor
-                ]
-#elseif os(iOS) || targetEnvironment(macCatalyst)
-                attr = [
-                    .font: OSMonoFont,
-                    .foregroundColor: UIColor.label
-                ]
-#endif
-                attrString.setAttributes(attr, range: NSRange(location: 0, length: attrString.length))
+                let attrString = NSAttributedString(string: self.text.wrappedValue)
                 self.textStorage.setAttributedString(attrString)
             }
         }
@@ -89,33 +76,29 @@ public class CVCoordinator: NSObject {
     var newlineOffsets: [Int] = []
     
     @MainActor func syncHeights() {
-        guard let lineHeights = self.lineHeight, let layout = self.textContainer.layoutManager else {
+        guard let lineHeights = self.lineHeight else {
             return
         }
         var heights: [CGFloat] = []
-        var runningOffset: CGFloat = 0
-        var j: Int = 0
-        for i in 0..<self.newlineOffsets.count {
-            let offset = self.newlineOffsets[i]
-            if offset > self.textStorage.length {
-                continue
-            }
-            let rect = layout.lineFragmentRect(forGlyphAt: self.newlineOffsets[i], effectiveRange: nil, withoutAdditionalLayout: false)
-            var height = rect.maxY - runningOffset
+//        var runningOffset: CGFloat = 0
+//        var j: Int = 0
+        self.textLayoutManager.ensureLayout(for: self.textLayoutManager.documentRange)
+        self.textLayoutManager.enumerateTextLayoutFragments(from: self.textLayoutManager.documentRange.location) { fragement in
+            let rect = fragement.renderingSurfaceBounds
+            print(rect, fragement.textLineFragments.count)
+//            var height = rect.maxY - runningOffset
             // What
-            if j < self.exclusionPaths.count && self.exclusionPaths[j].maxY <= rect.minY {
-                height -= self.exclusionPaths[j].height
-                j += 1
-            }
-            runningOffset += rect.maxY - runningOffset
+//            if j < self.exclusionPaths.count && self.exclusionPaths[j].maxY <= rect.minY {
+//                height -= self.exclusionPaths[j].height
+//                j += 1
+//            }
+//            runningOffset += rect.maxY - runningOffset
 
-            let rounded = (height * 10).rounded(.awayFromZero) / 10
-            heights.append(rounded)
-        }
-        let lastOffset = self.textStorage.length - 1
-        if lastOffset != self.newlineOffsets.last {
-            let rect = layout.lineFragmentRect(forGlyphAt: lastOffset, effectiveRange: nil, withoutAdditionalLayout: false)
-            heights.append(rect.maxY - runningOffset)
+//            var height = rect.height
+//            let rounded = (height * 10).rounded(.awayFromZero) / 10
+//            heights.append(rounded)
+            heights.append(16)
+            return true
         }
 #if DEBUG
         print(heights)
