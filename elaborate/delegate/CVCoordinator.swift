@@ -61,9 +61,6 @@ public class CVCoordinator: NSObject {
         
         
         // TODO: REMOVE
-//        self.textStorage.setAttributedString(NSAttributedString(string: self.text.wrappedValue))
-//        self.textStorage.foregroundColor = .labelColor
-//        self.textStorage.font = .monospacedSystemFont(ofSize: 13, weight: .regular)
         // At the end refresh the contents
         self.update(codeView)
     }
@@ -101,8 +98,6 @@ public class CVCoordinator: NSObject {
         if self.text.wrappedValue != self.textStorage.string {
             self.textContentStorage.performEditingTransaction {
                 self.textStorage.setAttributedString(NSAttributedString(string: self.text.wrappedValue))
-                self.textStorage.foregroundColor = .labelColor
-                self.textStorage.font = .monospacedSystemFont(ofSize: 13, weight: .regular)
             }
         }
     }
