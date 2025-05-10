@@ -58,9 +58,6 @@ struct ResultView: View {
                     .padding(.top, 4)
             }
         }
-        //        .padding()
-        //        .background(.capsule)
-        //        .background(in: .buttonBorder)
         .padding(.all, 8)
 #if OUTLINES
         .background(RoundedRectangle(cornerRadius: 8).stroke(color, lineWidth: 1))
@@ -68,6 +65,7 @@ struct ResultView: View {
         .background(color.opacity(0.5))
 #endif
         .background(.regularMaterial.secondary, in: RoundedRectangle(cornerRadius: 8, style: .circular))
+//        .shadow(radius: 4, x: 0, y: 2)
     }
 }
 

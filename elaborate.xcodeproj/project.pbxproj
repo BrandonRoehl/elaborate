@@ -108,7 +108,6 @@
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
-		551BEEE32DB41AE2000D13F6 /* attachment */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = attachment; sourceTree = "<group>"; };
 		551BEEE42DB41B02000D13F6 /* CodeTextView */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = CodeTextView; sourceTree = "<group>"; };
 		551BEEE52DB41B2A000D13F6 /* delegate */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = delegate; sourceTree = "<group>"; };
 		55E0FEAA2D1B6F1800344C57 /* transport */ = {isa = PBXFileSystemSynchronizedRootGroup; exceptions = (55E0FEAB2D1B6F1E00344C57 /* PBXFileSystemSynchronizedBuildFileExceptionSet */, 55E0FEAC2D1B6F1E00344C57 /* PBXFileSystemSynchronizedBuildFileExceptionSet */, ); explicitFileTypes = {}; explicitFolders = (); path = transport; sourceTree = "<group>"; };
@@ -180,7 +179,6 @@
 			isa = PBXGroup;
 			children = (
 				551BEEE42DB41B02000D13F6 /* CodeTextView */,
-				551BEEE32DB41AE2000D13F6 /* attachment */,
 				55E0FEAA2D1B6F1800344C57 /* transport */,
 				556ABF5E2D17A2C7004D6A05 /* ElaborateApp.swift */,
 				556ABF602D17A2C7004D6A05 /* ElaborateDocument.swift */,
@@ -241,7 +239,6 @@
 			dependencies = (
 			);
 			fileSystemSynchronizedGroups = (
-				551BEEE32DB41AE2000D13F6 /* attachment */,
 				551BEEE42DB41B02000D13F6 /* CodeTextView */,
 				551BEEE52DB41B2A000D13F6 /* delegate */,
 				55E0FEAA2D1B6F1800344C57 /* transport */,

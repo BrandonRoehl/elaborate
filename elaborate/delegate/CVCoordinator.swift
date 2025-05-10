@@ -12,15 +12,6 @@ import SwiftUI
 `NSTextContentManager.performEditingTransaction(_ transaction: () -> Void)`
 */
 
-//struct BindingUpdates: OptionSet {
-//    let rawValue: Int8
-//
-//    static let text = BindingUpdates(rawValue: 1 << 0)
-//    static let results = BindingUpdates(rawValue: 1 << 1)
-//
-//    static let all: BindingUpdates = [.text, .results]
-//}
-
 public class CVCoordinator: NSObject {
     let textStorage: NSTextStorage
     let textContainer: NSTextContainer
@@ -60,11 +51,7 @@ public class CVCoordinator: NSObject {
 
         // Update the text container
         self.textLayoutManager.textContainer = self.textContainer
-        
-        // TODO: REMOVE
-//        self.textStorage.setAttributedString(NSAttributedString(string: self.text.wrappedValue))
-//        self.textStorage.foregroundColor = .labelColor
-//        self.textStorage.font = .monospacedSystemFont(ofSize: 13, weight: .regular)
+
         // At the end refresh the contents
         self.update(codeView)
     }
@@ -74,28 +61,6 @@ public class CVCoordinator: NSObject {
         self.lineHeight = codeView.lineHeight
         // Thse have to be sorted before they are set
         self.exclusionPaths = codeView.exclusionPaths.sorted { $0.minY < $1.minY }
-//        let newResults = codeView.results.mapValues { $0.platformView() }
-//        defer { self.results = newResults }
-        
-        // Mark edit for the specific chars that need to be updated
-//        var lines: Set<Int> = Set(newResults.keys)
-//        lines.formUnion(self.results.keys)
-//        for lineNumber in lines {
-//        let begining = self.textLayoutManager.documentRange.location
-//        for offset in self.newlineOffsets.reversed() {
-////            guard self.newlineOffsets.count > lineNumber - 1 else {
-////                continue
-////            }
-////            
-////            let offset = self.newlineOffsets[lineNumber - 1]
-////            self.textStorage.beginEditing()
-//            self.textStorage.edited(.editedCharacters, range: NSRange(location: offset, length: 1), changeInLength: 0)
-//            guard let loc = self.textLayoutManager.location(begining, offsetBy: offset) else {
-//                continue
-//            }
-//            self.textLayoutManager.invalidateLayout(for: NSTextRange(location: loc))
-//        }
-        // relayout
 
         // TODO: this check is very slow and also dumb but I don't have time
         // to figure out the correct way to do this
