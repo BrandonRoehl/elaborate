@@ -80,12 +80,13 @@ public class CVCoordinator: NSObject {
             return
         }
         var heights: [CGFloat] = []
-//        var runningOffset: CGFloat = 0
-//        var j: Int = 0
         self.textLayoutManager.ensureLayout(for: self.textLayoutManager.documentRange)
         self.textLayoutManager.enumerateTextLayoutFragments(from: self.textLayoutManager.documentRange.location) { fragement in
-            let rect = fragement.renderingSurfaceBounds
-            print(rect, fragement.textLineFragments.count)
+            guard let line = fragement.textLineFragments.first else {
+                return true
+            }
+            let rect = line.typographicBounds
+            print(rect)
 //            var height = rect.maxY - runningOffset
             // What
 //            if j < self.exclusionPaths.count && self.exclusionPaths[j].maxY <= rect.minY {
@@ -93,11 +94,10 @@ public class CVCoordinator: NSObject {
 //                j += 1
 //            }
 //            runningOffset += rect.maxY - runningOffset
-
-//            var height = rect.height
-//            let rounded = (height * 10).rounded(.awayFromZero) / 10
-//            heights.append(rounded)
-            heights.append(16)
+            let height = rect.height
+            
+            let rounded = (height * 10).rounded(.awayFromZero) / 10
+            heights.append(rounded)
             return true
         }
 #if DEBUG
