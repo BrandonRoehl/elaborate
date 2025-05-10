@@ -15,7 +15,9 @@ struct ResultGroup: View {
             ForEach(results) { result in
                 ResultView(result: result)
             }
-        }.padding(.all, 4)
+        }
+        .padding([.top, .bottom], 4)
+        .padding([.leading, .trailing], 8)
     }
 }
 

@@ -143,7 +143,7 @@ public class CVCoordinator: NSObject {
             }
             runningOffset += rect.maxY - runningOffset
 
-            let rounded = (height * 100).rounded(.awayFromZero) / 100
+            let rounded = (height * 10).rounded(.awayFromZero) / 10
             heights.append(rounded)
         }
         let lastOffset = self.textStorage.length - 1
