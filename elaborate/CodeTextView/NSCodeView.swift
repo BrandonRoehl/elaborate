@@ -19,10 +19,11 @@ extension CodeTextView: NSViewRepresentable {
         )
         textView.minSize = NSSize(width: 0, height: 0)
         textView.maxSize = NSSize(width: CGFloat.infinity, height: CGFloat.infinity)
-        textView.isVerticallyResizable = true
+        textView.isVerticallyResizable = false
         textView.isHorizontallyResizable = false
-        textView.autoresizingMask = [.width, .height]
+        textView.autoresizingMask = []
         textView.backgroundColor = .clear
+        textView.textContainerInset = .zero
         return textView
     }
     
