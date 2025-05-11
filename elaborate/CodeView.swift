@@ -45,7 +45,7 @@ struct CodeView: View {
                 let height = self.getLineHeight(at: line)
                 HStack {
                     Text("\(line + 1)")
-                        .frame(width: numberWidth, height: height, alignment: .trailing)
+                        .frame(width: numberWidth, height: height, alignment: .topTrailing)
                         .font(Font(OSMonoFont))
 #if OUTLINES
                         .border(Color.green, width: 1)
