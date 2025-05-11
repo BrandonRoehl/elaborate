@@ -33,7 +33,8 @@ struct CodeView: View {
     }
     
     func calculateNumberLabel() -> CGFloat {
-        return 30
+        let chars: CGSize = "\(lineHeights.count * 10)".size(withAttributes: [.font: OSMonoFont])
+        return chars.width
     }
     
     var responses: some View {
@@ -45,7 +46,7 @@ struct CodeView: View {
                 HStack {
                     Text("\(line + 1)")
                         .frame(width: numberWidth, height: height, alignment: .trailing)
-                        .font(.system(.body).monospaced())
+                        .font(Font(OSMonoFont))
 #if OUTLINES
                         .border(Color.green, width: 1)
 #endif

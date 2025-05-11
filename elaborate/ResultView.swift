@@ -14,9 +14,9 @@ struct ResultView: View {
 
     let result: Elaborate_Result
     
-    let mono = Font.system(.body).monospaced()
-    let regular = Font.system(.body)
-    
+    let mono = Font.system(.body, design: .monospaced, weight: .regular)
+    let regular = Font.system(.body, design: .default, weight: .regular)
+
     var icon: String {
         return switch result.status {
         case .error: "xmark.octagon.fill"
