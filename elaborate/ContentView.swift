@@ -36,7 +36,6 @@ struct ContentView: View {
         }
     }
 
-    @State var task: Task<Void, Never>? = nil
     @State var stream = AsyncChannel<ElaborateDocument>()
     
     var body: some View {
@@ -58,20 +57,14 @@ struct ContentView: View {
                 }
             }
         }
-        .onAppear {
-            self.task = Task.detached(priority: .background) {
-                let stream = await self.stream.debounce(for: .milliseconds(500))
-                for await doc in stream {
-                    await Self.logger.debug("Running")
-                    await run(doc)
-                    await Self.logger.debug("Ran")
-                }
-                await Self.logger.info("Closing task")
+        .task(priority: .background) {
+            let stream = self.stream.debounce(for: .milliseconds(500))
+            for await doc in stream {
+                Self.logger.debug("Running")
+                await run(doc)
+                Self.logger.debug("Ran")
             }
-        }
-        .onDisappear {
-            self.task?.cancel()
-            self.stream.finish()
+            Self.logger.info("Closing task")
         }
         .onChange(of: self.document.text, initial: true) {
             Task.detached(priority: .background) {
