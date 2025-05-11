@@ -17,6 +17,9 @@ extension CVCoordinator: NSTextContentStorageDelegate {
         }
         // Get the places to replace with a view
         let originalText = textStorage.attributedSubstring(from: range)
+#if DEBUG
+        print(originalText.string.debugDescription)
+#endif
         let attrString = NSMutableAttributedString(attributedString: originalText)
         let attr: [NSAttributedString.Key: Any]
 #if os(macOS)
