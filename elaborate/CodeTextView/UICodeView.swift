@@ -21,6 +21,8 @@ extension CodeTextView: UIViewRepresentable {
         textView.textContainerInset = .zero
         textView.autocapitalizationType = .none
         textView.autocorrectionType = .no
+        textView.autoresizingMask = []
+        textView.backgroundColor = .clear
         return textView
         
     }
