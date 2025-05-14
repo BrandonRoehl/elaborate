@@ -14,8 +14,8 @@ struct ResultView: View {
 
     let result: Elaborate_Result
     
-    let mono = Font.system(.body, design: .monospaced, weight: .regular)
-    let regular = Font.system(.body, design: .default, weight: .regular)
+    static let mono = Font.system(.body, design: .monospaced, weight: .regular)
+    static let regular = Font.system(.body, design: .default, weight: .regular)
 
     var icon: String {
         return switch result.status {
@@ -36,6 +36,18 @@ struct ResultView: View {
         case .UNRECOGNIZED(_): .blue
         }
     }
+    
+    var text: some View {
+        // Set the font to mono space if this is a value
+        let font = switch result.status {
+        case .info, .value: Self.mono
+        default: Self.regular
+        }
+        return Text(result.output)
+            .textSelection(.enabled)
+            .font(font)
+            .padding(.top, 4)
+    }
 
     var body: some View {
         VStack(alignment: .leading) {
@@ -51,13 +63,16 @@ struct ResultView: View {
             }
             .font(.caption)
             if !result.output.isEmpty {
-                // Set the font to mono space if this is a value
-                Text(result.output)
-                    .textSelection(.enabled)
-                    .font(result.status == .value ? mono : regular)
-                    .padding(.top, 4)
+                if result.status == .info {
+                    ScrollView(.horizontal) {
+                        text
+                    }
+                } else {
+                    text
+                }
             }
         }
+        
         .padding(.all, 8)
 #if OUTLINES
         .background(RoundedRectangle(cornerRadius: 8).stroke(color, lineWidth: 1))
