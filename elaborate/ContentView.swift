@@ -14,6 +14,8 @@ import AsyncAlgorithms
 struct ContentView: View {
     static let logger = Logger(subsystem: "elb", category: "content")
 
+    @Environment(\.openURL) private var openURL
+    
     @Binding var document: ElaborateDocument
 
     @State var running: Bool = false
@@ -53,7 +55,9 @@ struct ContentView: View {
             }
             ToolbarItem(placement: .primaryAction) {
                 Button("Help", systemImage: "questionmark.circle") {
-                    print("helpme")
+                    if let url = URL(string: "https://pkg.go.dev/robpike.io/ivy") {
+                        openURL(url)
+                    }
                 }
             }
         }

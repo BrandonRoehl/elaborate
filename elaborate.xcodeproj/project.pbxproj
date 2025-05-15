@@ -110,6 +110,7 @@
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		551BEEE42DB41B02000D13F6 /* CodeTextView */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = CodeTextView; sourceTree = "<group>"; };
 		551BEEE52DB41B2A000D13F6 /* delegate */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = delegate; sourceTree = "<group>"; };
+		551CF8812DD586A900C37118 /* URLUtils */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = URLUtils; sourceTree = "<group>"; };
 		55E0FEAA2D1B6F1800344C57 /* transport */ = {isa = PBXFileSystemSynchronizedRootGroup; exceptions = (55E0FEAB2D1B6F1E00344C57 /* PBXFileSystemSynchronizedBuildFileExceptionSet */, 55E0FEAC2D1B6F1E00344C57 /* PBXFileSystemSynchronizedBuildFileExceptionSet */, ); explicitFileTypes = {}; explicitFolders = (); path = transport; sourceTree = "<group>"; };
 /* End PBXFileSystemSynchronizedRootGroup section */
 
@@ -178,6 +179,7 @@
 		556ABF5D2D17A2C7004D6A05 /* elaborate */ = {
 			isa = PBXGroup;
 			children = (
+				551CF8812DD586A900C37118 /* URLUtils */,
 				551BEEE42DB41B02000D13F6 /* CodeTextView */,
 				55E0FEAA2D1B6F1800344C57 /* transport */,
 				556ABF5E2D17A2C7004D6A05 /* ElaborateApp.swift */,
@@ -187,8 +189,8 @@
 				552E75272D49B98600F34A32 /* ResultView.swift */,
 				5519F93C2D500E2F00823450 /* ResultGroup.swift */,
 				559354FF2D87456F00FCFE4A /* NSRange+Extension.swift */,
-				556ABF622D17A2C7004D6A05 /* ContentView.swift */,
 				55776DCB2DCD5B9E00FFCA23 /* CodeView.swift */,
+				556ABF622D17A2C7004D6A05 /* ContentView.swift */,
 				556ABF642D17A2C9004D6A05 /* Assets.xcassets */,
 				556ABF662D17A2C9004D6A05 /* Info.plist */,
 				556ABF672D17A2C9004D6A05 /* elaborate.entitlements */,
@@ -241,6 +243,7 @@
 			fileSystemSynchronizedGroups = (
 				551BEEE42DB41B02000D13F6 /* CodeTextView */,
 				551BEEE52DB41B2A000D13F6 /* delegate */,
+				551CF8812DD586A900C37118 /* URLUtils */,
 				55E0FEAA2D1B6F1800344C57 /* transport */,
 			);
 			name = elaborate;
