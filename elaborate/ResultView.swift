@@ -30,9 +30,13 @@ struct ResultView: View {
     var color: Color {
         return switch result.status {
         case .error: .red
+#if OUTLINES
+        case .value: .primary
+#else
         case .value: .clear
+#endif
         case .eof: .brown
-        case .info: .blue
+        case .info: .accentColor
         case .UNRECOGNIZED(_): .blue
         }
     }
