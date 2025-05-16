@@ -1,4 +1,4 @@
-module Munchausen {
+module Elb {
   header "elb.h"
   export *
 }
