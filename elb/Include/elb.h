@@ -1,7 +1,7 @@
 #ifndef ELB_H
 #define ELB_H
-
 #include <stdint.h>
+
 enum Status {
     ERROR = 0,
     VALUE = 1,
