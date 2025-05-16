@@ -52,12 +52,13 @@ func parseLine(parse *parse.Parser) int64 {
 	return out
 }
 
-func Execute(content string) C.Response {
+// Execute must match the header file so this import works
+func Execute(content *C.char) C.Response {
+	input := C.GoString(content)
 	// The results of the file execution.
-	results := innerExecute(content)
+	results := innerExecute(input)
 	// Return the results.
 	return C.Response{
-		// results: results,
 		results: (**C.Result)(unsafe.Pointer(&results)),
 		size:    C.int64_t(len(results)),
 	}
