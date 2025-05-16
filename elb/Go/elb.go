@@ -1,5 +1,10 @@
 package elb
 
+/*
+#include "elb.h"
+*/
+import "C"
+
 import (
 	"bytes"
 	"fmt"
@@ -9,8 +14,6 @@ import (
 	"strconv"
 	"strings"
 
-	"google.golang.org/protobuf/proto"
-
 	"robpike.io/ivy/config"
 	"robpike.io/ivy/exec"
 	"robpike.io/ivy/parse"
@@ -19,16 +22,6 @@ import (
 
 	_ "robpike.io/ivy/run" // Needed to initialize IvyEval
 )
-
-// func init() {
-// value.BinaryOps
-// How to add new unary operators:
-// value.UnaryOps["roehl"] = value.UnaryOp{
-// 	Name:        "sys",
-// 	Elementwise: false,
-// 	Fn:          map[value.NumType]value.UnaryFn{value.VectorType: sys},
-// }
-// }
 
 func newConfig() *config.Config {
 	var conf config.Config
@@ -43,6 +36,9 @@ func newConfig() *config.Config {
 	conf.SetMobile(true)
 	conf.SetOutput(os.Stdout)
 	conf.SetErrOutput(os.Stdout)
+
+	_ = C.CString("test")
+	_ = C.Result{}
 	return &conf
 }
 
@@ -55,18 +51,14 @@ func parseLine(parse *parse.Parser) int64 {
 	return out
 }
 
-func Execute(content string) ([]byte, error) {
+func Execute(content string) C.Response {
 	// The results of the file execution.
 	results := innerExecute(content)
 	// Return the results.
-	response := transport.Response{
-		Results: results,
+	return C.Response{
+		// results: results,
+		size: C.int64_t(len(results)),
 	}
-	out, err := proto.Marshal(&response)
-	if err != nil {
-		return make([]byte, 0), err
-	}
-	return out, nil
 }
 
 // printValues neatly prints the values returned from execution, followed by a newline.
@@ -103,12 +95,28 @@ func printValues(conf *config.Config, writer io.Writer, values []value.Value) bo
 	return printed
 }
 
+func Result(output string, status C.Status, line int64) *C.Result {
+	// var cout
+	var cout *C.char
+	if len(output) > 0 {
+		cout = C.CString(output)
+	} else {
+		cout = nil
+	}
+
+	return &C.Result{
+		output: cout,
+		status: status,
+		line:   C.int64_t(line),
+	}
+}
+
 // Run runs the parser/evaluator until EOF or error.
 // The return value says whether we completed without error. If the return
 // value is true, it means we ran out of data (EOF) and the run was successful.
 // Typical execution is therefore to loop calling Run until it succeeds.
 // Error details are reported to the configured error output stream.
-func Run(p *parse.Parser, context value.Context) (results []*transport.Result) {
+func Run(p *parse.Parser, context value.Context) (results []*C.Result) {
 	// Handle errors that are thrown
 	defer func() {
 		err := recover()
@@ -120,11 +128,11 @@ func Run(p *parse.Parser, context value.Context) (results []*transport.Result) {
 			_, ok = err.(big.ErrNaN) // Floating point error from math/big.
 		}
 		if ok {
-			results = append(results, &transport.Result{
-				Output: fmt.Sprint(err),
-				Status: transport.Result_ERROR,
-				Line:   parseLine(p),
-			})
+			results = append(results, Result(
+				fmt.Sprint(err),
+				C.ERROR,
+				parseLine(p),
+			))
 			return
 		}
 		panic(err)
@@ -144,34 +152,34 @@ func Run(p *parse.Parser, context value.Context) (results []*transport.Result) {
 		var out bytes.Buffer
 		if printValues(conf, &out, values) {
 			context.AssignGlobal("_", values[len(values)-1])
-			results = append(results, &transport.Result{
-				Output: out.String(),
-				Status: transport.Result_VALUE,
-				Line:   parseLine(p),
-			})
+			results = append(results, Result(
+				out.String(),
+				C.VALUE,
+				parseLine(p),
+			))
 		}
 		// Collect info
 		if info.Len() > 0 {
-			results = append(results, &transport.Result{
-				Output: info.String(),
-				Status: transport.Result_INFO,
-				Line:   parseLine(p),
-			})
+			results = append(results, Result(
+				info.String(),
+				C.INFO,
+				parseLine(p),
+			))
 			info.Reset()
 		}
 		// If we are at EOF, we're done. Return the last value.
 		if !ok {
-			results = append(results, &transport.Result{
-				Output: "",
-				Status: transport.Result_EOF,
-				Line:   parseLine(p),
-			})
+			results = append(results, Result(
+				"",
+				C.EOF,
+				parseLine(p),
+			))
 			return
 		}
 	}
 }
 
-func innerExecute(expr string) []*transport.Result {
+func innerExecute(expr string) []*C.Result {
 	if !strings.HasSuffix(expr, "\n") {
 		expr += "\n"
 	}
@@ -186,25 +194,25 @@ func innerExecute(expr string) []*transport.Result {
 	return Run(parser, context)
 }
 
-func GetSymbols() ([]byte, error) {
-	unas := make([]string, 0, len(value.UnaryOps))
-	for k := range value.UnaryOps {
-		unas = append(unas, k)
-	}
-
-	bins := make([]string, 0, len(value.BinaryOps))
-	for k := range value.BinaryOps {
-		bins = append(bins, k)
-	}
-
-	// Return the results.
-	response := transport.Symbols{
-		Unary:  unas,
-		Binary: bins,
-	}
-	out, err := proto.Marshal(&response)
-	if err != nil {
-		return make([]byte, 0), err
-	}
-	return out, nil
-}
+// func GetSymbols() ([]byte, error) {
+// 	unas := make([]string, 0, len(value.UnaryOps))
+// 	for k := range value.UnaryOps {
+// 		unas = append(unas, k)
+// 	}
+//
+// 	bins := make([]string, 0, len(value.BinaryOps))
+// 	for k := range value.BinaryOps {
+// 		bins = append(bins, k)
+// 	}
+//
+// 	// Return the results.
+// 	response := C.Symbols{
+// 		Unary:  unas,
+// 		Binary: bins,
+// 	}
+// 	out, err := proto.Marshal(&response)
+// 	if err != nil {
+// 		return make([]byte, 0), err
+// 	}
+// 	return out, nil
+// }

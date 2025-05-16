@@ -19,5 +19,5 @@ lib/Elb.xcframework: $(SWIFT) lib/elb.a Include/*
 	@$(RM) -rf $@
 	@xcodebuild -create-xcframework \
 		-library lib/elb.a \
-		-headers ./Include/ \
+		-headers ./Go/ \
 		-output $@
