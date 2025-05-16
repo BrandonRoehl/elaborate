@@ -9,7 +9,6 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/brandonroehl/elaborate/elb/transport"
 	"google.golang.org/protobuf/proto"
 
 	"robpike.io/ivy/config"

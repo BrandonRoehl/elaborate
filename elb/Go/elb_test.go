@@ -3,7 +3,6 @@ package elb
 import (
 	"testing"
 
-	"github.com/brandonroehl/elaborate/elb/transport"
 	"github.com/stretchr/testify/assert"
 )
 
