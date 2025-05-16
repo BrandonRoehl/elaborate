@@ -13,6 +13,7 @@ import (
 	"os"
 	"strconv"
 	"strings"
+	"unsafe"
 
 	"robpike.io/ivy/config"
 	"robpike.io/ivy/exec"
@@ -57,7 +58,8 @@ func Execute(content string) C.Response {
 	// Return the results.
 	return C.Response{
 		// results: results,
-		size: C.int64_t(len(results)),
+		results: (**C.Result)(unsafe.Pointer(&results)),
+		size:    C.int64_t(len(results)),
 	}
 }
 

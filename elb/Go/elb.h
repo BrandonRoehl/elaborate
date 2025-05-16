@@ -16,7 +16,7 @@ typedef struct Result {
 } Result;
 
 typedef struct Response {
-    Result **result;
+    Result **results;
     int64_t size;
 } Response;
 
