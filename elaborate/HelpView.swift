@@ -13,15 +13,21 @@ struct HelpView: View {
     
     var body: some View {
         NavigationStack {
+//            Text(ElbGetHelp())
             WKHTMLView(content: ElbGetHelp())
-        }
-        .navigationTitle("Help")
-        .toolbar {
-            ToolbarItem(placement: .cancellationAction) {
-                Button("Close", role: .cancel, action: {
-                    self.presentationMode.wrappedValue.dismiss()
-                })
-            }
+                .navigationTitle("Help")
+                .navigationBarBackButtonHidden()
+                .toolbar {
+                    //            ToolbarItem(placement: .cancellationAction) {
+                    ToolbarItem(placement: .cancellationAction) {
+                        Button("Close", role: .cancel, action: {
+                            self.presentationMode.wrappedValue.dismiss()
+                        })
+                    }
+                }
+#if os(iOS) || targetEnvironment(macCatalyst)
+                .navigationBarTitleDisplayMode(.inline)
+#endif
         }
     }
 }
