@@ -37,9 +37,6 @@ func newConfig() *config.Config {
 	conf.SetMobile(true)
 	conf.SetOutput(os.Stdout)
 	conf.SetErrOutput(os.Stdout)
-
-	_ = C.CString("test")
-	_ = C.Result{}
 	return &conf
 }
 
