@@ -1,4 +1,4 @@
-package elb
+package main
 
 /*
 #include "elb.h"
@@ -23,6 +23,8 @@ import (
 
 	_ "robpike.io/ivy/run" // Needed to initialize IvyEval
 )
+
+func main() {}
 
 func newConfig() *config.Config {
 	var conf config.Config
