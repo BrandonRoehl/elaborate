@@ -1,6 +1,9 @@
 GO := $(shell find Go -iname "*.go")
 SWIFT :=  $(shell find Sources -iname "*.swift")
 
+# IOS_CC = $(shell xcrun --sdk iphoneos --find clang)
+# IOS_CC = /usr/bin/clang
+
 # Flags for all targets
 export CGO_ENABLED = 1
 # export CGO_CFLAGS = -fembed-bitcode

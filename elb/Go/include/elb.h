@@ -1,6 +1,7 @@
 #ifndef ELB_H
 #define ELB_H
 #include <stdlib.h>
+// typedef long long int64_t;
 
 typedef enum Status {
     ERROR = 0,
