@@ -20,6 +20,4 @@ typedef struct Response {
     int64_t size;
 } Response;
 
-Response Execute(const char *content);
-
 #endif
