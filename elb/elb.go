@@ -14,6 +14,7 @@ import (
 
 	"robpike.io/ivy/config"
 	"robpike.io/ivy/exec"
+	"robpike.io/ivy/mobile"
 	"robpike.io/ivy/parse"
 	"robpike.io/ivy/scan"
 	"robpike.io/ivy/value"
@@ -187,25 +188,30 @@ func innerExecute(expr string) []*transport.Result {
 	return Run(parser, context)
 }
 
-func GetSymbols() ([]byte, error) {
-	unas := make([]string, 0, len(value.UnaryOps))
-	for k := range value.UnaryOps {
-		unas = append(unas, k)
-	}
-
-	bins := make([]string, 0, len(value.BinaryOps))
-	for k := range value.BinaryOps {
-		bins = append(bins, k)
-	}
-
-	// Return the results.
-	response := transport.Symbols{
-		Unary:  unas,
-		Binary: bins,
-	}
-	out, err := proto.Marshal(&response)
-	if err != nil {
-		return make([]byte, 0), err
-	}
-	return out, nil
+// GetHelp return the help page formatted in HTML.
+func GetHelp() string {
+	return mobile.Help()
 }
+
+// func GetSymbols() ([]byte, error) {
+// 	unas := make([]string, 0, len(value.UnaryOps))
+// 	for k := range value.UnaryOps {
+// 		unas = append(unas, k)
+// 	}
+//
+// 	bins := make([]string, 0, len(value.BinaryOps))
+// 	for k := range value.BinaryOps {
+// 		bins = append(bins, k)
+// 	}
+//
+// 	// Return the results.
+// 	response := transport.Symbols{
+// 		Unary:  unas,
+// 		Binary: bins,
+// 	}
+// 	out, err := proto.Marshal(&response)
+// 	if err != nil {
+// 		return make([]byte, 0), err
+// 	}
+// 	return out, nil
+// }
