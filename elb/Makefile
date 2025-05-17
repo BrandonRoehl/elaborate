@@ -2,7 +2,9 @@ GO := $(shell find Go -iname "*.go")
 SWIFT :=  $(shell find Sources -iname "*.swift")
 
 # Flags for all targets
-BASE_VARS = CGO_ENABLED=1 CGO_CFLAGS="-fembed-bitcode" CGO_LDFLAGS="-lresolv"
+export CGO_ENABLED = 1
+export CGO_CFLAGS = -fembed-bitcode
+export CGO_LDFLAGS = -lresolv
 
 .PHONY: test
 test: lib/Elb.xcframework
@@ -30,7 +32,7 @@ lib/elb_ios_amd64.a: FLAGS = -tags ios
 
 lib/%.a:
 	$(if $(VARS),,$(error Not a supported target))
-	$(BASE_VARS) $(VARS) go build -buildmode=c-archive $(FLAGS) -o $@ ./Go
+	$(VARS) go build -buildmode=c-archive $(FLAGS) -o $@ ./Go
 
 lib/elb_mac_universal.a: lib/elb_mac_arm64.a lib/elb_mac_amd64.a
 	lipo -create -output $@ $?
