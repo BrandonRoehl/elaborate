@@ -5,9 +5,6 @@ SWIFT :=  $(shell find Sources -iname "*.swift")
 export CGO_ENABLED = 1
 export CGO_CFLAGS = "-fembed-bitcode"
 
-out: lib/elb_mac_arm64.a lib/elb_mac_amd64.a lib/elb_ios_arm64.a
-	@echo "Build complete."
-
 .PHONY: test
 test: lib/Elb.xcframework
 	@swift test
@@ -31,15 +28,17 @@ lib/elb_ios_arm64.a: FLAGS = GOOS=ios GOARCH=arm64
 lib/elb_ios_amd64.a: FLAGS = GOOS=ios GOARCH=amd64
 
 lib/%.a:
+	$(if $(FLAGS),,$(error Not a supported target))
 	$(FLAGS) go build -buildmode=c-archive -o $@ ./Go
 
-lib/elb.a: lib/elb_ios_arm64.a lib/elb_sim_arm64.a
-	@$(RM) -rf $@
-	@lipo -create -output $@ $?
+lib/elb_mac_universal.a: lib/elb_mac_arm64.a lib/elb_mac_amd64.a
+	lipo -create -output $@ $?
 
-lib/Elb.xcframework: $(SWIFT) lib/elb.a Include/*
+lib/Elb.xcframework: $(SWIFT) lib/elb_mac_universal.a lib/elb_ios_arm64.a Include/*
 	@$(RM) -rf $@
 	@xcodebuild -create-xcframework \
-		-library lib/elb.a \
+		-library lib/elb_mac_universal.a \
+		-headers ./Go/ \
+		-library lib/elb_ios_arm64.a \
 		-headers ./Go/ \
 		-output $@
