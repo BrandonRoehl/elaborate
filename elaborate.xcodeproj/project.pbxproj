@@ -12,6 +12,7 @@
 		552E75282D49B98C00F34A32 /* ResultView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 552E75272D49B98600F34A32 /* ResultView.swift */; };
 		552F0FED2DD8371600720390 /* SFViewModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 552F0FEC2DD8371600720390 /* SFViewModifier.swift */; };
 		552F0FFF2DD8EE9A00720390 /* WKHTMLView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 552F0FFE2DD8EE8E00720390 /* WKHTMLView.swift */; };
+		552F10012DD8F18D00720390 /* HelpView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 552F10002DD8F18A00720390 /* HelpView.swift */; };
 		553B935A2D263F2C001397D7 /* AsyncAlgorithms in Frameworks */ = {isa = PBXBuildFile; productRef = 553B93592D263F2C001397D7 /* AsyncAlgorithms */; };
 		556ABF5F2D17A2C7004D6A05 /* ElaborateApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 556ABF5E2D17A2C7004D6A05 /* ElaborateApp.swift */; };
 		556ABF612D17A2C7004D6A05 /* ElaborateDocument.swift in Sources */ = {isa = PBXBuildFile; fileRef = 556ABF602D17A2C7004D6A05 /* ElaborateDocument.swift */; };
@@ -73,6 +74,7 @@
 		552E75272D49B98600F34A32 /* ResultView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResultView.swift; sourceTree = "<group>"; };
 		552F0FEC2DD8371600720390 /* SFViewModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SFViewModifier.swift; sourceTree = "<group>"; };
 		552F0FFE2DD8EE8E00720390 /* WKHTMLView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WKHTMLView.swift; sourceTree = "<group>"; };
+		552F10002DD8F18A00720390 /* HelpView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HelpView.swift; sourceTree = "<group>"; };
 		556ABF5B2D17A2C7004D6A05 /* elaborate.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = elaborate.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		556ABF5E2D17A2C7004D6A05 /* ElaborateApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ElaborateApp.swift; sourceTree = "<group>"; };
 		556ABF602D17A2C7004D6A05 /* ElaborateDocument.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ElaborateDocument.swift; sourceTree = "<group>"; };
@@ -195,6 +197,7 @@
 				559354FF2D87456F00FCFE4A /* NSRange+Extension.swift */,
 				55776DCB2DCD5B9E00FFCA23 /* CodeView.swift */,
 				556ABF622D17A2C7004D6A05 /* ContentView.swift */,
+				552F10002DD8F18A00720390 /* HelpView.swift */,
 				556ABF642D17A2C9004D6A05 /* Assets.xcassets */,
 				556ABF662D17A2C9004D6A05 /* Info.plist */,
 				556ABF672D17A2C9004D6A05 /* elaborate.entitlements */,
@@ -377,6 +380,7 @@
 				556ABF5F2D17A2C7004D6A05 /* ElaborateApp.swift in Sources */,
 				557A56A32D1A6FF700209EFF /* transport.proto in Sources */,
 				552E75282D49B98C00F34A32 /* ResultView.swift in Sources */,
+				552F10012DD8F18D00720390 /* HelpView.swift in Sources */,
 				5519F93F2D50105000823450 /* Transport+Extentions.swift in Sources */,
 				556ABF632D17A2C7004D6A05 /* ContentView.swift in Sources */,
 				552F0FFF2DD8EE9A00720390 /* WKHTMLView.swift in Sources */,

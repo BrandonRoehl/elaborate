@@ -40,6 +40,8 @@ struct ContentView: View {
 
     @State var stream = AsyncChannel<ElaborateDocument>()
     
+    @State var showingHelp: Bool = false
+
     var body: some View {
         CodeView(
             text: $document.text,
@@ -55,9 +57,10 @@ struct ContentView: View {
             }
             ToolbarItem(placement: .primaryAction) {
                 Button("Help", systemImage: "questionmark.circle") {
-                    if let url = URL(string: "https://pkg.go.dev/robpike.io/ivy") {
-                        openURL(url)
-                    }
+//                    if let url = URL(string: "https://pkg.go.dev/robpike.io/ivy") {
+//                        openURL(url)
+//                    }
+                    self.showingHelp = true
                 }
             }
         }
@@ -76,6 +79,9 @@ struct ContentView: View {
                 await self.stream.send(self.document)
                 await Self.logger.debug("Sent")
             }
+        }
+        .sheet(isPresented: self.$showingHelp) {
+            HelpView()
         }
     }
     
