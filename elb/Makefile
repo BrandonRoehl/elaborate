@@ -34,11 +34,11 @@ lib/%.a:
 lib/elb_mac_universal.a: lib/elb_mac_arm64.a lib/elb_mac_amd64.a
 	lipo -create -output $@ $?
 
-lib/Elb.xcframework: $(SWIFT) lib/elb_mac_universal.a lib/elb_ios_arm64.a Include/*
+lib/Elb.xcframework: $(SWIFT) lib/elb_mac_universal.a lib/elb_ios_arm64.a go/include/*
 	@$(RM) -rf $@
 	@xcodebuild -create-xcframework \
 		-library lib/elb_mac_universal.a \
-		-headers ./Go/ \
-		-library lib/elb_ios_arm64.a \
-		-headers ./Go/ \
+		-headers ./Go/include/ \
 		-output $@
+		# -library lib/elb_ios_arm64.a \
+		# -headers ./Go/ \

@@ -1,6 +1,8 @@
 package main
 
 /*
+#cgo CFLAGS: -I${SRCDIR}/include
+#cgo LDFLAGS: -linclude
 #include "elb.h"
 */
 import "C"
