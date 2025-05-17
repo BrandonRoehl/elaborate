@@ -3,8 +3,8 @@ SWIFT :=  $(shell find Sources -iname "*.swift")
 
 # Flags for all targets
 export CGO_ENABLED = 1
-export CGO_CFLAGS = -fembed-bitcode
-export CGO_LDFLAGS = -lresolv
+# export CGO_CFLAGS = -fembed-bitcode
+# export CGO_LDFLAGS = -lresolv
 
 .PHONY: test
 test: lib/Elb.xcframework
