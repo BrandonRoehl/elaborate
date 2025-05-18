@@ -138,19 +138,17 @@ func Run(p *parse.Parser, context value.Context) (results []C.Result) {
 		if err == nil {
 			return
 		}
-		_, ok := err.(value.Error)
-		if !ok {
-			_, ok = err.(big.ErrNaN) // Floating point error from math/big.
+		switch err.(type) {
+		case value.Error, big.ErrNaN:
+			// type is fine
+		default:
+			panic(err)
 		}
-		if ok {
-			results = append(results, Result(
-				fmt.Sprint(err),
-				C.ERROR,
-				parseLine(p),
-			))
-			return
-		}
-		panic(err)
+		results = append(results, Result(
+			fmt.Sprint(err),
+			C.ERROR,
+			parseLine(p),
+		))
 	}()
 
 	// Read the file and aggregate the results
