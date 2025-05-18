@@ -1,6 +1,4 @@
 #!/bin/sh
-# set -x
-
 # go/clangwrap.sh
 
 SDK_PATH=`xcrun --sdk $SDK --show-sdk-path`
