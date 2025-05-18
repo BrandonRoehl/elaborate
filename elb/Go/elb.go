@@ -64,7 +64,7 @@ func Execute(content *C.char) C.Response {
 	results := innerExecute(input)
 	// Return the results.
 	return C.Response{
-		results: (**C.Result)(unsafe.Pointer(&results)),
+		results: (*C.Result)(unsafe.Pointer(&results)),
 		size:    C.int64_t(len(results)),
 	}
 }
@@ -103,7 +103,7 @@ func printValues(conf *config.Config, writer io.Writer, values []value.Value) bo
 	return printed
 }
 
-func Result(output string, status C.Status, line int64) *C.Result {
+func Result(output string, status C.Status, line int64) C.Result {
 	// var cout
 	var cout *C.char
 	if len(output) > 0 {
@@ -112,7 +112,7 @@ func Result(output string, status C.Status, line int64) *C.Result {
 		cout = nil
 	}
 
-	return &C.Result{
+	return C.Result{
 		output: cout,
 		status: status,
 		line:   C.int64_t(line),
@@ -124,7 +124,7 @@ func Result(output string, status C.Status, line int64) *C.Result {
 // value is true, it means we ran out of data (EOF) and the run was successful.
 // Typical execution is therefore to loop calling Run until it succeeds.
 // Error details are reported to the configured error output stream.
-func Run(p *parse.Parser, context value.Context) (results []*C.Result) {
+func Run(p *parse.Parser, context value.Context) (results []C.Result) {
 	// Handle errors that are thrown
 	defer func() {
 		err := recover()
@@ -187,7 +187,7 @@ func Run(p *parse.Parser, context value.Context) (results []*C.Result) {
 	}
 }
 
-func innerExecute(expr string) []*C.Result {
+func innerExecute(expr string) []C.Result {
 	if !strings.HasSuffix(expr, "\n") {
 		expr += "\n"
 	}
