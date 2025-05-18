@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import Elb
 
 struct ResultGroup: View {
     let results: [Response]
@@ -22,28 +23,25 @@ struct ResultGroup: View {
 }
 
 #Preview {
-    ResultGroup(results: [{
-        var result = Response()
-        result.line = 1
-        result.output = "1234 alskdjasd aslkjdasd asldkjasdlkj asldkjasd lajsd\n"
-        result.status = .value
-        return result
-    }(), {
-        var result = Response()
-        result.line = 1
-        result.output = "Info that gets printed"
-        result.status = .info
-        return result
-    }(), {
-        var result = Response()
-        result.line = 1
-        result.output = "This is an error output"
-        result.status = .error
-        return result
-    }(), {
-        var result = Response()
-        result.line = 1
-        result.status = .eof
-        return result
-    }()])
+    ResultGroup(results: [
+        Response(
+            line: 1,
+            status: .value,
+            output: "1234 alskdjasd aslkjdasd asldkjasdlkj asldkjasd lajsd\n",
+        ),
+        Response(
+            line: 1,
+            status: .info,
+            output: "Info that gets printed",
+        ),
+        Response(
+            line: 1,
+            status: .error,
+            output: "This is an error output"
+        ),
+        Response(
+            line: 1,
+            status: .eof,
+        )
+    ])
 }

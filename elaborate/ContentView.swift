@@ -24,14 +24,14 @@ struct ContentView: View {
         didSet {
             for (line, view) in self.messages {
                 for result in view.results {
-                    let json = (try? result.jsonString()) ?? ""
+                    let msg = result.output ?? ""
                     switch result.status {
                     case .error:
-                        Self.logger.error("\(line): \(json)")
+                        Self.logger.error("\(line): \(msg)")
                     case .value, .info:
-                        Self.logger.info("\(line): \(json)")
-                    case .eof, .UNRECOGNIZED(_):
-                        Self.logger.debug("\(line): \(json)")
+                        Self.logger.info("\(line): \(msg)")
+                    case .eof:
+                        Self.logger.debug("\(line): \(msg)")
                     }
                 }
             }
