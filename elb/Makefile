@@ -48,12 +48,12 @@ lib/ios-simulator-x86_64.a: TARGET=x86_64-apple-ios-simulator
 lib/ios-maccatalyst-arm64.a: TARGET=aarch64-apple-ios-macabi
 lib/ios-maccatalyst-x86_64.a: TARGET=x86_64-apple-ios-macabi
 
-lib/%-arm64_x86_64.a:
+lib/%-arm64_x86_64.a: $(GO) lib Go/include/*
 	$(MAKE) lib/$*-arm64.a
 	$(MAKE) lib/$*-x86_64.a
 	lipo -create -output $@ lib/$*-arm64.a lib/$*-x86_64.a
 
-lib/%.a: lib
+lib/%.a: $(GO) lib Go/include/*
 	$(if $(GOARCH),,$(error Arachitecture not set))
 	$(if $(GOOS),,$(error Operation system not set))
 	$(if $(TARGET),,$(error No known target))
