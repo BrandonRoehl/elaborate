@@ -48,7 +48,7 @@ lib/ios-simulator-x86_64.a: TARGET=x86_64-apple-ios-simulator
 lib/ios-maccatalyst-arm64.a: TARGET=aarch64-apple-ios-macabi
 lib/ios-maccatalyst-x86_64.a: TARGET=x86_64-apple-ios-macabi
 
-lib/%-arm64_x86_64.a: $(GO) lib Go/include/*
+lib/%-arm64_x86_64.a: $(GO) lib Go/include/elb.h
 	$(MAKE) lib/$*-arm64.a
 	$(MAKE) lib/$*-x86_64.a
 	lipo -create -output $@ lib/$*-arm64.a lib/$*-x86_64.a
@@ -61,7 +61,7 @@ lib/%.a: $(GO) lib Go/include/*
 		   $(if $(SDK),SDK=$(SDK) CC=$(CURDIR)/clangwrap.sh,) \
 		   go build -buildmode=c-archive -o $@ ./Go
 
-lib/Elb.xcframework: $(SWIFT) lib/macos-arm64_x86_64.a lib/ios-arm64.a lib/ios-simulator-arm64_x86_64.a lib/ios-maccatalyst-arm64_x86_64.a Go/include/*
+lib/Elb.xcframework: $(SWIFT) lib/macos-arm64_x86_64.a lib/ios-arm64.a lib/ios-simulator-arm64_x86_64.a lib/ios-maccatalyst-arm64_x86_64.a Go/include/module.modulemap
 	$(RM) -rf $@
 	xcodebuild -create-xcframework \
 		-library lib/ios-arm64.a \

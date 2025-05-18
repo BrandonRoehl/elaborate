@@ -58,7 +58,7 @@ func parseLine(parse *parse.Parser) int64 {
 // Execute must match the header file so this import works
 //
 //export Execute
-func Execute(content *C.char) C.Response {
+func Execute(content *C.cchar_t) C.Response {
 	input := C.GoString(content)
 	// The results of the file execution.
 	results := innerExecute(input)

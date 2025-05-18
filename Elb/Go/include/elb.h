@@ -4,6 +4,8 @@
 // #include <stdint.h>
 // typedef long long int64_t;
 
+typedef const char cchar_t;
+
 typedef enum Status {
     ERROR = 0,
     VALUE = 1,
@@ -22,6 +24,6 @@ typedef struct Response {
     int64_t size;
 } Response;
 
-extern Response Execute(const char *content);
+extern Response Execute(cchar_t *content);
 
 #endif
