@@ -62,17 +62,29 @@ func Execute(content *C.char) C.Response {
 	input := C.GoString(content)
 	// The results of the file execution.
 	results := innerExecute(input)
-	if len(results) == 0 {
+	size := len(results)
+	if size == 0 {
 		// optional null response
 		return C.Response{
 			results: nil,
 			size:    0,
 		}
 	}
+
+	// Malloc the array and fill it with a copy of results
+	responseSize := unsafe.Sizeof(C.Result{})
+	cResultsArray := C.malloc(C.size_t(size * int(responseSize)))
+	for i, r := range results {
+		cResult := (*C.Result)(unsafe.Add(cResultsArray, uintptr(i)*responseSize))
+		cResult.line = r.line
+		cResult.status = r.status
+		cResult.output = r.output
+	}
+
 	// Return the results.
 	return C.Response{
-		results: (*C.Result)(unsafe.Pointer(&results[0])),
-		size:    C.int64_t(len(results)),
+		results: (*C.Result)(cResultsArray),
+		size:    C.int64_t(size),
 	}
 }
 
