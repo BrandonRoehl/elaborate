@@ -23,11 +23,8 @@
 		557A569C2D1A6FB800209EFF /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = 557A569B2D1A6FB800209EFF /* README.md */; };
 		557A569D2D1A6FB800209EFF /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = 557A569B2D1A6FB800209EFF /* README.md */; };
 		557A569E2D1A6FB800209EFF /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = 557A569B2D1A6FB800209EFF /* README.md */; };
-		557A56A32D1A6FF700209EFF /* transport.proto in Sources */ = {isa = PBXBuildFile; fileRef = 557A56A22D1A6FF700209EFF /* transport.proto */; };
-		557A56A42D1A6FF700209EFF /* transport.proto in Sources */ = {isa = PBXBuildFile; fileRef = 557A56A22D1A6FF700209EFF /* transport.proto */; };
-		557A56A52D1A6FF700209EFF /* transport.proto in Sources */ = {isa = PBXBuildFile; fileRef = 557A56A22D1A6FF700209EFF /* transport.proto */; };
 		5588601E2DDA619900EF7E49 /* Elb in Frameworks */ = {isa = PBXBuildFile; productRef = 5588601D2DDA619900EF7E49 /* Elb */; };
-		559355002D87457600FCFE4A /* NSRange+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 559354FF2D87456F00FCFE4A /* NSRange+Extension.swift */; };
+		55ADEB7D2DDA65AE004B5509 /* SFViewModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55ADEB7C2DDA65AE004B5509 /* SFViewModifier.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -78,15 +75,12 @@
 		556ABF7F2D17A2CA004D6A05 /* elaborateUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = elaborateUITestsLaunchTests.swift; sourceTree = "<group>"; };
 		55776DCB2DCD5B9E00FFCA23 /* CodeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CodeView.swift; sourceTree = "<group>"; };
 		557A569B2D1A6FB800209EFF /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
-		557A56A22D1A6FF700209EFF /* transport.proto */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.protobuf; path = transport.proto; sourceTree = "<group>"; };
 		5588601C2DDA617F00EF7E49 /* Elb */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = Elb; sourceTree = "<group>"; };
-		559354FF2D87456F00FCFE4A /* NSRange+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSRange+Extension.swift"; sourceTree = "<group>"; };
+		55ADEB7C2DDA65AE004B5509 /* SFViewModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SFViewModifier.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		551BEEE42DB41B02000D13F6 /* CodeTextView */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = CodeTextView; sourceTree = "<group>"; };
-		551BEEE52DB41B2A000D13F6 /* delegate */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = delegate; sourceTree = "<group>"; };
-		551CF8812DD586A900C37118 /* URLUtils */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = URLUtils; sourceTree = "<group>"; };
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -127,13 +121,12 @@
 		556ABF522D17A2C7004D6A05 = {
 			isa = PBXGroup;
 			children = (
-				5588601C2DDA617F00EF7E49 /* Elb */,
 				557A569B2D1A6FB800209EFF /* README.md */,
+				5588601C2DDA617F00EF7E49 /* Elb */,
 				556ABF5D2D17A2C7004D6A05 /* elaborate */,
 				556ABF722D17A2CA004D6A05 /* elaborateTests */,
 				556ABF7C2D17A2CA004D6A05 /* elaborateUITests */,
 				556ABF5C2D17A2C7004D6A05 /* Products */,
-				557A56A22D1A6FF700209EFF /* transport.proto */,
 				555805C02D74C01500209D00 /* Frameworks */,
 			);
 			sourceTree = "<group>";
@@ -151,16 +144,14 @@
 		556ABF5D2D17A2C7004D6A05 /* elaborate */ = {
 			isa = PBXGroup;
 			children = (
-				551CF8812DD586A900C37118 /* URLUtils */,
 				551BEEE42DB41B02000D13F6 /* CodeTextView */,
-				556ABF5E2D17A2C7004D6A05 /* ElaborateApp.swift */,
-				556ABF602D17A2C7004D6A05 /* ElaborateDocument.swift */,
-				551BEEE52DB41B2A000D13F6 /* delegate */,
-				552E75272D49B98600F34A32 /* ResultView.swift */,
-				5519F93C2D500E2F00823450 /* ResultGroup.swift */,
-				559354FF2D87456F00FCFE4A /* NSRange+Extension.swift */,
 				55776DCB2DCD5B9E00FFCA23 /* CodeView.swift */,
+				556ABF602D17A2C7004D6A05 /* ElaborateDocument.swift */,
+				556ABF5E2D17A2C7004D6A05 /* ElaborateApp.swift */,
 				556ABF622D17A2C7004D6A05 /* ContentView.swift */,
+				5519F93C2D500E2F00823450 /* ResultGroup.swift */,
+				552E75272D49B98600F34A32 /* ResultView.swift */,
+				55ADEB7C2DDA65AE004B5509 /* SFViewModifier.swift */,
 				556ABF642D17A2C9004D6A05 /* Assets.xcassets */,
 				556ABF662D17A2C9004D6A05 /* Info.plist */,
 				556ABF672D17A2C9004D6A05 /* elaborate.entitlements */,
@@ -212,8 +203,6 @@
 			);
 			fileSystemSynchronizedGroups = (
 				551BEEE42DB41B02000D13F6 /* CodeTextView */,
-				551BEEE52DB41B2A000D13F6 /* delegate */,
-				551CF8812DD586A900C37118 /* URLUtils */,
 			);
 			name = elaborate;
 			productName = elaborate;
@@ -341,10 +330,9 @@
 				556ABF612D17A2C7004D6A05 /* ElaborateDocument.swift in Sources */,
 				55776DCC2DCD5BA200FFCA23 /* CodeView.swift in Sources */,
 				556ABF5F2D17A2C7004D6A05 /* ElaborateApp.swift in Sources */,
-				557A56A32D1A6FF700209EFF /* transport.proto in Sources */,
 				552E75282D49B98C00F34A32 /* ResultView.swift in Sources */,
 				556ABF632D17A2C7004D6A05 /* ContentView.swift in Sources */,
-				559355002D87457600FCFE4A /* NSRange+Extension.swift in Sources */,
+				55ADEB7D2DDA65AE004B5509 /* SFViewModifier.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -352,7 +340,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				557A56A42D1A6FF700209EFF /* transport.proto in Sources */,
 				556ABF742D17A2CA004D6A05 /* elaborateTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -362,7 +349,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				556ABF802D17A2CA004D6A05 /* elaborateUITestsLaunchTests.swift in Sources */,
-				557A56A52D1A6FF700209EFF /* transport.proto in Sources */,
 				556ABF7E2D17A2CA004D6A05 /* elaborateUITests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
