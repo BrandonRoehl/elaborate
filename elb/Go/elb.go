@@ -62,9 +62,16 @@ func Execute(content *C.char) C.Response {
 	input := C.GoString(content)
 	// The results of the file execution.
 	results := innerExecute(input)
+	if len(results) == 0 {
+		// optional null response
+		return C.Response{
+			results: nil,
+			size:    0,
+		}
+	}
 	// Return the results.
 	return C.Response{
-		results: (*C.Result)(unsafe.Pointer(&results)),
+		results: (*C.Result)(unsafe.Pointer(&results[0])),
 		size:    C.int64_t(len(results)),
 	}
 }
