@@ -40,13 +40,13 @@ lib/elb_ios_arm64.a: FLAGS = -tags ios
 lib/elb_ios_amd64.a: VARS = GOOS=ios GOARCH=amd64
 lib/elb_ios_amd64.a: FLAGS = -tags ios
 
-lib/%-arm64_x86_64.a: lib/%-arm64.a lib/%-x86_64.a
-	lipo -create -output $@ $?
-
 lib/%.a:
 	$(if $(GOARCH),,$(error Arachitecture not set))
 	$(if $(GOOS),,$(error Operation system not set))
 	GOARCH=$(GOARCH) GOOS=$(GOOS) go build -buildmode=c-archive $(if $(FLAGS), -flags $(FLAGS),) -o $@ ./Go
+
+lib/%-arm64_x86_64.a: lib/%-arm64.a lib/%-x86_64.a
+	lipo -create -output $@ $?
 
 lib/Elb.xcframework: $(SWIFT) lib/macos-arm64_x86_64.a go/include/*
 	@$(RM) -rf $@
