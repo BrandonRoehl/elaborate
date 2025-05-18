@@ -6,7 +6,6 @@ SWIFT :=  $(shell find Sources -iname "*.swift")
 
 # Flags for all targets
 export CGO_ENABLED = 1
-export CC=$(CURDIR)/clangwrap.sh
 # export CGO_CFLAGS = -fembed-bitcode
 # export CGO_LDFLAGS = -lresolv
 
@@ -24,30 +23,30 @@ lib/%-arm64.a: GOARCH=arm64
 lib/%-x86_64.a: GOARCH=amd64
 
 lib/ios-%.a: GOOS=ios
-lib/ios-%.a: FLAGS=ios
+# lib/ios-%.a: FLAGS=ios
 lib/ios-%.a: SDK=iphoneos
 
 lib/macos-%.a: GOOS=darwin
-lib/macos-%.a: SDK=macos 
 
 lib/ios-%-simulator.a: GOOS=ios
-lib/ios-%-simulator.a: FLAGS=ios
+# lib/ios-%-simulator.a: FLAGS=ios
 lib/ios-%-simulator.a: SDK=iphonesimulator 
 
 lib/%.a: lib
 	$(if $(GOARCH),,$(error Arachitecture not set))
 	$(if $(GOOS),,$(error Operation system not set))
-	GOARCH=$(GOARCH) GOOS=$(GOOS) $(if $(SDK), SDK=$(SDK),) \
+	GOARCH=$(GOARCH) GOOS=$(GOOS) \
+		   $(if $(SDK), SDK=$(SDK) CC=$(CURDIR)/clangwrap.sh,) \
 		   go build -buildmode=c-archive $(if $(FLAGS), -flags=$(FLAGS),) -o $@ ./Go
 
 lib/macos-arm64_x86_64.a: lib/macos-arm64.a lib/macos-x86_64.a
 	lipo -create -output $@ $?
 
-lib/Elb.xcframework: $(SWIFT) lib/macos-arm64_x86_64.a go/include/*
+lib/Elb.xcframework: $(SWIFT) lib/macos-arm64_x86_64.a lib/ios-arm64.a go/include/*
 	@$(RM) -rf $@
 	@xcodebuild -create-xcframework \
 		-library lib/macos-arm64_x86_64.a \
 		-headers ./Go/include/ \
+		-library lib/ios-arm64.a \
+		-headers ./Go/ \
 		-output $@
-		# -library lib/elb_ios_arm64.a \
-		# -headers ./Go/ \
