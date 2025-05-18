@@ -45,6 +45,6 @@ lib/Elb.xcframework: $(SWIFT) lib/elb_mac_universal.a lib/elb_ios_arm64.a go/inc
 	@xcodebuild -create-xcframework \
 		-library lib/elb_mac_universal.a \
 		-headers ./Go/include/ \
-		-library lib/elb_ios_arm64.a \
-		-headers ./Go/ \
 		-output $@
+		# -library lib/elb_ios_arm64.a \
+		# -headers ./Go/ \
