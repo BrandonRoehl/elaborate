@@ -1,5 +1,4 @@
 module ElbLib {
   header "elb.h"
-  header "elb_go.h"
   export *
 }

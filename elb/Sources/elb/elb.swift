@@ -3,5 +3,8 @@
 import ElbLib
 
 func Execute(_ document: String) {
-    ElbLib.Execute(document)
+    document.withCString { cString in
+        let _ = ElbLib.Execute(cString)
+    }
 }
+

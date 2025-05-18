@@ -22,4 +22,6 @@ typedef struct Response {
     int64_t size;
 } Response;
 
+extern Response Execute(const char *content);
+
 #endif
