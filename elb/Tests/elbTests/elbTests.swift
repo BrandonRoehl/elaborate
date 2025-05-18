@@ -1,7 +1,7 @@
+import ElbLib
 import Testing
 
 @testable import Elb
-@testable import ElbLib
 
 @Test func example() async throws {
     // Write your test here and use APIs like `#expect(...)` to check expected conditions.
@@ -15,7 +15,6 @@ import Testing
 
 func ElbExecute(_ document: String) {
     document.withCString { cString in
-        let response = ElbLib.Execute(cString)
-
+        let _ = Execute(cString)
     }
 }
