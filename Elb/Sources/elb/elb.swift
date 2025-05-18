@@ -3,7 +3,7 @@
 import ElbLib
 
 public struct Response {
-    public enum Status {
+    public enum Status: Int {
         case ERROR = 0
         case VALUE = 1
         case EOF = 2
@@ -15,8 +15,8 @@ public struct Response {
     let ouput: String
 }
 
-public func elbExecute(_ document: String) {
-    document.withCString { cString in
+public func elbExecute(_ document: String) -> [Response] {
+    return document.withCString { cString in
         let response = ElbLib.Execute(cString)
     }
 }
