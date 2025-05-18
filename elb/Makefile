@@ -6,6 +6,7 @@ SWIFT :=  $(shell find Sources -iname "*.swift")
 
 # Flags for all targets
 export CGO_ENABLED = 1
+export CC=$(CURDIR)/clangwrap.sh
 # export CGO_CFLAGS = -fembed-bitcode
 # export CGO_LDFLAGS = -lresolv
 
@@ -24,13 +25,20 @@ lib/%-x86_64.a: GOARCH=amd64
 
 lib/ios-%.a: GOOS=ios
 lib/ios-%.a: FLAGS=ios
+lib/ios-%.a: SDK=iphoneos
 
 lib/macos-%.a: GOOS=darwin
+lib/macos-%.a: SDK=macos 
+
+lib/ios-%-simulator.a: GOOS=ios
+lib/ios-%-simulator.a: FLAGS=ios
+lib/ios-%-simulator.a: SDK=iphonesimulator 
 
 lib/%.a: lib
 	$(if $(GOARCH),,$(error Arachitecture not set))
 	$(if $(GOOS),,$(error Operation system not set))
-	GOARCH=$(GOARCH) GOOS=$(GOOS) go build -buildmode=c-archive $(if $(FLAGS), -flags $(FLAGS),) -o $@ ./Go
+	GOARCH=$(GOARCH) GOOS=$(GOOS) $(if $(SDK), SDK=$(SDK),) \
+		   go build -buildmode=c-archive $(if $(FLAGS), -flags=$(FLAGS),) -o $@ ./Go
 
 lib/macos-arm64_x86_64.a: lib/macos-arm64.a lib/macos-x86_64.a
 	lipo -create -output $@ $?
