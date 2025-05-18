@@ -113,26 +113,26 @@ struct CodeView: View {
         text: .constant("count \"Hello World\"\nprint (2 * 100)\n"),
         messages: .constant([
             1: ResultGroup(results: [{
-                var result = Elaborate_Result()
+                var result = Response()
                 result.line = 1
                 result.output = "1234 alskdjasd aslkjdasd asldkjasdlkj asldkjasd lajsd\n"
                 result.status = .value
                 return result
             }(), {
-                var result = Elaborate_Result()
+                var result = Response()
                 result.line = 1
                 result.output = "Info that gets printed"
                 result.status = .info
                 return result
             }(), {
-                var result = Elaborate_Result()
+                var result = Response()
                 result.line = 1
                 result.output = "This is an error output"
                 result.status = .error
                 return result
             }()]),
             2: ResultGroup(results: [{
-                var result = Elaborate_Result()
+                var result = Response()
                 result.line = 2
                 result.status = .eof
                 return result

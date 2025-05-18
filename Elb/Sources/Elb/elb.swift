@@ -24,10 +24,25 @@ public struct Response {
             }
         }
     }
+    
+    public init(line: Int, status: Status, output: String? = nil) {
+        self.line = line
+        self.status = status
+        self.output = output
+    }
 
-    let status: Status
-    let line: Int
-    let output: String?
+    public let status: Status
+    public let line: Int
+    public let output: String?
+}
+
+extension Response: Hashable {
+}
+
+extension Response: Identifiable {
+    public var id: Int {
+        self.hashValue
+    }
 }
 
 public func elbExecute(_ document: String) -> [Response] {
@@ -46,7 +61,7 @@ public func elbExecute(_ document: String) -> [Response] {
             } else {
                 output = String(cString: result.output)
             }
-            return Response(status: .init(result.status)!, line: Int(clamping: result.line), output: output)
+            return Response(line: Int(clamping: result.line), status: .init(result.status)!, output: output)
         }
     }
 }
