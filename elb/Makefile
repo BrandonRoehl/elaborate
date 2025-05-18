@@ -19,6 +19,13 @@ build: lib/Elb.xcframework
 lib:
 	@mkdir -p lib
 
+lib/%-arm64.a: GOARCH=arm64
+lib/%-x86_64.a: GOARCH=amd64
+
+lib/ios-%.a: GOOS=ios
+lib/macos-%.a: GOOS=ios
+
+
 # macOS Intel
 lib/elb_mac_arm64.a: VARS = GOOS=darwin GOARCH=arm64
 
@@ -34,16 +41,17 @@ lib/elb_ios_amd64.a: VARS = GOOS=ios GOARCH=amd64
 lib/elb_ios_amd64.a: FLAGS = -tags ios
 
 lib/%.a:
-	$(if $(VARS),,$(error Not a supported target))
-	$(VARS) go build -buildmode=c-archive $(FLAGS) -o $@ ./Go
+	$(if $(GOARCH),,$(error Arachitecture not set))
+	$(if $(GOOS),,$(error Operation system not set))
+	GOARCH=$(GOARCH) GOOS=$(GOOS) go build -buildmode=c-archive $(if $(FLAGS), -flags $(FLAGS),) -o $@ ./Go
 
-lib/elb_mac_universal.a: lib/elb_mac_arm64.a lib/elb_mac_amd64.a
+lib/%-arm64_x86_64.a: lib/$*-arm64.a lib/$*-x86_64.a
 	lipo -create -output $@ $?
 
-lib/Elb.xcframework: $(SWIFT) lib/elb_mac_universal.a lib/elb_ios_arm64.a go/include/*
+lib/Elb.xcframework: $(SWIFT) lib/macos-arm64_x86_64.a go/include/*
 	@$(RM) -rf $@
 	@xcodebuild -create-xcframework \
-		-library lib/elb_mac_universal.a \
+		-library lib/macos-arm64_x86_64.a \
 		-headers ./Go/include/ \
 		-output $@
 		# -library lib/elb_ios_arm64.a \
