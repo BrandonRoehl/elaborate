@@ -23,29 +23,16 @@ lib/%-arm64.a: GOARCH=arm64
 lib/%-x86_64.a: GOARCH=amd64
 
 lib/ios-%.a: GOOS=ios
+lib/ios-%.a: FLAGS=ios
+
 lib/macos-%.a: GOOS=darwin
-
-
-# macOS Intel
-lib/elb_mac_arm64.a: VARS = GOOS=darwin GOARCH=arm64
-
-# macOS Apply Silicon
-lib/elb_mac_amd64.a: VARS = GOOS=darwin GOARCH=amd64
-
-# iOS, macOS Catalyst, & iOS Simulator
-lib/elb_ios_arm64.a: VARS = GOOS=ios GOARCH=arm64
-lib/elb_ios_arm64.a: FLAGS = -tags ios
-
-# iOS Simulator on Intel - probs can remove
-lib/elb_ios_amd64.a: VARS = GOOS=ios GOARCH=amd64
-lib/elb_ios_amd64.a: FLAGS = -tags ios
 
 lib/%.a:
 	$(if $(GOARCH),,$(error Arachitecture not set))
 	$(if $(GOOS),,$(error Operation system not set))
 	GOARCH=$(GOARCH) GOOS=$(GOOS) go build -buildmode=c-archive $(if $(FLAGS), -flags $(FLAGS),) -o $@ ./Go
 
-lib/%-arm64_x86_64.a: lib/%-arm64.a lib/%-x86_64.a
+lib/macos-arm64_x86_64.a: lib/macos-arm64.a lib/macos-x86_64.a
 	lipo -create -output $@ $?
 
 lib/Elb.xcframework: $(SWIFT) lib/macos-arm64_x86_64.a go/include/*
