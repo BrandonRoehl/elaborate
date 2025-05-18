@@ -61,12 +61,6 @@ lib/%.a: lib
 		   $(if $(SDK),SDK=$(SDK) CC=$(CURDIR)/clangwrap.sh,) \
 		   go build -buildmode=c-archive -o $@ ./Go
 
-# lib/ios-arm64_x86_64-maccatalyst.a: lib/ios-maccatalyst-arm64.a lib/ios-maccatalyst-x86_64.a
-# 	lipo -create -output $@ $?
-#
-# lib/ios-arm64_x86_64-simulator.a: lib/ios-simulator-arm64.a lib/ios-simulator-x86_64.a
-# 	lipo -create -output $@ $?
-
 lib/Elb.xcframework: $(SWIFT) lib/macos-arm64_x86_64.a lib/ios-arm64.a lib/ios-simulator-arm64_x86_64.a lib/ios-maccatalyst-arm64_x86_64.a Go/include/*
 	$(RM) -rf $@
 	xcodebuild -create-xcframework \
