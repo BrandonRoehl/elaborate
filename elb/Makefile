@@ -30,7 +30,7 @@ lib/ios-simulator-%.a: GOOS=ios
 lib/ios-maccatalyst-%.a: GOOS=ios
 
 # SDK
-lib/macos-%.a: SDK=macosx
+# lib/macos-%.a: SDK=macosx
 lib/ios-%.a: SDK=iphoneos
 lib/ios-simulator-%.a: SDK=iphonesimulator 
 lib/ios-maccatalyst-%.a: SDK=macosx
@@ -42,11 +42,11 @@ lib/macos-x86_64.a: TARGET=x86_64-apple-darwin
 lib/ios-arm64.a: TARGET=aarch64-apple-ios
 lib/ios-x86_64.a: TARGET=x86_64-apple-ios
 
-lib/ios-simulator-arm64.a: TARGET=aarch64-apple-ios-sim
-lib/ios-simulator-x86_64.a: TARGET=aarch64-apple-ios-sim
+lib/ios-simulator-arm64.a: TARGET=aarch64-apple-ios-simulator
+lib/ios-simulator-x86_64.a: TARGET=x86_64-apple-ios-simulator
 
 lib/ios-maccatalyst-arm64.a: TARGET=aarch64-apple-ios-macabi
-lib/ios-maccatalyst-x86_64.a: TARGET=aarch64-apple-ios-macabi
+lib/ios-maccatalyst-x86_64.a: TARGET=x86_64-apple-ios-macabi
 
 lib/%-arm64_x86_64.a:
 	$(MAKE) lib/$*-arm64.a
