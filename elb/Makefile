@@ -11,13 +11,13 @@ export CGO_ENABLED = 1
 
 .PHONY: test
 test: lib/Elb.xcframework
-	@swift test
+	swift test
 
 .PHONY: build
 build: lib/Elb.xcframework
 
 lib:
-	@mkdir -p lib
+	mkdir -p $@
 
 lib/%-arm64.a: GOARCH=arm64
 lib/%-x86_64.a: GOARCH=amd64
@@ -27,7 +27,7 @@ lib/ios-%.a: FLAGS=ios
 
 lib/macos-%.a: GOOS=darwin
 
-lib/%.a:
+lib/%.a: lib
 	$(if $(GOARCH),,$(error Arachitecture not set))
 	$(if $(GOOS),,$(error Operation system not set))
 	GOARCH=$(GOARCH) GOOS=$(GOOS) go build -buildmode=c-archive $(if $(FLAGS), -flags $(FLAGS),) -o $@ ./Go
