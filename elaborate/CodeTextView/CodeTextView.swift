@@ -28,6 +28,6 @@ public struct CodeTextView {
 }
 
 #Preview {
-    @Previewable @State var text: String = "Hello, World!"
+    @Previewable @State var text: String = ") help"
     CodeTextView(text: $text)
 }
