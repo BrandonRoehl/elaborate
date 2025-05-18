@@ -4,21 +4,21 @@ import ElbLib
 
 public struct Response {
     public enum Status {
-        case ERROR
-        case VALUE
-        case EOF
-        case INFO
+        case error
+        case value
+        case eof
+        case info
         
         fileprivate init?(_ rawValue: ElbLib.Status) {
             switch rawValue {
             case ElbLib.ERROR:
-                self = .ERROR
+                self = .error
             case ElbLib.VALUE:
-                self = .VALUE
+                self = .value
             case ElbLib.EOF:
-                self = .EOF
+                self = .eof
             case ElbLib.INFO:
-                self = .INFO
+                self = .info
             default:
                 return nil
             }
@@ -27,7 +27,7 @@ public struct Response {
 
     let status: Status
     let line: Int
-    let ouput: String
+    let output: String?
 }
 
 public func elbExecute(_ document: String) -> [Response] {
@@ -40,8 +40,13 @@ public func elbExecute(_ document: String) -> [Response] {
         }
         return (0..<size).map { i in
             let result = response.results.advanced(by: i).pointee
-            let output = String(cString: result.output)
-            return Response(status: .init(result.status)!, line: Int(clamping: result.line), ouput: output)
+            let output: String?
+            if result.output == nil {
+                output = nil
+            } else {
+                output = String(cString: result.output)
+            }
+            return Response(status: .init(result.status)!, line: Int(clamping: result.line), output: output)
         }
     }
 }
