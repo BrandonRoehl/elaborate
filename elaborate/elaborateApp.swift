@@ -12,6 +12,7 @@ struct ElaborateApp: App {
     var body: some Scene {
         DocumentGroup(newDocument: ElaborateDocument()) { file in
             ContentView(document: file.$document)
+                .openURLSheet()
 //                .toolbarBackground(Material.bar)
 //                .toolbarBackgroundVisibility(.visible, for: .navigationBar, .automatic)
         }

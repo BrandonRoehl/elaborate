@@ -7,15 +7,16 @@
 // View a single result
 
 import SwiftUI
+import Elb
 import os
 
 struct ResultView: View {
     static let logger = Logger(subsystem: "elb", category: "result")
 
-    let result: Elaborate_Result
+    let result: Response
     
-    let mono = Font.system(.body, design: .monospaced, weight: .regular)
-    let regular = Font.system(.body, design: .default, weight: .regular)
+    static let mono = Font.system(.body, design: .monospaced, weight: .regular)
+    static let regular = Font.system(.body, design: .default, weight: .regular)
 
     var icon: String {
         return switch result.status {
@@ -23,18 +24,32 @@ struct ResultView: View {
         case .value: "number.square.fill"
         case .eof: "arrow.down.to.line"
         case .info: "info.bubble.fill"
-        case .UNRECOGNIZED(_): "questionmark.diamond.fill"
         }
     }
     
     var color: Color {
         return switch result.status {
         case .error: .red
+#if OUTLINES
+        case .value: .primary
+#else
         case .value: .clear
+#endif
         case .eof: .brown
-        case .info: .blue
-        case .UNRECOGNIZED(_): .blue
+        case .info: .accentColor
         }
+    }
+    
+    var text: some View {
+        // Set the font to mono space if this is a value
+        let font = switch result.status {
+        case .info, .value: Self.mono
+        default: Self.regular
+        }
+        return Text(result.output!)
+            .textSelection(.enabled)
+            .font(font)
+            .padding(.top, 4)
     }
 
     var body: some View {
@@ -50,14 +65,17 @@ struct ResultView: View {
                 
             }
             .font(.caption)
-            if !result.output.isEmpty {
-                // Set the font to mono space if this is a value
-                Text(result.output)
-                    .textSelection(.enabled)
-                    .font(result.status == .value ? mono : regular)
-                    .padding(.top, 4)
+            if !(result.output?.isEmpty ?? true) {
+                if result.status == .info {
+                    ScrollView(.horizontal) {
+                        text
+                    }
+                } else {
+                    text
+                }
             }
         }
+        
         .padding(.all, 8)
 #if OUTLINES
         .background(RoundedRectangle(cornerRadius: 8).stroke(color, lineWidth: 1))
@@ -71,35 +89,27 @@ struct ResultView: View {
 
 #Preview {
     VStack(spacing: 8) {
-        ResultView(result: {
-            var result = Elaborate_Result()
-            result.line = 1
-            result.output = "1234 alskdjasd aslkjdasd asldkjasdlkj asldkjasd lajsd\n"
-            result.status = .value
-            return result
-        }())
+        ResultView(result: Response(
+            line: 1,
+            status: .value,
+            output: "1234 alskdjasd aslkjdasd asldkjasdlkj asldkjasd lajsd\n",
+        ))
         
-        ResultView(result: {
-            var result = Elaborate_Result()
-            result.line = 1
-            result.output = "Info that gets printed"
-            result.status = .info
-            return result
-        }())
+        ResultView(result: Response(
+            line: 1,
+            status: .info,
+            output: "Info that gets printed",
+        ))
         
-        ResultView(result: {
-            var result = Elaborate_Result()
-            result.line = 1
-            result.output = "This is an error output"
-            result.status = .error
-            return result
-        }())
-        
-        ResultView(result: {
-            var result = Elaborate_Result()
-            result.line = 1
-            result.status = .eof
-            return result
-        }())
+        ResultView(result: Response(
+            line: 1,
+            status: .error,
+            output: "This is an error output"
+        ))
+       
+        ResultView(result: Response(
+            line: 1,
+            status: .eof,
+        ))
     }
 }

@@ -8,7 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		5519F93D2D500E3300823450 /* ResultGroup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5519F93C2D500E2F00823450 /* ResultGroup.swift */; };
-		5519F93F2D50105000823450 /* Transport+Extentions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5519F93E2D50105000823450 /* Transport+Extentions.swift */; };
 		552E75282D49B98C00F34A32 /* ResultView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 552E75272D49B98600F34A32 /* ResultView.swift */; };
 		553B935A2D263F2C001397D7 /* AsyncAlgorithms in Frameworks */ = {isa = PBXBuildFile; productRef = 553B93592D263F2C001397D7 /* AsyncAlgorithms */; };
 		556ABF5F2D17A2C7004D6A05 /* ElaborateApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 556ABF5E2D17A2C7004D6A05 /* ElaborateApp.swift */; };
@@ -20,18 +19,10 @@
 		556ABF7E2D17A2CA004D6A05 /* elaborateUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 556ABF7D2D17A2CA004D6A05 /* elaborateUITests.swift */; };
 		556ABF802D17A2CA004D6A05 /* elaborateUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 556ABF7F2D17A2CA004D6A05 /* elaborateUITestsLaunchTests.swift */; };
 		55776DCC2DCD5BA200FFCA23 /* CodeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55776DCB2DCD5B9E00FFCA23 /* CodeView.swift */; };
-		557A56962D1A6CAA00209EFF /* SwiftProtobuf in Frameworks */ = {isa = PBXBuildFile; productRef = 557A56952D1A6CAA00209EFF /* SwiftProtobuf */; };
-		557A56982D1A6DD800209EFF /* Elb.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 557A56972D1A6DD800209EFF /* Elb.xcframework */; };
-		557A569A2D1A6DD800209EFF /* Elb.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 557A56972D1A6DD800209EFF /* Elb.xcframework */; };
 		557A569C2D1A6FB800209EFF /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = 557A569B2D1A6FB800209EFF /* README.md */; };
 		557A569D2D1A6FB800209EFF /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = 557A569B2D1A6FB800209EFF /* README.md */; };
-		557A569E2D1A6FB800209EFF /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = 557A569B2D1A6FB800209EFF /* README.md */; };
-		557A56A32D1A6FF700209EFF /* transport.proto in Sources */ = {isa = PBXBuildFile; fileRef = 557A56A22D1A6FF700209EFF /* transport.proto */; };
-		557A56A42D1A6FF700209EFF /* transport.proto in Sources */ = {isa = PBXBuildFile; fileRef = 557A56A22D1A6FF700209EFF /* transport.proto */; };
-		557A56A52D1A6FF700209EFF /* transport.proto in Sources */ = {isa = PBXBuildFile; fileRef = 557A56A22D1A6FF700209EFF /* transport.proto */; };
-		559355002D87457600FCFE4A /* NSRange+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 559354FF2D87456F00FCFE4A /* NSRange+Extension.swift */; };
-		55C583392D2B501200AFB1C8 /* Elb.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 557A56972D1A6DD800209EFF /* Elb.xcframework */; };
-		55C5833A2D2B501200AFB1C8 /* Elb.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 557A56972D1A6DD800209EFF /* Elb.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		5588601E2DDA619900EF7E49 /* Elb in Frameworks */ = {isa = PBXBuildFile; productRef = 5588601D2DDA619900EF7E49 /* Elb */; };
+		55ADEB7D2DDA65AE004B5509 /* SFViewModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55ADEB7C2DDA65AE004B5509 /* SFViewModifier.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -58,7 +49,6 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				55C5833A2D2B501200AFB1C8 /* Elb.xcframework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -67,7 +57,6 @@
 
 /* Begin PBXFileReference section */
 		5519F93C2D500E2F00823450 /* ResultGroup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResultGroup.swift; sourceTree = "<group>"; };
-		5519F93E2D50105000823450 /* Transport+Extentions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Transport+Extentions.swift"; sourceTree = "<group>"; };
 		552E75272D49B98600F34A32 /* ResultView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResultView.swift; sourceTree = "<group>"; };
 		556ABF5B2D17A2C7004D6A05 /* elaborate.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = elaborate.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		556ABF5E2D17A2C7004D6A05 /* ElaborateApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ElaborateApp.swift; sourceTree = "<group>"; };
@@ -83,34 +72,13 @@
 		556ABF7D2D17A2CA004D6A05 /* elaborateUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = elaborateUITests.swift; sourceTree = "<group>"; };
 		556ABF7F2D17A2CA004D6A05 /* elaborateUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = elaborateUITestsLaunchTests.swift; sourceTree = "<group>"; };
 		55776DCB2DCD5B9E00FFCA23 /* CodeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CodeView.swift; sourceTree = "<group>"; };
-		557A56972D1A6DD800209EFF /* Elb.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; path = Elb.xcframework; sourceTree = "<group>"; };
 		557A569B2D1A6FB800209EFF /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
-		557A569F2D1A6FDC00209EFF /* Makefile */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.make; path = Makefile; sourceTree = "<group>"; };
-		557A56A22D1A6FF700209EFF /* transport.proto */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.protobuf; path = transport.proto; sourceTree = "<group>"; };
-		559354FF2D87456F00FCFE4A /* NSRange+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSRange+Extension.swift"; sourceTree = "<group>"; };
+		5588601C2DDA617F00EF7E49 /* Elb */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = Elb; sourceTree = "<group>"; };
+		55ADEB7C2DDA65AE004B5509 /* SFViewModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SFViewModifier.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
-
-/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
-		55E0FEAB2D1B6F1E00344C57 /* PBXFileSystemSynchronizedBuildFileExceptionSet */ = {
-			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
-			membershipExceptions = (
-				transport.pb.swift,
-			);
-			target = 556ABF6E2D17A2CA004D6A05 /* elaborateTests */;
-		};
-		55E0FEAC2D1B6F1E00344C57 /* PBXFileSystemSynchronizedBuildFileExceptionSet */ = {
-			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
-			membershipExceptions = (
-				transport.pb.swift,
-			);
-			target = 556ABF782D17A2CA004D6A05 /* elaborateUITests */;
-		};
-/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		551BEEE42DB41B02000D13F6 /* CodeTextView */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = CodeTextView; sourceTree = "<group>"; };
-		551BEEE52DB41B2A000D13F6 /* delegate */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = delegate; sourceTree = "<group>"; };
-		55E0FEAA2D1B6F1800344C57 /* transport */ = {isa = PBXFileSystemSynchronizedRootGroup; exceptions = (55E0FEAB2D1B6F1E00344C57 /* PBXFileSystemSynchronizedBuildFileExceptionSet */, 55E0FEAC2D1B6F1E00344C57 /* PBXFileSystemSynchronizedBuildFileExceptionSet */, ); explicitFileTypes = {}; explicitFolders = (); path = transport; sourceTree = "<group>"; };
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -118,8 +86,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				557A56962D1A6CAA00209EFF /* SwiftProtobuf in Frameworks */,
-				55C583392D2B501200AFB1C8 /* Elb.xcframework in Frameworks */,
+				5588601E2DDA619900EF7E49 /* Elb in Frameworks */,
 				553B935A2D263F2C001397D7 /* AsyncAlgorithms in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -128,7 +95,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				557A569A2D1A6DD800209EFF /* Elb.xcframework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -136,7 +102,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				557A56982D1A6DD800209EFF /* Elb.xcframework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -154,13 +119,11 @@
 			isa = PBXGroup;
 			children = (
 				557A569B2D1A6FB800209EFF /* README.md */,
-				557A56972D1A6DD800209EFF /* Elb.xcframework */,
+				5588601C2DDA617F00EF7E49 /* Elb */,
 				556ABF5D2D17A2C7004D6A05 /* elaborate */,
 				556ABF722D17A2CA004D6A05 /* elaborateTests */,
 				556ABF7C2D17A2CA004D6A05 /* elaborateUITests */,
 				556ABF5C2D17A2C7004D6A05 /* Products */,
-				557A569F2D1A6FDC00209EFF /* Makefile */,
-				557A56A22D1A6FF700209EFF /* transport.proto */,
 				555805C02D74C01500209D00 /* Frameworks */,
 			);
 			sourceTree = "<group>";
@@ -179,16 +142,13 @@
 			isa = PBXGroup;
 			children = (
 				551BEEE42DB41B02000D13F6 /* CodeTextView */,
-				55E0FEAA2D1B6F1800344C57 /* transport */,
-				556ABF5E2D17A2C7004D6A05 /* ElaborateApp.swift */,
-				556ABF602D17A2C7004D6A05 /* ElaborateDocument.swift */,
-				551BEEE52DB41B2A000D13F6 /* delegate */,
-				5519F93E2D50105000823450 /* Transport+Extentions.swift */,
-				552E75272D49B98600F34A32 /* ResultView.swift */,
-				5519F93C2D500E2F00823450 /* ResultGroup.swift */,
-				559354FF2D87456F00FCFE4A /* NSRange+Extension.swift */,
-				556ABF622D17A2C7004D6A05 /* ContentView.swift */,
 				55776DCB2DCD5B9E00FFCA23 /* CodeView.swift */,
+				556ABF602D17A2C7004D6A05 /* ElaborateDocument.swift */,
+				556ABF5E2D17A2C7004D6A05 /* ElaborateApp.swift */,
+				556ABF622D17A2C7004D6A05 /* ContentView.swift */,
+				5519F93C2D500E2F00823450 /* ResultGroup.swift */,
+				552E75272D49B98600F34A32 /* ResultView.swift */,
+				55ADEB7C2DDA65AE004B5509 /* SFViewModifier.swift */,
 				556ABF642D17A2C9004D6A05 /* Assets.xcassets */,
 				556ABF662D17A2C9004D6A05 /* Info.plist */,
 				556ABF672D17A2C9004D6A05 /* elaborate.entitlements */,
@@ -240,8 +200,6 @@
 			);
 			fileSystemSynchronizedGroups = (
 				551BEEE42DB41B02000D13F6 /* CodeTextView */,
-				551BEEE52DB41B2A000D13F6 /* delegate */,
-				55E0FEAA2D1B6F1800344C57 /* transport */,
 			);
 			name = elaborate;
 			productName = elaborate;
@@ -317,7 +275,6 @@
 			);
 			mainGroup = 556ABF522D17A2C7004D6A05;
 			packageReferences = (
-				557A56942D1A6CAA00209EFF /* XCRemoteSwiftPackageReference "swift-protobuf" */,
 				553B93582D263F2C001397D7 /* XCRemoteSwiftPackageReference "swift-async-algorithms" */,
 			);
 			productRefGroup = 556ABF5C2D17A2C7004D6A05 /* Products */;
@@ -336,7 +293,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				557A569E2D1A6FB800209EFF /* README.md in Resources */,
 				556ABF6A2D17A2C9004D6A05 /* Preview Assets.xcassets in Resources */,
 				556ABF652D17A2C9004D6A05 /* Assets.xcassets in Resources */,
 			);
@@ -369,11 +325,9 @@
 				556ABF612D17A2C7004D6A05 /* ElaborateDocument.swift in Sources */,
 				55776DCC2DCD5BA200FFCA23 /* CodeView.swift in Sources */,
 				556ABF5F2D17A2C7004D6A05 /* ElaborateApp.swift in Sources */,
-				557A56A32D1A6FF700209EFF /* transport.proto in Sources */,
 				552E75282D49B98C00F34A32 /* ResultView.swift in Sources */,
-				5519F93F2D50105000823450 /* Transport+Extentions.swift in Sources */,
 				556ABF632D17A2C7004D6A05 /* ContentView.swift in Sources */,
-				559355002D87457600FCFE4A /* NSRange+Extension.swift in Sources */,
+				55ADEB7D2DDA65AE004B5509 /* SFViewModifier.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -381,7 +335,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				557A56A42D1A6FF700209EFF /* transport.proto in Sources */,
 				556ABF742D17A2CA004D6A05 /* elaborateTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -391,7 +344,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				556ABF802D17A2CA004D6A05 /* elaborateUITestsLaunchTests.swift in Sources */,
-				557A56A52D1A6FF700209EFF /* transport.proto in Sources */,
 				556ABF7E2D17A2CA004D6A05 /* elaborateUITests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -531,10 +483,11 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = NO;
 				CODE_SIGN_ENTITLEMENTS = elaborate/elaborate.entitlements;
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 3;
 				DEVELOPMENT_ASSET_PATHS = "\"elaborate/Preview Content\"";
 				DEVELOPMENT_TEAM = V7JGZY6Z4Z;
 				ENABLE_PREVIEWS = YES;
@@ -545,12 +498,14 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = elaborate/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = Elaborate;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphoneos*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphonesimulator*]" = YES;
 				"INFOPLIST_KEY_UILaunchScreen_Generation[sdk=iphoneos*]" = YES;
 				"INFOPLIST_KEY_UILaunchScreen_Generation[sdk=iphonesimulator*]" = YES;
+				INFOPLIST_KEY_UIStatusBarStyle = "";
 				"INFOPLIST_KEY_UIStatusBarStyle[sdk=iphoneos*]" = UIStatusBarStyleDefault;
 				"INFOPLIST_KEY_UIStatusBarStyle[sdk=iphonesimulator*]" = UIStatusBarStyleDefault;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
@@ -580,10 +535,11 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = NO;
 				CODE_SIGN_ENTITLEMENTS = elaborate/elaborate.entitlements;
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 3;
 				DEVELOPMENT_ASSET_PATHS = "\"elaborate/Preview Content\"";
 				DEVELOPMENT_TEAM = V7JGZY6Z4Z;
 				ENABLE_PREVIEWS = YES;
@@ -594,12 +550,14 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = elaborate/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = Elaborate;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphoneos*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphonesimulator*]" = YES;
 				"INFOPLIST_KEY_UILaunchScreen_Generation[sdk=iphoneos*]" = YES;
 				"INFOPLIST_KEY_UILaunchScreen_Generation[sdk=iphonesimulator*]" = YES;
+				INFOPLIST_KEY_UIStatusBarStyle = "";
 				"INFOPLIST_KEY_UIStatusBarStyle[sdk=iphoneos*]" = UIStatusBarStyleDefault;
 				"INFOPLIST_KEY_UIStatusBarStyle[sdk=iphonesimulator*]" = UIStatusBarStyleDefault;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
@@ -759,14 +717,6 @@
 				minimumVersion = 1.0.3;
 			};
 		};
-		557A56942D1A6CAA00209EFF /* XCRemoteSwiftPackageReference "swift-protobuf" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/apple/swift-protobuf.git";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 1.28.2;
-			};
-		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -775,10 +725,9 @@
 			package = 553B93582D263F2C001397D7 /* XCRemoteSwiftPackageReference "swift-async-algorithms" */;
 			productName = AsyncAlgorithms;
 		};
-		557A56952D1A6CAA00209EFF /* SwiftProtobuf */ = {
+		5588601D2DDA619900EF7E49 /* Elb */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 557A56942D1A6CAA00209EFF /* XCRemoteSwiftPackageReference "swift-protobuf" */;
-			productName = SwiftProtobuf;
+			productName = Elb;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

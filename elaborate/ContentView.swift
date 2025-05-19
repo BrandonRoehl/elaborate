@@ -14,6 +14,8 @@ import AsyncAlgorithms
 struct ContentView: View {
     static let logger = Logger(subsystem: "elb", category: "content")
 
+    @Environment(\.openURL) private var openURL
+    
     @Binding var document: ElaborateDocument
 
     @State var running: Bool = false
@@ -22,14 +24,14 @@ struct ContentView: View {
         didSet {
             for (line, view) in self.messages {
                 for result in view.results {
-                    let json = (try? result.jsonString()) ?? ""
+                    let msg = result.output ?? ""
                     switch result.status {
                     case .error:
-                        Self.logger.error("\(line): \(json)")
+                        Self.logger.error("\(line): \(msg)")
                     case .value, .info:
-                        Self.logger.info("\(line): \(json)")
-                    case .eof, .UNRECOGNIZED(_):
-                        Self.logger.debug("\(line): \(json)")
+                        Self.logger.info("\(line): \(msg)")
+                    case .eof:
+                        Self.logger.debug("\(line): \(msg)")
                     }
                 }
             }
@@ -53,7 +55,9 @@ struct ContentView: View {
             }
             ToolbarItem(placement: .primaryAction) {
                 Button("Help", systemImage: "questionmark.circle") {
-                    print("helpme")
+                    if let url = URL(string: "https://pkg.go.dev/robpike.io/ivy") {
+                        openURL(url)
+                    }
                 }
             }
         }
@@ -81,16 +85,8 @@ struct ContentView: View {
         }.value
         await withTaskGroup(of: Void.self) { taskGroup in
             do {
-                var error: NSError?
-                guard let data = ElbExecute(document.text, &error) else {
-                    // TODO Throw an actual response
-                    return
-                }
-                if let error {
-                    throw error
-                }
+                let responses = elbExecute(document.text)
                 // Run the thing
-                let responses = try Elaborate_Response(serializedBytes: data).results
                 let messages = Dictionary(grouping: responses) { result in
                     Int(clamping: result.line)
                 }.mapValues(ResultGroup.init(results:))

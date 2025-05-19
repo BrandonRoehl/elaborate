@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import Elb
 
 fileprivate extension GeometryProxy {
     func exlusion(in space: some CoordinateSpaceProtocol) -> CGRect {
@@ -40,7 +41,7 @@ struct CodeView: View {
     var responses: some View {
         let numberWidth = self.calculateNumberLabel()
 
-        return LazyVStack(spacing: 0) {
+        return VStack(spacing: 0) {
             ForEach(lineHeights.indices, id: \.self) { line in
                 let height = self.getLineHeight(at: line)
                 HStack {
@@ -109,5 +110,32 @@ struct CodeView: View {
 }
 
 #Preview {
-    CodeView(text: .constant(""), messages: .constant([:]))
+    CodeView(
+        text: .constant("count \"Hello World\"\nprint (2 * 100)\n"),
+        messages: .constant([
+            1: ResultGroup(results: [
+                Response(
+                    line: 1,
+                    status: .value,
+                    output: "1234 alskdjasd aslkjdasd asldkjasdlkj asldkjasd lajsd\n",
+                ),
+                Response(
+                    line: 1,
+                    status: .info,
+                    output: "Info that gets printed",
+                ),
+                Response(
+                    line: 1,
+                    status: .error,
+                    output: "This is an error output"
+                )
+            ]),
+            2: ResultGroup(results: [
+                Response(
+                    line: 1,
+                    status: .eof,
+                )
+            ])
+        ])
+    )
 }
