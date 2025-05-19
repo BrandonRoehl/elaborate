@@ -19,7 +19,6 @@
 		556ABF7E2D17A2CA004D6A05 /* elaborateUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 556ABF7D2D17A2CA004D6A05 /* elaborateUITests.swift */; };
 		556ABF802D17A2CA004D6A05 /* elaborateUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 556ABF7F2D17A2CA004D6A05 /* elaborateUITestsLaunchTests.swift */; };
 		55776DCC2DCD5BA200FFCA23 /* CodeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55776DCB2DCD5B9E00FFCA23 /* CodeView.swift */; };
-		557A56962D1A6CAA00209EFF /* SwiftProtobuf in Frameworks */ = {isa = PBXBuildFile; productRef = 557A56952D1A6CAA00209EFF /* SwiftProtobuf */; };
 		557A569C2D1A6FB800209EFF /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = 557A569B2D1A6FB800209EFF /* README.md */; };
 		557A569D2D1A6FB800209EFF /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = 557A569B2D1A6FB800209EFF /* README.md */; };
 		557A569E2D1A6FB800209EFF /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = 557A569B2D1A6FB800209EFF /* README.md */; };
@@ -89,7 +88,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				5588601E2DDA619900EF7E49 /* Elb in Frameworks */,
-				557A56962D1A6CAA00209EFF /* SwiftProtobuf in Frameworks */,
 				553B935A2D263F2C001397D7 /* AsyncAlgorithms in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -278,7 +276,6 @@
 			);
 			mainGroup = 556ABF522D17A2C7004D6A05;
 			packageReferences = (
-				557A56942D1A6CAA00209EFF /* XCRemoteSwiftPackageReference "swift-protobuf" */,
 				553B93582D263F2C001397D7 /* XCRemoteSwiftPackageReference "swift-async-algorithms" */,
 			);
 			productRefGroup = 556ABF5C2D17A2C7004D6A05 /* Products */;
@@ -488,6 +485,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = NO;
 				CODE_SIGN_ENTITLEMENTS = elaborate/elaborate.entitlements;
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
@@ -502,12 +500,14 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = elaborate/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = Elaborate;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphoneos*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphonesimulator*]" = YES;
 				"INFOPLIST_KEY_UILaunchScreen_Generation[sdk=iphoneos*]" = YES;
 				"INFOPLIST_KEY_UILaunchScreen_Generation[sdk=iphonesimulator*]" = YES;
+				INFOPLIST_KEY_UIStatusBarStyle = "";
 				"INFOPLIST_KEY_UIStatusBarStyle[sdk=iphoneos*]" = UIStatusBarStyleDefault;
 				"INFOPLIST_KEY_UIStatusBarStyle[sdk=iphonesimulator*]" = UIStatusBarStyleDefault;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
@@ -537,6 +537,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = NO;
 				CODE_SIGN_ENTITLEMENTS = elaborate/elaborate.entitlements;
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
@@ -551,12 +552,14 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = elaborate/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = Elaborate;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphoneos*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphonesimulator*]" = YES;
 				"INFOPLIST_KEY_UILaunchScreen_Generation[sdk=iphoneos*]" = YES;
 				"INFOPLIST_KEY_UILaunchScreen_Generation[sdk=iphonesimulator*]" = YES;
+				INFOPLIST_KEY_UIStatusBarStyle = "";
 				"INFOPLIST_KEY_UIStatusBarStyle[sdk=iphoneos*]" = UIStatusBarStyleDefault;
 				"INFOPLIST_KEY_UIStatusBarStyle[sdk=iphonesimulator*]" = UIStatusBarStyleDefault;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
@@ -716,14 +719,6 @@
 				minimumVersion = 1.0.3;
 			};
 		};
-		557A56942D1A6CAA00209EFF /* XCRemoteSwiftPackageReference "swift-protobuf" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/apple/swift-protobuf.git";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 1.28.2;
-			};
-		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -731,11 +726,6 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 553B93582D263F2C001397D7 /* XCRemoteSwiftPackageReference "swift-async-algorithms" */;
 			productName = AsyncAlgorithms;
-		};
-		557A56952D1A6CAA00209EFF /* SwiftProtobuf */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 557A56942D1A6CAA00209EFF /* XCRemoteSwiftPackageReference "swift-protobuf" */;
-			productName = SwiftProtobuf;
 		};
 		5588601D2DDA619900EF7E49 /* Elb */ = {
 			isa = XCSwiftPackageProductDependency;
