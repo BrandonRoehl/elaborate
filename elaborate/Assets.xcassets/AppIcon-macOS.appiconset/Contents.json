@@ -1,11 +1,6 @@
 {
   "images" : [
     {
-      "idiom" : "universal",
-      "platform" : "ios",
-      "size" : "1024x1024"
-    },
-    {
       "filename" : "Icon-macOS-16x16@1x.png_16.png",
       "idiom" : "mac",
       "scale" : "1x",
