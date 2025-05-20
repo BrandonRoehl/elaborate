@@ -23,6 +23,8 @@
 		557A569D2D1A6FB800209EFF /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = 557A569B2D1A6FB800209EFF /* README.md */; };
 		5588601E2DDA619900EF7E49 /* Elb in Frameworks */ = {isa = PBXBuildFile; productRef = 5588601D2DDA619900EF7E49 /* Elb */; };
 		55ADEB7D2DDA65AE004B5509 /* SFViewModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55ADEB7C2DDA65AE004B5509 /* SFViewModifier.swift */; };
+		55EB0D332DDCDFFD00729160 /* Credits.rtf in Resources */ = {isa = PBXBuildFile; fileRef = 55EB0D322DDCDFFD00729160 /* Credits.rtf */; };
+		55EB0D392DDD27D300729160 /* Settings.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 55EB0D382DDD27D300729160 /* Settings.bundle */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -75,6 +77,8 @@
 		557A569B2D1A6FB800209EFF /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		5588601C2DDA617F00EF7E49 /* Elb */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = Elb; sourceTree = "<group>"; };
 		55ADEB7C2DDA65AE004B5509 /* SFViewModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SFViewModifier.swift; sourceTree = "<group>"; };
+		55EB0D322DDCDFFD00729160 /* Credits.rtf */ = {isa = PBXFileReference; lastKnownFileType = text.rtf; path = Credits.rtf; sourceTree = "<group>"; };
+		55EB0D382DDD27D300729160 /* Settings.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = Settings.bundle; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -149,10 +153,12 @@
 				5519F93C2D500E2F00823450 /* ResultGroup.swift */,
 				552E75272D49B98600F34A32 /* ResultView.swift */,
 				55ADEB7C2DDA65AE004B5509 /* SFViewModifier.swift */,
+				55EB0D322DDCDFFD00729160 /* Credits.rtf */,
 				556ABF642D17A2C9004D6A05 /* Assets.xcassets */,
 				556ABF662D17A2C9004D6A05 /* Info.plist */,
 				556ABF672D17A2C9004D6A05 /* elaborate.entitlements */,
 				556ABF682D17A2C9004D6A05 /* Preview Content */,
+				55EB0D382DDD27D300729160 /* Settings.bundle */,
 			);
 			path = elaborate;
 			sourceTree = "<group>";
@@ -293,7 +299,9 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				55EB0D392DDD27D300729160 /* Settings.bundle in Resources */,
 				556ABF6A2D17A2C9004D6A05 /* Preview Assets.xcassets in Resources */,
+				55EB0D332DDCDFFD00729160 /* Credits.rtf in Resources */,
 				556ABF652D17A2C9004D6A05 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

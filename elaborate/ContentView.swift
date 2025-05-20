@@ -84,18 +84,14 @@ struct ContentView: View {
             running = true
         }.value
         await withTaskGroup(of: Void.self) { taskGroup in
-            do {
-                let responses = elbExecute(document.text)
-                // Run the thing
-                let messages = Dictionary(grouping: responses) { result in
-                    Int(clamping: result.line)
-                }.mapValues(ResultGroup.init(results:))
-                // Call back to main to update the stuff
-                taskGroup.addTask(priority: .high) { @MainActor in
-                    self.messages = messages
-                }
-            } catch {
-                await Self.logger.error("Error: \(error)")
+            let responses = elbExecute(document.text)
+            // Run the thing
+            let messages = Dictionary(grouping: responses) { result in
+                Int(clamping: result.line)
+            }.mapValues(ResultGroup.init(results:))
+            // Call back to main to update the stuff
+            taskGroup.addTask(priority: .high) { @MainActor in
+                self.messages = messages
             }
             taskGroup.addTask(priority: .high) { @MainActor in
                 self.running = false
