@@ -86,7 +86,8 @@ struct CodeView: View {
                 ).padding(.leading, gutterWidth)
                 self.responses
             }.coordinateSpace(space)
-        }.background(
+        }
+        .background(
             ZStack {
 #if os(macOS)
                 Color(NSColor.textBackgroundColor)
@@ -98,7 +99,9 @@ struct CodeView: View {
                     Color.clear
                 }
             }
-        ).defaultScrollAnchor(.top)
+        )
+        .defaultScrollAnchor(.top)
+        .scrollDismissesKeyboard(.interactively)
     }
     
     private func getLineHeight(at index: Int) -> CGFloat {

@@ -45,7 +45,6 @@ struct ContentView: View {
             text: $document.text,
             messages: $messages,
         )
-        .scrollDismissesKeyboard(.interactively)
         .toolbarRole(.editor)
         .toolbar {
             if running {

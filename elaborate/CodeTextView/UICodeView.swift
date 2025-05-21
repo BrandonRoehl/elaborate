@@ -23,6 +23,7 @@ extension CodeTextView: UIViewRepresentable {
         textView.autocorrectionType = .no
         textView.autoresizingMask = []
         textView.backgroundColor = .clear
+        textView.keyboardType = .numbersAndPunctuation
         return textView
         
     }
