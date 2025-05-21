@@ -91,7 +91,7 @@ struct CodeView: View {
             ZStack {
 #if os(macOS)
                 Color(NSColor.textBackgroundColor)
-#elseif os(iOS) || targetEnvironment(macCatalyst)
+#else
                 Color.init(UIColor.systemBackground)
 #endif
                 HStack {

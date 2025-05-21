@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-#if os(iOS)
+#if os(iOS) && !targetEnvironment(macCatalyst)
 import SafariServices
 
 extension URL: @retroactive Identifiable {
@@ -37,7 +37,7 @@ public struct SFViewModifier: ViewModifier {
 
     public func body(content: Content) -> some View {
         content
-#if os(iOS)
+#if os(iOS) && !targetEnvironment(macCatalyst)
             .environment(\.openURL, OpenURLAction { url in
                 /// Catch any URLs that are about to be opened in an external browser.
                 /// Instead, handle them here and store the URL to reopen in our sheet.

@@ -24,7 +24,7 @@ public class CVCoordinator: NSObject {
         didSet {
 #if os(macOS)
             self.textContainer.exclusionPaths = self.exclusionPaths.map(NSBezierPath.init(rect:))
-#elseif os(iOS) || targetEnvironment(macCatalyst)
+#else
             self.textContainer.exclusionPaths = self.exclusionPaths.map(UIBezierPath.init(rect:))
 #endif
         }
@@ -66,7 +66,7 @@ public class CVCoordinator: NSObject {
                     .font: OSMonoFont,
                     .foregroundColor: NSColor.labelColor
                 ]
-#elseif os(iOS) || targetEnvironment(macCatalyst)
+#else
                 attr = [
                     .font: OSMonoFont,
                     .foregroundColor: UIColor.label
