@@ -22,7 +22,7 @@ public class CVCoordinator: NSObject {
 
     var exclusionPaths: [CGRect] = [] {
         didSet {
-#if os(macOS) && !targetEnvironment(macCatalyst)
+#if os(macOS)
             self.textContainer.exclusionPaths = self.exclusionPaths.map(NSBezierPath.init(rect:))
 #else
             self.textContainer.exclusionPaths = self.exclusionPaths.map(UIBezierPath.init(rect:))

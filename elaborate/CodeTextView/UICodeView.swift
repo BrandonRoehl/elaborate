@@ -5,7 +5,7 @@
 //  Created by Brandon Roehl on 1/3/25.
 //
 
-#if !os(macOS) || targetEnvironment(macCatalyst)
+#if !os(macOS)
 import SwiftUI
 import UIKit
 

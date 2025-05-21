@@ -5,7 +5,7 @@
 //  Created by Brandon Roehl on 1/8/25.
 //
 
-#if os(macOS) && !targetEnvironment(macCatalyst)
+#if os(macOS)
     import AppKit
     public typealias OSTextStorageEditActions = NSTextStorageEditActions
 #else
