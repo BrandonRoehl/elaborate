@@ -26,14 +26,14 @@ lib/%-x86_64.a: GOARCH=amd64
 # GOOS
 lib/macos-%.a: GOOS=darwin
 lib/ios-%.a: GOOS=ios
-lib/ios-simulator-%.a: GOOS=ios
-lib/ios-maccatalyst-%.a: GOOS=ios
 
 # SDK
 # lib/macos-%.a: SDK=macosx
 lib/ios-%.a: SDK=iphoneos
 lib/ios-simulator-%.a: SDK=iphonesimulator 
 lib/ios-maccatalyst-%.a: SDK=macosx
+lib/ios-xros-%.a: SDK=xros
+lib/ios-xros-simulator-%.a: SDK=xrsimulator
 
 # Targets
 lib/macos-arm64.a: TARGET=aarch64-apple-darwin
@@ -41,6 +41,8 @@ lib/macos-x86_64.a: TARGET=x86_64-apple-darwin
 
 lib/ios-arm64.a: TARGET=aarch64-apple-ios
 lib/ios-x86_64.a: TARGET=x86_64-apple-ios
+
+lib/ios-xros-arm64.a: TARGET=aarch64-apple-ios-xros
 
 lib/ios-simulator-arm64.a: TARGET=aarch64-apple-ios-simulator
 lib/ios-simulator-x86_64.a: TARGET=x86_64-apple-ios-simulator
