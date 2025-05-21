@@ -22,9 +22,9 @@ public class CVCoordinator: NSObject {
 
     var exclusionPaths: [CGRect] = [] {
         didSet {
-#if os(macOS)
+#if os(macOS) && !targetEnvironment(macCatalyst)
             self.textContainer.exclusionPaths = self.exclusionPaths.map(NSBezierPath.init(rect:))
-#elseif os(iOS) || targetEnvironment(macCatalyst)
+#else
             self.textContainer.exclusionPaths = self.exclusionPaths.map(UIBezierPath.init(rect:))
 #endif
         }
@@ -61,12 +61,12 @@ public class CVCoordinator: NSObject {
         if self.text.wrappedValue != self.textStorage.string {
                 let attrString = NSMutableAttributedString(string: self.text.wrappedValue)
                 let attr: [NSAttributedString.Key: Any]
-#if os(macOS)
+#if os(macOS) && !targetEnvironment(macCatalyst)
                 attr = [
                     .font: OSMonoFont,
                     .foregroundColor: NSColor.labelColor
                 ]
-#elseif os(iOS) || targetEnvironment(macCatalyst)
+#else
                 attr = [
                     .font: OSMonoFont,
                     .foregroundColor: UIColor.label
