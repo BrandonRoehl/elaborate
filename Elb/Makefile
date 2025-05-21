@@ -26,14 +26,15 @@ lib/%-x86_64.a: GOARCH=amd64
 # GOOS
 lib/macos-%.a: GOOS=darwin
 lib/ios-%.a: GOOS=ios
+lib/xros-%.a: GOOS=ios
 
 # SDK
 # lib/macos-%.a: SDK=macosx
 lib/ios-%.a: SDK=iphoneos
 lib/ios-simulator-%.a: SDK=iphonesimulator 
 lib/ios-maccatalyst-%.a: SDK=macosx
-lib/ios-xros-%.a: SDK=xros
-lib/ios-xros-simulator-%.a: SDK=xrsimulator
+lib/xros-%.a: SDK=xros
+lib/xros-simulator-%.a: SDK=xrsimulator
 
 # Targets
 lib/macos-arm64.a: TARGET=aarch64-apple-darwin
@@ -42,7 +43,11 @@ lib/macos-x86_64.a: TARGET=x86_64-apple-darwin
 lib/ios-arm64.a: TARGET=aarch64-apple-ios
 lib/ios-x86_64.a: TARGET=x86_64-apple-ios
 
-lib/ios-xros-arm64.a: TARGET=aarch64-apple-ios-xros
+lib/xros-arm64.a: TARGET=aarch64-apple-xros
+lib/xros-x86_64.a: TARGET=aarch64-apple-xros
+
+lib/xros-simulator-arm64.a: TARGET=aarch64-apple-xros-simulator
+lib/xros-simulator-x86_64.a: TARGET=aarch64-apple-xros-simulator
 
 lib/ios-simulator-arm64.a: TARGET=aarch64-apple-ios-simulator
 lib/ios-simulator-x86_64.a: TARGET=x86_64-apple-ios-simulator
@@ -63,7 +68,13 @@ lib/%.a: $(GO) lib Go/include/*
 		   $(if $(SDK),SDK=$(SDK) CC=$(CURDIR)/clangwrap.sh,) \
 		   go build -buildmode=c-archive -o $@ ./Go
 
-lib/Elb.xcframework: $(SWIFT) lib/macos-arm64_x86_64.a lib/ios-arm64.a lib/ios-simulator-arm64_x86_64.a lib/ios-maccatalyst-arm64_x86_64.a Go/include/module.modulemap
+lib/Elb.xcframework: $(SWIFT) Go/include/module.modulemap \
+	lib/macos-arm64_x86_64.a \
+	lib/ios-arm64.a \
+	lib/ios-maccatalyst-arm64_x86_64.a \
+	lib/xros-arm64.a \
+	lib/ios-simulator-arm64_x86_64.a \
+	lib/xros-simulator-arm64_x86_64.a
 	$(RM) -rf $@
 	xcodebuild -create-xcframework \
 		-library lib/ios-arm64.a \
@@ -73,5 +84,9 @@ lib/Elb.xcframework: $(SWIFT) lib/macos-arm64_x86_64.a lib/ios-arm64.a lib/ios-s
 		-library lib/ios-simulator-arm64_x86_64.a \
 		-headers ./Go/include/ \
 		-library lib/macos-arm64_x86_64.a \
+		-headers ./Go/include/ \
+		-library lib/xros-arm64.a \
+		-headers ./Go/include/ \
+		-library lib/xros-simulator-arm64_x86_64.a \
 		-headers ./Go/include/ \
 		-output $@
