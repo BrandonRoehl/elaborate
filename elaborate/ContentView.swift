@@ -13,8 +13,6 @@ import AsyncAlgorithms
 
 struct ContentView: View {
     static let logger = Logger(subsystem: "elb", category: "content")
-
-    @Environment(\.openURL) private var openURL
     
     @Binding var document: ElaborateDocument
 
@@ -38,8 +36,9 @@ struct ContentView: View {
         }
     }
 
-    @State var stream = AsyncChannel<ElaborateDocument>()
-    
+    @State var debounce = AsyncChannel<ElaborateDocument>()
+    @State var instant = AsyncChannel<ElaborateDocument>()
+
     var body: some View {
         CodeView(
             text: $document.text,
@@ -47,21 +46,22 @@ struct ContentView: View {
         )
         .toolbarRole(.editor)
         .toolbar {
-            if running {
-                ToolbarItem(placement: .primaryAction) {
-                    ProgressView()
-                }
-            }
             ToolbarItem(placement: .primaryAction) {
-                Button("Help", systemImage: "questionmark.circle") {
-                    if let url = URL(string: "https://pkg.go.dev/robpike.io/ivy") {
-                        openURL(url)
-                    }
+                if running {
+                    ProgressView()
+                } else {
+                    Button("Run", systemImage: "play.fill") {
+                        running = true
+                        Task {
+                            await self.instant.send(self.document)
+                        }
+                    }.keyboardShortcut("r", modifiers: .command)
                 }
             }
         }
         .task(priority: .background) {
-            let stream = self.stream.debounce(for: .milliseconds(500))
+            let typing = self.debounce.debounce(for: .milliseconds(500))
+            let stream = merge(typing, instant)
             for await doc in stream {
                 Self.logger.debug("Running")
                 await run(doc)
@@ -72,7 +72,7 @@ struct ContentView: View {
         .onChange(of: self.document.text, initial: true) {
             Task.detached(priority: .background) {
                 await Self.logger.debug("Sending")
-                await self.stream.send(self.document)
+                await self.debounce.send(self.document)
                 await Self.logger.debug("Sent")
             }
         }

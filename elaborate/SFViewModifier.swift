@@ -16,14 +16,14 @@ extension URL: @retroactive Identifiable {
     }
 }
 
-fileprivate struct SFSafariView: UIViewControllerRepresentable {
+public struct SFSafariView: UIViewControllerRepresentable {
     let url: URL
 
-    func makeUIViewController(context: UIViewControllerRepresentableContext<Self>) -> SFSafariViewController {
+    public func makeUIViewController(context: UIViewControllerRepresentableContext<Self>) -> SFSafariViewController {
         return SFSafariViewController(url: url)
     }
 
-    func updateUIViewController(_ uiViewController: SFSafariViewController, context: UIViewControllerRepresentableContext<Self>) {
+    public func updateUIViewController(_ uiViewController: SFSafariViewController, context: UIViewControllerRepresentableContext<Self>) {
         // No need to do anything here
     }
 }
@@ -52,7 +52,7 @@ public struct SFViewModifier: ViewModifier {
     }
 }
 
-extension View {
+public extension View {
     func openURLSheet() -> some View {
         modifier(SFViewModifier())
     }
