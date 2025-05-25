@@ -19,22 +19,22 @@ extension CVCoordinator: NSTextContentStorageDelegate {
         }
         // Get the places to replace with a view
         let originalText = textStorage.attributedSubstring(from: range)
-        #if DEBUG
-            print(originalText.string.debugDescription)
-        #endif
+#if DEBUG
+        print(originalText.string.debugDescription)
+#endif
         let attrString = NSMutableAttributedString(attributedString: originalText)
         let attr: [NSAttributedString.Key: Any]
-        #if os(macOS)
-            attr = [
-                .font: OSMonoFont,
-                .foregroundColor: NSColor.labelColor,
-            ]
-        #elseif os(iOS) || targetEnvironment(macCatalyst)
-            attr = [
-                .font: OSMonoFont,
-                .foregroundColor: UIColor.label,
-            ]
-        #endif
+#if os(macOS)
+        attr = [
+            .font: OSMonoFont,
+            .foregroundColor: NSColor.labelColor,
+        ]
+#elseif os(iOS) || targetEnvironment(macCatalyst)
+        attr = [
+            .font: OSMonoFont,
+            .foregroundColor: UIColor.label,
+        ]
+#endif
         attrString.setAttributes(attr, range: NSRange(location: 0, length: attrString.length))
         return NSTextParagraph(attributedString: attrString)
     }
