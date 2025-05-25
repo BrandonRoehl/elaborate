@@ -10,7 +10,7 @@ import SwiftUI
 #if os(iOS) && !targetEnvironment(macCatalyst)
 import SafariServices
 
-public extension URL: @retroactive Identifiable {
+extension URL: @retroactive Identifiable {
     public var id: String {
         return self.absoluteString
     }
@@ -19,11 +19,11 @@ public extension URL: @retroactive Identifiable {
 public struct SFSafariView: UIViewControllerRepresentable {
     let url: URL
 
-    func makeUIViewController(context: UIViewControllerRepresentableContext<Self>) -> SFSafariViewController {
+    public func makeUIViewController(context: UIViewControllerRepresentableContext<Self>) -> SFSafariViewController {
         return SFSafariViewController(url: url)
     }
 
-    func updateUIViewController(_ uiViewController: SFSafariViewController, context: UIViewControllerRepresentableContext<Self>) {
+    public func updateUIViewController(_ uiViewController: SFSafariViewController, context: UIViewControllerRepresentableContext<Self>) {
         // No need to do anything here
     }
 }
