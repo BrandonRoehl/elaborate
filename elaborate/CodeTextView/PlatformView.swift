@@ -10,7 +10,7 @@ import SwiftUI
 #if os(macOS)
 typealias OSView = NSView
 typealias OSFont = NSFont
-#elseif os(iOS) || targetEnvironment(macCatalyst)
+#else
 typealias OSView = UIView
 typealias OSFont = UIFont
 #endif
@@ -20,7 +20,7 @@ internal extension View {
     @MainActor @inline(__always) func platformView() -> some NSView {
         return NSHostingView(rootView: self)
     }
-#elseif os(iOS) || targetEnvironment(macCatalyst)
+#else
     @MainActor @inline(__always) func platformView() -> some UIView {
         return UIHostingController(rootView: self).view
     }

@@ -23,11 +23,13 @@ public class CVCoordinator: NSObject {
 
     var exclusionPaths: [CGRect] = [] {
         didSet {
-#if os(macOS)
-            self.textContainer.exclusionPaths = self.exclusionPaths.map(NSBezierPath.init(rect:))
-#elseif os(iOS) || targetEnvironment(macCatalyst)
-            self.textContainer.exclusionPaths = self.exclusionPaths.map(UIBezierPath.init(rect:))
-#endif
+            #if os(macOS)
+                self.textContainer.exclusionPaths = self.exclusionPaths.map(
+                    NSBezierPath.init(rect:))
+            #else
+                self.textContainer.exclusionPaths = self.exclusionPaths.map(
+                    UIBezierPath.init(rect:))
+            #endif
             self.textLayoutManager.invalidateLayout(for: self.textLayoutManager.documentRange)
         }
     }
@@ -73,16 +75,18 @@ public class CVCoordinator: NSObject {
             }
         }
     }
-    
+
     var newlineOffsets: [Int] = []
-    
+
     @MainActor func syncHeights() {
         guard let lineHeights = self.lineHeight else {
             return
         }
         var heights: [CGFloat] = []
 
-        self.textLayoutManager.enumerateTextLayoutFragments(from: self.textLayoutManager.documentRange.location) { fragement in
+        self.textLayoutManager.enumerateTextLayoutFragments(
+            from: self.textLayoutManager.documentRange.location
+        ) { fragement in
             var height: CGFloat = 0
             for line in fragement.textLineFragments {
                 height += line.typographicBounds.height
@@ -101,7 +105,6 @@ public class CVCoordinator: NSObject {
         }
     }
 }
-
 
 extension CodeTextView {
     @MainActor public func makeCoordinator() -> CVCoordinator {

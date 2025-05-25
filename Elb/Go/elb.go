@@ -95,7 +95,7 @@ func printValues(conf *config.Config, writer io.Writer, values []value.Value) bo
 	if len(values) == 0 {
 		return false
 	}
-	if conf.Debug("types") {
+	if conf.Debug("types") > 0 {
 		for i, v := range values {
 			if i > 0 {
 				fmt.Fprint(writer, ",")

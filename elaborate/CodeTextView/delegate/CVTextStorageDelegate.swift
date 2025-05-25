@@ -8,7 +8,7 @@
 #if os(macOS)
     import AppKit
     public typealias OSTextStorageEditActions = NSTextStorageEditActions
-#elseif os(iOS) || targetEnvironment(macCatalyst)
+#else
     import UIKit
     public typealias OSTextStorageEditActions = NSTextStorage.EditActions
 #endif
