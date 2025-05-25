@@ -16,7 +16,7 @@ extension URL: @retroactive Identifiable {
     }
 }
 
-fileprivate struct SFSafariView: UIViewControllerRepresentable {
+struct SFSafariView: UIViewControllerRepresentable {
     let url: URL
 
     func makeUIViewController(context: UIViewControllerRepresentableContext<Self>) -> SFSafariViewController {
