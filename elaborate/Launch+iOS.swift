@@ -5,7 +5,7 @@
 //  Created by Brandon Roehl on 5/24/25.
 //
 
-#if !os(macOS)
+#if os(iOS) && !targetEnvironment(macCatalyst)
 import SwiftUI
 import SafariServices
 
@@ -26,10 +26,17 @@ struct LaunchScene: Scene {
         }
         DocumentGroup(newDocument: ElaborateDocument()) { file in
             NavigationStack {
-                ContentView(document: file.$document)
+                let content = ContentView(document: file.$document)
                     .openURLSheet()
                     .toolbarBackground(Material.bar)
                     .toolbarBackgroundVisibility(.visible, for: .navigationBar)
+                if let url = file.fileURL {
+                    content
+                        .navigationDocument(url)
+                        .navigationTitle(url.lastPathComponent)
+                } else {
+                    content
+                }
             }
         }
     }
