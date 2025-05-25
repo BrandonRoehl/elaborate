@@ -13,8 +13,6 @@ import AsyncAlgorithms
 
 struct ContentView: View {
     static let logger = Logger(subsystem: "elb", category: "content")
-
-    @Environment(\.openURL) private var openURL
     
     @Binding var document: ElaborateDocument
 
