@@ -19,6 +19,14 @@
 		<dict>
 			<key>Type</key>
 			<string>PSGroupSpecifier</string>
+			<key>Title</key>
+			<string>Source Code</string>
+			<key>FooterText</key>
+			<string>https://github.com/BrandonRoehl/elaborate</string>
+		</dict>
+		<dict>
+			<key>Type</key>
+			<string>PSGroupSpecifier</string>
 			<key>FooterText</key>
 			<string>Coded with ❤️ by Brandon Roehl</string>
 		</dict>
