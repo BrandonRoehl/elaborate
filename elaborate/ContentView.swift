@@ -47,15 +47,15 @@ struct ContentView: View {
         )
         .toolbarRole(.editor)
         .toolbar {
-            if running {
-                ToolbarItem(placement: .primaryAction) {
-                    ProgressView()
-                }
-            }
             ToolbarItem(placement: .primaryAction) {
-                Button("Help", systemImage: "questionmark.circle") {
-                    if let url = URL(string: "https://pkg.go.dev/robpike.io/ivy") {
-                        openURL(url)
+                if running {
+                    ProgressView()
+                } else {
+                    Button("Run", systemImage: "play.fill") {
+                        running = true
+                        Task {
+                            await self.stream.send(self.document)
+                        }
                     }
                 }
             }

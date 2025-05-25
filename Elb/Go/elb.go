@@ -39,7 +39,7 @@ func newConfig() *config.Config {
 	conf.SetOrigin(1)
 	conf.SetPrompt("")
 	conf.SetBase(0, 0)
-	conf.SetRandomSeed(0)
+	// conf.SetRandomSeed(0)
 	conf.SetMobile(true)
 	conf.SetOutput(os.Stdout)
 	conf.SetErrOutput(os.Stdout)
