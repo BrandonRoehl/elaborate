@@ -36,12 +36,16 @@ extension CodeTextView: UIViewRepresentable {
         guard let width = proposal.width, width > 0 else {
             return nil
         }
-        let container = textView.textContainer
-        let layout = textView.layoutManager
-        container.size = CGSize(width: width, height: .greatestFiniteMagnitude)
-        layout.ensureLayout(for: container)
-        let usedRect = layout.usedRect(for: container)
+        let container = context.coordinator.textContainer
+        container.size = CGSize(width: width, height: CGFloat.greatestFiniteMagnitude)
+        
+        let layout = context.coordinator.textLayoutManager
+        layout.ensureLayout(for: layout.documentRange)
+        let usedRect = layout.usageBoundsForTextContainer
         let newSize = proposal.replacingUnspecifiedDimensions(by: usedRect.size)
+        Task.detached { @MainActor in
+            context.coordinator.syncHeights()
+        }
         return newSize
     }
 }
