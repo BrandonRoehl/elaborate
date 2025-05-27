@@ -35,7 +35,7 @@ extension CVCoordinator: NSTextStorageDelegate {
         
         // Grab how many pg markers are going to get replaced
         var startIndex: Int = 0
-        while startIndex < self.newlineOffsets.count, self.newlineOffsets[startIndex] < oldRange.lowerBound {
+        while startIndex < self.newlineOffsets.count, self.newlineOffsets[startIndex] <= oldRange.lowerBound {
             startIndex += 1
         }
 
