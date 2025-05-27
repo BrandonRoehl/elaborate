@@ -503,7 +503,7 @@
 				CODE_SIGN_ENTITLEMENTS = elaborate/elaborate.entitlements;
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 7;
+				CURRENT_PROJECT_VERSION = 8;
 				DEVELOPMENT_ASSET_PATHS = "\"elaborate/Preview Content\"";
 				DEVELOPMENT_TEAM = V7JGZY6Z4Z;
 				ENABLE_PREVIEWS = YES;
@@ -555,7 +555,7 @@
 				CODE_SIGN_ENTITLEMENTS = elaborate/elaborate.entitlements;
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 7;
+				CURRENT_PROJECT_VERSION = 8;
 				DEVELOPMENT_ASSET_PATHS = "\"elaborate/Preview Content\"";
 				DEVELOPMENT_TEAM = V7JGZY6Z4Z;
 				ENABLE_PREVIEWS = YES;
