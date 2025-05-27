@@ -80,34 +80,24 @@ public class CVCoordinator: NSObject {
     var newlineOffsets: [Int] = []
     
     @MainActor func syncHeights() {
-        guard let lineHeights = self.lineHeight, let layout = self.textContainer.layoutManager else {
+        guard let lineHeights = self.lineHeight else {
             return
         }
         var heights: [CGFloat] = []
-        var runningOffset: CGFloat = 0
-        var j: Int = 0
-        for i in 0..<self.newlineOffsets.count {
-            let offset = self.newlineOffsets[i]
-            if offset > self.textStorage.length {
-                continue
-            }
-            let rect = layout.lineFragmentRect(forGlyphAt: self.newlineOffsets[i], effectiveRange: nil, withoutAdditionalLayout: false)
-            var height = rect.maxY - runningOffset
-            // What
-            if j < self.exclusionPaths.count && self.exclusionPaths[j].maxY <= rect.minY {
-                height -= self.exclusionPaths[j].height
-                j += 1
-            }
-            runningOffset += rect.maxY - runningOffset
 
-            let rounded = (height * 10).rounded(.awayFromZero) / 10
-            heights.append(rounded)
-        }
-        let lastOffset = self.textStorage.length - 1
-        if lastOffset != self.newlineOffsets.last {
-            let rect = layout.lineFragmentRect(forGlyphAt: lastOffset, effectiveRange: nil, withoutAdditionalLayout: false)
-            heights.append(rect.maxY - runningOffset)
-        }
+        let documentRange = NSRange(location: 0, length: self.textStorage.length)
+        var line: Int = 0
+        self.textLayoutManager.enumerateLineFragments(forGlyphRange: documentRange, using: { rect, usedRect, textContainer, glyphRange, stop in
+            while line < self.newlineOffsets.count && self.newlineOffsets[line] < glyphRange.location {
+                line += 1
+            }
+
+            if heights.count < line + 1 {
+                heights.append(contentsOf: Array(repeating: 0, count: line - heights.count + 1))
+            }
+            
+            heights[line] += rect.height
+        })
 #if DEBUG
         print(heights)
 #endif

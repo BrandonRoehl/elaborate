@@ -62,7 +62,7 @@ extension CVCoordinator: NSTextStorageDelegate {
         #if DEBUG
         for offset in newlineOffsets {
             let idx = text.index(text.startIndex, offsetBy: offset)
-            assert(text[idx] == "\n", "our adjustments don't lead to a \n")
+            assert(text[idx].isNewline, "our adjustments don't lead to a \n")
         }
         assert(check == newlineOffsets, "Somehow we lost count and newlines aren't aligned")
         #endif
