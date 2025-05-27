@@ -52,7 +52,7 @@ extension CVCoordinator: NSTextStorageDelegate {
         }
         
         // Remove the ones we know are bad
-        self.newlineOffsets.removeSubrange(startIndex...endIndex)
+        self.newlineOffsets.removeSubrange(startIndex..<endIndex)
         // The string to look at for changes
         let substring = textStorage.attributedSubstring(from: newRange)
         // construct the array of the new lineends
