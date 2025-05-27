@@ -17,7 +17,7 @@ extension CVCoordinator: NSTextStorageDelegate {
     public func textStorage(
         _ textStorage: NSTextStorage,
         didProcessEditing editedMask: OSTextStorageEditActions,
-        range editedRange: NSRange,
+        range newRange: NSRange,
         changeInLength delta: Int
     ) {
         guard editedMask.contains(.editedCharacters) else { return }
@@ -25,36 +25,39 @@ extension CVCoordinator: NSTextStorageDelegate {
         
         // The textStorage holds the string it will be and not the string it was
         // so you have to determine where we were before here
-        
 #if DEBUG
         // these are here in this to help debug the code during development
         let check: [Int] = text.enumerated().filter(\.element.isNewline).map { (index, _) in
             return index
         }
 #endif
+        let oldRange = NSRange(location: newRange.location, length: newRange.length - delta)
         
         // Grab how many pg markers are going to get replaced
-        let startIndex: Int = self.newlineOffsets.firstIndex(where: { newLine in
-            return newLine >= editedRange.lowerBound
-        }) ?? self.newlineOffsets.endIndex
-        
-        let endOffset = (editedRange.upperBound - delta)
-        let finalIndex = self.newlineOffsets.firstIndex(where: { newLine in
-            return newLine >= endOffset
-        }) ?? self.newlineOffsets.count
+        var startIndex: Int = 0
+        while startIndex < self.newlineOffsets.count, self.newlineOffsets[startIndex] < oldRange.lowerBound {
+            startIndex += 1
+        }
+
+        var endIndex: Int = startIndex
+        while endIndex < self.newlineOffsets.count, self.newlineOffsets[endIndex] < oldRange.upperBound {
+            endIndex += 1
+        }
         
         // update the offset for those that are at final index
-        for i in finalIndex..<self.newlineOffsets.count {
-            self.newlineOffsets[i] += delta
+        if endIndex < self.newlineOffsets.count - 1 {
+            for i in (endIndex+1)..<self.newlineOffsets.count {
+                self.newlineOffsets[i] += delta
+            }
         }
         
         // Remove the ones we know are bad
-        self.newlineOffsets.removeSubrange(startIndex..<finalIndex)
+        self.newlineOffsets.removeSubrange(startIndex...endIndex)
         // The string to look at for changes
-        let substring = textStorage.attributedSubstring(from: editedRange)
+        let substring = textStorage.attributedSubstring(from: newRange)
         // construct the array of the new lineends
         let newOffsets: [Int] = substring.string.enumerated().filter(\.element.isNewline).map { (index, _) in
-            return index + editedRange.location
+            return index + newRange.location
         }
         // Insert all the new stuff into here now
         self.newlineOffsets.insert(contentsOf: newOffsets, at: startIndex)
