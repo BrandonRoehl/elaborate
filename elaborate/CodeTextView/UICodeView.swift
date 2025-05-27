@@ -38,13 +38,15 @@ extension CodeTextView: UIViewRepresentable {
         }
         let container = textView.textContainer
         let layout = textView.layoutManager
-        container.size = CGSize(width: width, height: .greatestFiniteMagnitude)
+        if containerSize != container.containerSize {
+            container.containerSize = containerSize
+            Task.detached { @MainActor in
+                context.coordinator.syncHeights()
+            }
+        }
         layout.ensureLayout(for: container)
         let usedRect = layout.usedRect(for: container)
         let newSize = proposal.replacingUnspecifiedDimensions(by: usedRect.size)
-        Task.detached { @MainActor in
-            context.coordinator.syncHeights()
-        }
         return newSize
     }
 }

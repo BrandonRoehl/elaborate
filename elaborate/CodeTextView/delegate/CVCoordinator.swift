@@ -98,11 +98,9 @@ public class CVCoordinator: NSObject {
             
             heights[line] += ((rect.height * 100).rounded(.awayFromZero) / 100)
         })
-#if DEBUG
-        print(heights)
-#endif
-        // assert(heights.allSatisfy { $0 >= 0 }, "Check your math, lines cannot have negative height")
-        lineHeights.wrappedValue = heights
+        if lineHeights.wrappedValue != heights {
+            lineHeights.wrappedValue = heights
+        }
     }
 }
 
