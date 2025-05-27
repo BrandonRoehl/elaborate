@@ -96,7 +96,7 @@ public class CVCoordinator: NSObject {
                 heights.append(contentsOf: Array(repeating: 0, count: line - heights.count + 1))
             }
             
-            heights[line] += rect.height
+            heights[line] += ((rect.height * 100).rounded(.awayFromZero) / 100)
         })
 #if DEBUG
         print(heights)
