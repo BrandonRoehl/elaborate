@@ -70,10 +70,10 @@ extension CVCoordinator: NSTextStorageDelegate {
         
         // Add in the new paragraph markers
         Task.detached { @MainActor in
-            self.syncHeights()
             if self.text.wrappedValue != text {
                 self.text.wrappedValue = text
             }
+            self.syncHeights()
         }
     }
 }
