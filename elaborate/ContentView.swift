@@ -69,6 +69,10 @@ struct ContentView: View {
             }
             Self.logger.info("Closing task")
         }
+        .onDisappear {
+            self.debounce.finish()
+            self.instant.finish()
+        }
         .onChange(of: self.document.text, initial: true) {
             Task.detached(priority: .background) {
                 await Self.logger.debug("Sending")
