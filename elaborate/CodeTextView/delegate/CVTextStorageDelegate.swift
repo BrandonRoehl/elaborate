@@ -16,6 +16,29 @@
 extension CVCoordinator: NSTextStorageDelegate {
     public func textStorage(
         _ textStorage: NSTextStorage,
+        willProcessEditing editedMask: NSTextStorageEditActions,
+        range editedRange: NSRange,
+        changeInLength delta: Int
+    ) {
+        // TODO: this very dumb but also I don't have time
+        // to figure out the correct way to do this
+        let attr: [NSAttributedString.Key: Any]
+#if os(macOS)
+        attr = [
+            .font: OSMonoFont,
+            .foregroundColor: NSColor.labelColor
+        ]
+#else
+        attr = [
+            .font: OSMonoFont,
+            .foregroundColor: UIColor.label
+        ]
+#endif
+        textStorage.setAttributes(attr, range: editedRange)
+    }
+
+    public func textStorage(
+        _ textStorage: NSTextStorage,
         didProcessEditing editedMask: OSTextStorageEditActions,
         range newRange: NSRange,
         changeInLength delta: Int

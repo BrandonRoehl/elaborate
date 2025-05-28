@@ -57,23 +57,9 @@ public class CVCoordinator: NSObject {
         self.exclusionPaths = codeView.exclusionPaths.sorted { $0.minY < $1.minY }
 
         // TODO: this check is very slow and also dumb but I don't have time
-        // to figure out the correct way to do this
         if self.text.wrappedValue != self.textStorage.string {
-                let attrString = NSMutableAttributedString(string: self.text.wrappedValue)
-                let attr: [NSAttributedString.Key: Any]
-#if os(macOS)
-                attr = [
-                    .font: OSMonoFont,
-                    .foregroundColor: NSColor.labelColor
-                ]
-#else
-                attr = [
-                    .font: OSMonoFont,
-                    .foregroundColor: UIColor.label
-                ]
-#endif
-                attrString.setAttributes(attr, range: NSRange(location: 0, length: attrString.length))
-                self.textStorage.setAttributedString(attrString)
+            let attrString = NSAttributedString(string: self.text.wrappedValue)
+            self.textStorage.setAttributedString(attrString)
         }
     }
     
