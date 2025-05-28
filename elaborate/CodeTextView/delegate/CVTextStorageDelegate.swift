@@ -47,10 +47,51 @@ extension CVCoordinator: NSTextStorageDelegate {
         let text = textStorage.string
         // The textStorage holds the string it will be and not the string it was
         // so you have to determine where we were before here
+#if DEBUG
         // these are here in this to help debug the code during development
-        self.newlineOffsets = text.enumerated().filter(\.element.isNewline).map { (index, _) in
+        let check: [Int] = text.enumerated().filter(\.element.isNewline).map { (index, _) in
             return index
         }
+#endif
+        let oldRange = NSRange(location: newRange.location, length: newRange.length - delta)
+        
+        // Grab how many pg markers are going to get replaced
+        var startIndex: Int = 0
+        while startIndex < self.newlineOffsets.count, self.newlineOffsets[startIndex] <= oldRange.lowerBound {
+            startIndex += 1
+        }
+        
+        var endIndex: Int = startIndex
+        while endIndex < self.newlineOffsets.count, self.newlineOffsets[endIndex] < oldRange.upperBound {
+            endIndex += 1
+        }
+        
+        // update the offset for those that are at final index
+        if endIndex < self.newlineOffsets.count - 1 {
+            for i in (endIndex+1)..<self.newlineOffsets.count {
+                self.newlineOffsets[i] += delta
+            }
+        }
+        
+        // Remove the ones we know are bad
+        self.newlineOffsets.removeSubrange(startIndex..<endIndex)
+        // The string to look at for changes
+        let substring = textStorage.attributedSubstring(from: newRange)
+        // construct the array of the new lineends
+        let newOffsets: [Int] = substring.string.enumerated().filter(\.element.isNewline).map { (index, _) in
+            return index + newRange.location
+        }
+        // Insert all the new stuff into here now
+        self.newlineOffsets.insert(contentsOf: newOffsets, at: startIndex)
+        
+        // Good checks in dev but don't use this code in prod far to slow
+#if DEBUG
+        for offset in newlineOffsets {
+            let idx = text.index(text.startIndex, offsetBy: offset)
+            assert(text[idx].isNewline, "our adjustments don't lead to a \n")
+        }
+        assert(check == newlineOffsets, "Somehow we lost count and newlines aren't aligned")
+#endif
 
         // Add in the new paragraph markers
         Task.detached { @MainActor in
