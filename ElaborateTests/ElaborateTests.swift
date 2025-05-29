@@ -84,5 +84,34 @@ fileprivate extension CVCoordinator {
     print a
     count "the time of this"
     """)
+
+    // Insert LF middle of file
+    textStorage.beginEditing()
+    textStorage.replaceCharacters(in: NSRange(location: 22, length: 0), with: "\n")
+    textStorage.endEditing()
+
+    #expect(delegate.string == """
+    a = 2 ** 100
+    
+    print a
+    
+    count "the time of this"
+    """)
+
+    // Append LF
+    textStorage.beginEditing()
+    textStorage.replaceCharacters(in: NSRange(location: 47, length: 0), with: "\n\n")
+    textStorage.endEditing()
+
+    #expect(delegate.string == """
+    a = 2 ** 100
+    
+    print a
+    
+    count "the time of this"
+    
+    
+    """)
+    
 }
 
