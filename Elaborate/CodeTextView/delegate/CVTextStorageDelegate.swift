@@ -14,6 +14,7 @@
 #endif
 
 extension CVCoordinator: NSTextStorageDelegate {
+    /// Color the text
     public func textStorage(
         _ textStorage: NSTextStorage,
         willProcessEditing editedMask: NSTextStorageEditActions,
@@ -37,6 +38,7 @@ extension CVCoordinator: NSTextStorageDelegate {
         textStorage.setAttributes(attr, range: editedRange)
     }
 
+    /// Set the line endings
     public func textStorage(
         _ textStorage: NSTextStorage,
         didProcessEditing editedMask: OSTextStorageEditActions,
@@ -44,9 +46,8 @@ extension CVCoordinator: NSTextStorageDelegate {
         changeInLength delta: Int
     ) {
         guard editedMask.contains(.editedCharacters) else { return }
-        
+
 #if DEBUG
-        Self.logger.debug("\(textStorage.string)")
         Self.logger.debug("range: \(newRange), changeInLength: \(delta)")
 #endif
         // The textStorage holds the string it will be and not the string it was
@@ -79,7 +80,11 @@ extension CVCoordinator: NSTextStorageDelegate {
         }
         // Insert all the new stuff into here now
         self.newlineOffsets.insert(contentsOf: newOffsets, at: startIndex)
-        
+ 
+#if DEBUG
+        Self.logger.debug("newline offsets: \(self.newlineOffsets)")
+#endif
+       
         // Add in the new paragraph markers
         Task.detached { @MainActor [text = textStorage.string] in
             if self.text.wrappedValue != text {
