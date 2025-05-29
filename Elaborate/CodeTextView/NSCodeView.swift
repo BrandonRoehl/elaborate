@@ -28,10 +28,7 @@ extension CodeTextView: NSViewRepresentable {
     }
     
     @MainActor public func updateNSView(_ textView: NSTextView, context: Context) {
-//        let ranges = textView.selectedRanges
-//        defer { textView.selectedRanges = ranges }
         context.coordinator.update(self)
-//        scrollView.setNeedsDisplay(scrollView.bounds)
     }
     
     @MainActor public func sizeThatFits(_ proposal: ProposedViewSize, nsView textView: NSTextView, context: Context) -> CGSize? {

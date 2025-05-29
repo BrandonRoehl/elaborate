@@ -72,8 +72,8 @@ public class CVCoordinator: NSObject {
         guard let lineHeights = self.lineHeight else {
             return
         }
-        // Need a new slice with a plus one bound
-        let offsets = self.newlineOffsets + [self.textStorage.length]
+        // let to prevent accidental modification
+        let offsets = self.newlineOffsets
         var heights: [CGFloat] = []
 
         let documentRange = NSRange(location: 0, length: self.textStorage.length)
