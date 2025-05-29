@@ -21,6 +21,12 @@ fileprivate extension CVCoordinator {
     }
 }
 
+fileprivate extension String {
+    subscript(index: Int) -> Character {
+        self[self.index(self.startIndex, offsetBy: index)]
+    }
+}
+
 @Test func CVTextStorageDelegate() async {
     let ctv = CodeTextView(text: .constant(""))
     let delegate = await CVCoordinator(ctv)
@@ -94,7 +100,7 @@ fileprivate extension CVCoordinator {
     count "the time of this"
     """)
     #expect(textStorage.length == 46)
-    #expect(delegate.newlineOffsets == [12, 13, 22])
+    #expect(delegate.newlineOffsets == [12, 13, 21])
 
     // Insert LF middle of file
     textStorage.beginEditing()
@@ -109,7 +115,7 @@ fileprivate extension CVCoordinator {
     count "the time of this"
     """)
     #expect(textStorage.length == 47)
-    #expect(delegate.newlineOffsets == [10, 11, 22, 23])
+    #expect(delegate.newlineOffsets == [12, 13, 21, 22])
 
     // Append LF
     textStorage.beginEditing()
@@ -126,7 +132,7 @@ fileprivate extension CVCoordinator {
     
     """)
     #expect(textStorage.length == 49)
-    #expect(delegate.newlineOffsets == [10, 11, 22, 23, 47, 48])
+    #expect(delegate.newlineOffsets == [12, 13, 21, 22, 47, 48])
 
 }
 

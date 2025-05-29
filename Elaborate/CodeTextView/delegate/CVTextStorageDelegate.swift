@@ -66,7 +66,7 @@ extension CVCoordinator: NSTextStorageDelegate {
         }
         
         // update the offset for those that are at final index
-        for i in (endIndex)..<self.newlineOffsets.count {
+        for i in endIndex..<self.newlineOffsets.count {
             self.newlineOffsets[i] += delta
         }
         
