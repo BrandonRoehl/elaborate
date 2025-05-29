@@ -72,12 +72,14 @@ public class CVCoordinator: NSObject {
         guard let lineHeights = self.lineHeight else {
             return
         }
+        // Need a new slice with a plus one bound
+        let offsets = self.newlineOffsets + [self.textStorage.length]
         var heights: [CGFloat] = []
 
         let documentRange = NSRange(location: 0, length: self.textStorage.length)
         var line: Int = 0
         self.textLayoutManager.enumerateLineFragments(forGlyphRange: documentRange, using: { rect, usedRect, textContainer, glyphRange, stop in
-            while line < self.newlineOffsets.count && self.newlineOffsets[line] < glyphRange.location {
+            while line < offsets.count && offsets[line] < glyphRange.location {
                 line += 1
             }
 
