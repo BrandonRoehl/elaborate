@@ -44,7 +44,6 @@ extension CVCoordinator: NSTextStorageDelegate {
         changeInLength delta: Int
     ) {
         guard editedMask.contains(.editedCharacters) else { return }
-        let text = textStorage.string
         
 #if DEBUG
         Self.logger.debug("\(textStorage.string)")
@@ -81,16 +80,8 @@ extension CVCoordinator: NSTextStorageDelegate {
         // Insert all the new stuff into here now
         self.newlineOffsets.insert(contentsOf: newOffsets, at: startIndex)
         
-        // Good checks in dev but don't use this code in prod far to slow
-#if DEBUG
-        for offset in newlineOffsets {
-            let idx = text.index(text.startIndex, offsetBy: offset)
-            assert(text[idx].isNewline, "our adjustments don't lead to a \n")
-        }
-#endif
-
         // Add in the new paragraph markers
-        Task.detached { @MainActor in
+        Task.detached { @MainActor [text = textStorage.string] in
             if self.text.wrappedValue != text {
                 self.text.wrappedValue = text
             }
