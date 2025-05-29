@@ -7,12 +7,15 @@
 
 import Foundation
 import SwiftUI
+import os
 
 /** Push `NSTextContentStorage` changes through `NSTextContentManager`
 `NSTextContentManager.performEditingTransaction(_ transaction: () -> Void)`
 */
 
 public class CVCoordinator: NSObject {
+    static let logger = Logger(subsystem: "elb", category: "coordinator")
+    
     let textStorage: NSTextStorage
     let textContainer: NSTextContainer
     let textLayoutManager: NSLayoutManager

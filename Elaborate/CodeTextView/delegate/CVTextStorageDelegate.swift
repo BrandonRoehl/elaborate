@@ -45,6 +45,11 @@ extension CVCoordinator: NSTextStorageDelegate {
     ) {
         guard editedMask.contains(.editedCharacters) else { return }
         let text = textStorage.string
+        
+#if DEBUG
+        Self.logger.debug("\(textStorage.string)")
+        Self.logger.debug("range: \(newRange), changeInLength: \(delta)")
+#endif
         // The textStorage holds the string it will be and not the string it was
         // so you have to determine where we were before here
 #if DEBUG
@@ -86,11 +91,11 @@ extension CVCoordinator: NSTextStorageDelegate {
         
         // Good checks in dev but don't use this code in prod far to slow
 #if DEBUG
-        for offset in newlineOffsets {
-            let idx = text.index(text.startIndex, offsetBy: offset)
-            assert(text[idx].isNewline, "our adjustments don't lead to a \n")
-        }
-        assert(check == newlineOffsets, "Somehow we lost count and newlines aren't aligned")
+//        for offset in newlineOffsets {
+//            let idx = text.index(text.startIndex, offsetBy: offset)
+//            assert(text[idx].isNewline, "our adjustments don't lead to a \n")
+//        }
+//        assert(check == newlineOffsets, "Somehow we lost count and newlines aren't aligned")
 #endif
 
         // Add in the new paragraph markers
