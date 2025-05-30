@@ -81,16 +81,63 @@ extension CVCoordinator: NSTextStorageDelegate {
         // Insert all the new stuff into here now
         self.newlineOffsets.insert(contentsOf: newOffsets, at: startIndex)
  
+        let lineDetla: Int = newOffsets.count - (endIndex - startIndex)
 #if DEBUG
         Self.logger.debug("newline offsets: \(self.newlineOffsets)")
+        for offset in self.newlineOffsets {
+            assert(textStorage.characters[offset].string.first?.isNewline ?? true, "Bad offset: \(offset)")
+        }
 #endif
        
         // Add in the new paragraph markers
-        Task.detached { @MainActor [text = textStorage.string] in
+        Task.detached { @MainActor [
+            text = textStorage.string,
+            offsets = self.newlineOffsets,
+            startIndex,
+            endIndex,
+            lineDetla
+        ] in
             if self.text.wrappedValue != text {
                 self.text.wrappedValue = text
             }
-            self.syncHeights()
+
+            // Just calculate the changes in new line heigh
+            guard let lineHeight = self.lineHeight else {
+                return
+            }
+            let pgStartOffset: Int
+            let pgLength: Int
+
+            if startIndex < 0 {
+                pgStartOffset = 0
+            } else {
+                pgStartOffset = offsets[startIndex]
+            }
+            if endIndex < offsets.count {
+                pgLength = offsets[startIndex] - pgStartOffset
+            } else {
+                pgLength = textStorage.length - pgStartOffset
+            }
+
+            var heights = lineHeight.wrappedValue
+            heights.removeSubrange(startIndex..<endIndex)
+            heights.insert(
+                contentsOf: Array(repeating: 0, count: endIndex - startIndex + lineDetla),
+                at: startIndex
+            )
+
+            // counts
+            let pgRange = NSRange(location: pgStartOffset, length: pgLength)
+            var line: Int = startIndex
+            self.textLayoutManager.enumerateLineFragments(forGlyphRange: pgRange) {
+                rect, usedRect, textContainer, glyphRange, stop in
+                while line < offsets.count && offsets[line] < glyphRange.location {
+                    line += 1
+                }
+
+                heights[line] += ((rect.height * 100).rounded(.awayFromZero) / 100)
+            }
+            lineHeight.wrappedValue = heights
         }
     }
 }

@@ -78,17 +78,18 @@ public class CVCoordinator: NSObject {
 
         let documentRange = NSRange(location: 0, length: self.textStorage.length)
         var line: Int = 0
-        self.textLayoutManager.enumerateLineFragments(forGlyphRange: documentRange, using: { rect, usedRect, textContainer, glyphRange, stop in
+        self.textLayoutManager.enumerateLineFragments(forGlyphRange: documentRange) {
+            rect, usedRect, textContainer, glyphRange, stop in
             while line < offsets.count && offsets[line] < glyphRange.location {
                 line += 1
             }
-
+            
             if heights.count < line + 1 {
                 heights.append(contentsOf: Array(repeating: 0, count: line - heights.count + 1))
             }
             
             heights[line] += ((rect.height * 100).rounded(.awayFromZero) / 100)
-        })
+        }
         if lineHeights.wrappedValue != heights {
             lineHeights.wrappedValue = heights
         }
