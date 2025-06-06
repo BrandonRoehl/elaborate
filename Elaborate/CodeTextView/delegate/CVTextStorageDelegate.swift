@@ -81,7 +81,6 @@ extension CVCoordinator: NSTextStorageDelegate {
         // Insert all the new stuff into here now
         self.newlineOffsets.insert(contentsOf: newOffsets, at: startIndex)
  
-        let lineDetla: Int = newOffsets.count - (endIndex - startIndex)
 #if DEBUG
         Self.logger.debug("newline offsets: \(self.newlineOffsets)")
         for offset in self.newlineOffsets {
@@ -93,9 +92,7 @@ extension CVCoordinator: NSTextStorageDelegate {
         Task.detached { @MainActor [
             text = textStorage.string,
             offsets = self.newlineOffsets,
-            startIndex,
-            endIndex,
-            lineDetla
+            changedCount = newOffsets.count,
         ] in
             if self.text.wrappedValue != text {
                 self.text.wrappedValue = text
@@ -103,28 +100,37 @@ extension CVCoordinator: NSTextStorageDelegate {
 
             // Just calculate the changes in new line heigh
             guard let lineHeight = self.lineHeight else {
+                self.syncHeights()
                 return
             }
+            var heights = lineHeight.wrappedValue
+            guard heights.count > endIndex else {
+                self.syncHeights()
+                return
+            }
+            
+            // We know we can calculate these lines
+            heights.removeSubrange(startIndex..<endIndex+1)
+            heights.insert(
+                contentsOf: Array(repeating: 0, count: changedCount + 1),
+                at: startIndex
+            )
+            
+            // get the string range
             let pgStartOffset: Int
             let pgLength: Int
 
-            if startIndex < 0 {
+            if startIndex < 1 {
                 pgStartOffset = 0
             } else {
-                pgStartOffset = offsets[startIndex]
+                pgStartOffset = offsets[startIndex - 1] + 1
             }
-            if endIndex < offsets.count {
-                pgLength = offsets[startIndex] - pgStartOffset
+            let newEnd = startIndex + changedCount + 1
+            if newEnd < offsets.count {
+                pgLength = offsets[newEnd] - pgStartOffset
             } else {
                 pgLength = textStorage.length - pgStartOffset
             }
-
-            var heights = lineHeight.wrappedValue
-            heights.removeSubrange(startIndex..<endIndex)
-            heights.insert(
-                contentsOf: Array(repeating: 0, count: endIndex - startIndex + lineDetla),
-                at: startIndex
-            )
 
             // counts
             let pgRange = NSRange(location: pgStartOffset, length: pgLength)
