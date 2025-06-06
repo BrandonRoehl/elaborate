@@ -15,14 +15,15 @@ import os
 
 public class CVCoordinator: NSObject {
     static let logger = Logger(subsystem: "elb", category: "coordinator")
-    
+
     let textStorage: NSTextStorage
     let textContainer: NSTextContainer
-    let textLayoutManager: NSLayoutManager
-
+    let textLayoutManager: NSTextLayoutManager
+    let textContentStorage: NSTextContentStorage
+    
     var text: Binding<String>
     var lineHeight: Binding<[CGFloat]>?
-
+    
     var exclusionPaths: [CGRect] = [] {
         didSet {
 #if os(macOS)
@@ -30,25 +31,32 @@ public class CVCoordinator: NSObject {
 #else
             self.textContainer.exclusionPaths = self.exclusionPaths.map(UIBezierPath.init(rect:))
 #endif
+            self.textLayoutManager.invalidateLayout(for: self.textLayoutManager.documentRange)
         }
     }
-
+    
     @MainActor init(_ codeView: borrowing CodeTextView) {
         // Set to defaults to void dump until we get an initialized binding
         self.text = codeView.text
-
+        
         // Initilize the container first
         self.textStorage = NSTextStorage()
         self.textContainer = NSTextContainer()
-        self.textLayoutManager = NSLayoutManager()
+        self.textLayoutManager = NSTextLayoutManager()
+        self.textContentStorage = NSTextContentStorage()
 
         super.init()
 
         // MARK: NSTextStorageDelegate
         self.textStorage.delegate = self
+
+        self.textContentStorage.delegate = self
+        self.textContentStorage.textStorage = self.textStorage
+        self.textContentStorage.addTextLayoutManager(self.textLayoutManager)
+
         // Update the text container
-        self.textStorage.addLayoutManager(self.textLayoutManager)
-        self.textContainer.replaceLayoutManager(self.textLayoutManager)
+        self.textLayoutManager.textContainer = self.textContainer
+
         // At the end refresh the contents
         self.update(codeView)
     }
@@ -72,30 +80,29 @@ public class CVCoordinator: NSObject {
         guard let lineHeights = self.lineHeight else {
             return
         }
-        // let to prevent accidental modification
-        let offsets = self.newlineOffsets
         var heights: [CGFloat] = []
 
-        let documentRange = NSRange(location: 0, length: self.textStorage.length)
-        var line: Int = 0
-        self.textLayoutManager.enumerateLineFragments(forGlyphRange: documentRange) {
-            rect, usedRect, textContainer, glyphRange, stop in
-            while line < offsets.count && offsets[line] < glyphRange.location {
-                line += 1
+        self.textLayoutManager.enumerateTextLayoutFragments(
+            from: self.textLayoutManager.documentRange.location
+        ) { fragement in
+            var height: CGFloat = 0
+            for line in fragement.textLineFragments {
+                height += line.typographicBounds.height
             }
-            
-            if heights.count < line + 1 {
-                heights.append(contentsOf: Array(repeating: 0, count: line - heights.count + 1))
-            }
-            
-            heights[line] += ((rect.height * 100).rounded(.awayFromZero) / 100)
+            let rounded = (height * 10).rounded(.awayFromZero) / 10
+            heights.append(rounded)
+            return rounded > 0
         }
+        guard heights.last != 0 else {
+            return
+        }
+        // assert(heights.allSatisfy { $0 >= 0 }, "Check your math, lines cannot have negative height")
         if lineHeights.wrappedValue != heights {
+            print("heights:", heights.count, heights)
             lineHeights.wrappedValue = heights
         }
     }
 }
-
 
 extension CodeTextView {
     @MainActor public func makeCoordinator() -> CVCoordinator {

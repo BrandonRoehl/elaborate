@@ -14,30 +14,6 @@
 #endif
 
 extension CVCoordinator: NSTextStorageDelegate {
-    /// Color the text
-    public func textStorage(
-        _ textStorage: NSTextStorage,
-        willProcessEditing editedMask: OSTextStorageEditActions,
-        range editedRange: NSRange,
-        changeInLength delta: Int
-    ) {
-        // TODO: this very dumb but also I don't have time
-        // to figure out the correct way to do this
-        let attr: [NSAttributedString.Key: Any]
-#if os(macOS)
-        attr = [
-            .font: OSMonoFont,
-            .foregroundColor: NSColor.labelColor
-        ]
-#else
-        attr = [
-            .font: OSMonoFont,
-            .foregroundColor: UIColor.label
-        ]
-#endif
-        textStorage.setAttributes(attr, range: editedRange)
-    }
-
     /// Set the line endings
     public func textStorage(
         _ textStorage: NSTextStorage,
@@ -81,7 +57,7 @@ extension CVCoordinator: NSTextStorageDelegate {
         // Insert all the new stuff into here now
         self.newlineOffsets.insert(contentsOf: newOffsets, at: startIndex)
  
-#if DEBUG
+#if DEBUG && os(macOS)
         Self.logger.debug("newline offsets: \(self.newlineOffsets)")
         for offset in self.newlineOffsets {
             assert(textStorage.characters[offset].string.first?.isNewline ?? true, "Bad offset: \(offset)")
@@ -89,61 +65,12 @@ extension CVCoordinator: NSTextStorageDelegate {
 #endif
        
         // Add in the new paragraph markers
-        Task.detached { @MainActor [
-            text = textStorage.string,
-            offsets = self.newlineOffsets,
-            changedCount = newOffsets.count,
-        ] in
-            if self.text.wrappedValue != text {
+        let text = textStorage.string
+        if self.text.wrappedValue != text {
+            Task.detached { @MainActor in
+                self.syncHeights()
                 self.text.wrappedValue = text
             }
-
-            // Just calculate the changes in new line heigh
-            guard let lineHeight = self.lineHeight else {
-                self.syncHeights()
-                return
-            }
-            var heights = lineHeight.wrappedValue
-            guard heights.count > endIndex else {
-                self.syncHeights()
-                return
-            }
-            
-            // We know we can calculate these lines
-            heights.removeSubrange(startIndex..<endIndex+1)
-            heights.insert(
-                contentsOf: Array(repeating: 0, count: changedCount + 1),
-                at: startIndex
-            )
-            
-            // get the string range
-            let pgStartOffset: Int
-            let pgLength: Int
-
-            if startIndex < 1 {
-                pgStartOffset = 0
-            } else {
-                pgStartOffset = offsets[startIndex - 1] + 1
-            }
-            let newEnd = startIndex + changedCount + 1
-            if newEnd < offsets.count {
-                pgLength = offsets[newEnd] - pgStartOffset
-            } else {
-                pgLength = textStorage.length - pgStartOffset
-            }
-
-            // counts
-            let pgRange = NSRange(location: pgStartOffset, length: pgLength)
-            var line: Int = startIndex
-            self.textLayoutManager.enumerateLineFragments(forGlyphRange: pgRange) {
-                rect, usedRect, textContainer, glyphRange, stop in
-                while line < offsets.count && offsets[line] < glyphRange.location {
-                    line += 1
-                }
-
-                heights[line] += ((rect.height * 100).rounded(.awayFromZero) / 100)
-            }
-            lineHeight.wrappedValue = heights
         }
     }
 }
