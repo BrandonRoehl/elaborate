@@ -74,8 +74,6 @@ public class CVCoordinator: NSObject {
         }
     }
     
-    var newlineOffsets: [Int] = []
-    
     @MainActor func syncHeights() {
         guard let lineHeights = self.lineHeight else {
             return
