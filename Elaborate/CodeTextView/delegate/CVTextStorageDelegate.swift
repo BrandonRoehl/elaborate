@@ -80,11 +80,16 @@ extension CVCoordinator: NSTextStorageDelegate {
         }
         // Insert all the new stuff into here now
         self.newlineOffsets.insert(contentsOf: newOffsets, at: startIndex)
- 
+        
 #if DEBUG
         Self.logger.debug("newline offsets: \(self.newlineOffsets)")
+#if os(macOS)
+        for offset in self.newlineOffsets {
+            assert(textStorage.characters[offset].string.first?.isNewline ?? true, "Bad offset: \(offset)")
+        }
 #endif
-       
+#endif
+
         // Add in the new paragraph markers
         Task.detached { @MainActor [text = textStorage.string] in
             if self.text.wrappedValue != text {
