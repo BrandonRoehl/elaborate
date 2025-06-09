@@ -1,5 +1,7 @@
 # Elaborate
 
+** [App Store](https://apps.apple.com/us/app/elaborate-calculator/id6746104582)**
+
 Elaborate is an elaborate GUI for [ivy](https://github.com/robpike/ivy). It has
 been a favorite calculator of mine for a while on iOS for arbitrary precision and
 other quick calculations.
