@@ -7,8 +7,8 @@
 
 import ElbLib
 
-public struct Response {
-    public enum Status {
+public struct Response: Sendable {
+    public enum Status: Sendable {
         case error
         case value
         case eof

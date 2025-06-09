@@ -27,7 +27,7 @@ internal extension View {
 #endif
 }
 
-let OSMonoFont: OSFont = {
+nonisolated(unsafe) let OSMonoFont: OSFont = {
     let size = OSFont.systemFontSize
     return OSFont.monospacedSystemFont(ofSize: size, weight: .regular)
 }()

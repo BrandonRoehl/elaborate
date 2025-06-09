@@ -86,11 +86,16 @@ extension CVCoordinator: NSTextStorageDelegate {
 #endif
 
         // Add in the new paragraph markers
-        Task.detached { @MainActor [text = textStorage.string] in
-            if self.text.wrappedValue != text {
-                self.text.wrappedValue = text
+        Task.detached { @MainActor [
+            text = self.text,
+            newText = textStorage.string,
+            sync = self.syncHeights,
+        ] in
+            if text.wrappedValue != newText {
+                text.wrappedValue = newText
             }
-            self.syncHeights()
+            sync()
         }
     }
 }
+
