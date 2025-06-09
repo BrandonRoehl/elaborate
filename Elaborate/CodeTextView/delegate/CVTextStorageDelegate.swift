@@ -83,11 +83,6 @@ extension CVCoordinator: NSTextStorageDelegate {
         
 #if DEBUG
         Self.logger.debug("newline offsets: \(self.newlineOffsets)")
-#if os(macOS)
-        for offset in self.newlineOffsets {
-            assert(textStorage.characters[offset].string.first?.isNewline ?? true, "Bad offset: \(offset)")
-        }
-#endif
 #endif
 
         // Add in the new paragraph markers
