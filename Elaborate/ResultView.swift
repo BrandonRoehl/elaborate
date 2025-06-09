@@ -53,7 +53,7 @@ struct ResultView: View {
     }
 
     var body: some View {
-        VStack(alignment: .leading) {
+        var body = VStack(alignment: .leading) {
             HStack {
                 Label("\(result.line)", systemImage: "list.dash")
                     .foregroundStyle(.secondary)
@@ -64,7 +64,6 @@ struct ResultView: View {
                     .font(.headline)
                 
             }
-            .font(.caption)
             if !(result.output?.isEmpty ?? true) {
                 if result.status == .info {
                     ScrollView(.horizontal) {
@@ -75,15 +74,25 @@ struct ResultView: View {
                 }
             }
         }
-        
         .padding(.all, 8)
-#if OUTLINES
-        .background(RoundedRectangle(cornerRadius: 8).stroke(color, lineWidth: 1))
-#else
-        .background(color.opacity(0.5))
-        .background(.regularMaterial.secondary, in: RoundedRectangle(cornerRadius: 8, style: .circular))
+#if !OUTLINES
+        .tint(color)
 #endif
-//        .shadow(radius: 4, x: 0, y: 2)
+
+#if OUTLINES
+        return body.background(RoundedRectangle(cornerRadius: 8).stroke(color, lineWidth: 1))
+#else
+        if #available(macOS 26.0, iOS 26.0, *) {
+            return body.glassEffect(
+                .regular.tint(color.opacity(0.5)),
+                in: .rect(cornerRadius: 16.0)
+            )
+        } else {
+            return body
+                .background(color.opacity(0.5))
+                .background(.regularMaterial.secondary, in: RoundedRectangle(cornerRadius: 8, style: .circular))
+        }
+#endif
     }
 }
 
