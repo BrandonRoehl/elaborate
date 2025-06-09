@@ -28,8 +28,6 @@ struct LaunchScene: Scene {
             NavigationStack {
                 let content = ContentView(document: file.$document)
                     .openURLSheet()
-                    .toolbarBackground(Material.bar)
-                    .toolbarBackgroundVisibility(.visible, for: .navigationBar)
                 if let url = file.fileURL {
                     content
                         .navigationDocument(url)

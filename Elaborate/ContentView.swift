@@ -49,13 +49,16 @@ struct ContentView: View {
             ToolbarItem(placement: .primaryAction) {
                 if running {
                     ProgressView()
+                        .buttonStyle(.bordered)
                 } else {
                     Button("Run", systemImage: "play.fill") {
                         running = true
                         Task {
                             await self.instant.send(self.document)
                         }
-                    }.keyboardShortcut("r", modifiers: .command)
+                    }
+                    .keyboardShortcut("r", modifiers: .command)
+                    .buttonStyle(.borderedProminent)
                 }
             }
         }
