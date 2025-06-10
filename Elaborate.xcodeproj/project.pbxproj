@@ -10,6 +10,7 @@
 		5519F93D2D500E3300823450 /* ResultGroup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5519F93C2D500E2F00823450 /* ResultGroup.swift */; };
 		552E75282D49B98C00F34A32 /* ResultView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 552E75272D49B98600F34A32 /* ResultView.swift */; };
 		553B935A2D263F2C001397D7 /* AsyncAlgorithms in Frameworks */ = {isa = PBXBuildFile; productRef = 553B93592D263F2C001397D7 /* AsyncAlgorithms */; };
+		554B28962DF7D5A700BC4837 /* elaborate.icon in Resources */ = {isa = PBXBuildFile; fileRef = 554B28952DF7D5A700BC4837 /* elaborate.icon */; };
 		556ABF5F2D17A2C7004D6A05 /* ElaborateApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 556ABF5E2D17A2C7004D6A05 /* ElaborateApp.swift */; };
 		556ABF612D17A2C7004D6A05 /* ElaborateDocument.swift in Sources */ = {isa = PBXBuildFile; fileRef = 556ABF602D17A2C7004D6A05 /* ElaborateDocument.swift */; };
 		556ABF632D17A2C7004D6A05 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 556ABF622D17A2C7004D6A05 /* ContentView.swift */; };
@@ -62,6 +63,7 @@
 /* Begin PBXFileReference section */
 		5519F93C2D500E2F00823450 /* ResultGroup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResultGroup.swift; sourceTree = "<group>"; };
 		552E75272D49B98600F34A32 /* ResultView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResultView.swift; sourceTree = "<group>"; };
+		554B28952DF7D5A700BC4837 /* elaborate.icon */ = {isa = PBXFileReference; lastKnownFileType = folder.iconcomposer.icon; path = elaborate.icon; sourceTree = "<group>"; };
 		556ABF5B2D17A2C7004D6A05 /* Elaborate.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Elaborate.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		556ABF5E2D17A2C7004D6A05 /* ElaborateApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ElaborateApp.swift; sourceTree = "<group>"; };
 		556ABF602D17A2C7004D6A05 /* ElaborateDocument.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ElaborateDocument.swift; sourceTree = "<group>"; };
@@ -161,6 +163,7 @@
 				55ADEB7C2DDA65AE004B5509 /* SFViewModifier.swift */,
 				55EB0D322DDCDFFD00729160 /* Credits.rtf */,
 				556ABF642D17A2C9004D6A05 /* Assets.xcassets */,
+				554B28952DF7D5A700BC4837 /* elaborate.icon */,
 				556ABF662D17A2C9004D6A05 /* Info.plist */,
 				556ABF672D17A2C9004D6A05 /* elaborate.entitlements */,
 				556ABF682D17A2C9004D6A05 /* Preview Content */,
@@ -309,6 +312,7 @@
 				556ABF6A2D17A2C9004D6A05 /* Preview Assets.xcassets in Resources */,
 				55EB0D332DDCDFFD00729160 /* Credits.rtf in Resources */,
 				556ABF652D17A2C9004D6A05 /* Assets.xcassets in Resources */,
+				554B28962DF7D5A700BC4837 /* elaborate.icon in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

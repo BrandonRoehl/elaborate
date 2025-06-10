@@ -77,7 +77,7 @@ struct CodeView: View {
         // Add the padding we want
         let gutterWidth = self.calculateNumberLabel() + 4
 
-        return ScrollView([.vertical]) {
+        let body = ScrollView([.vertical]) {
             ZStack(alignment: .topLeading) {
                 CodeTextView(
                     text: $text,
@@ -102,6 +102,12 @@ struct CodeView: View {
         )
         .defaultScrollAnchor(.top)
         .scrollDismissesKeyboard(.interactively)
+
+        if #available(macOS 26.0, *) {
+            return body.scrollEdgeEffectStyle(.soft, for: .bottom)
+        } else {
+            return body
+        }
     }
     
     private func getLineHeight(at index: Int) -> CGFloat {
