@@ -22,14 +22,13 @@ extension CVCoordinator: NSTextStorageDelegate {
         changeInLength delta: Int
     ) {
         guard editedMask.contains(.editedCharacters) else { return }
-
+        
         // Add in the new paragraph markers
-        Task.detached {
-            @MainActor [
-                text = self.text,
-                newText = textStorage.string,
-                sync = self.syncHeights,
-            ] in
+        Task.detached { @MainActor [
+            text = self.text,
+            newText = textStorage.string,
+            sync = self.syncHeights,
+        ] in
             if text.wrappedValue != newText {
                 text.wrappedValue = newText
             }
