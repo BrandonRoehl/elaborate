@@ -103,7 +103,7 @@ struct CodeView: View {
         .defaultScrollAnchor(.top)
         .scrollDismissesKeyboard(.interactively)
 
-        if #available(macOS 26.0, *) {
+        if #available(macOS 26.0, iOS 26.0, *) {
             return body.scrollEdgeEffectStyle(.soft, for: .bottom)
         } else {
             return body
