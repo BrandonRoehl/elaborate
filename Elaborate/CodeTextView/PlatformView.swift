@@ -27,7 +27,14 @@ internal extension View {
 #endif
 }
 
-nonisolated(unsafe) let OSMonoFont: OSFont = {
-    let size = OSFont.systemFontSize
-    return OSFont.monospacedSystemFont(ofSize: size, weight: .regular)
+#if os(macOS)
+nonisolated(unsafe) let OSMonoFont: NSFont = {
+    let size = NSFont.systemFontSize
+    return NSFont.monospacedSystemFont(ofSize: size, weight: .regular)
 }()
+#else
+let OSMonoFont: UIFont = {
+    let size = UIFont.systemFontSize
+    return UIFont.monospacedSystemFont(ofSize: size, weight: .regular)
+}()
+#endif

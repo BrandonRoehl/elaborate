@@ -5,11 +5,11 @@
 //  Created by Brandon Roehl on 5/8/25.
 //
 
-import SwiftUI
 import Elb
+import SwiftUI
 
-fileprivate extension GeometryProxy {
-    func exlusion(in space: some CoordinateSpaceProtocol) -> CGRect {
+extension GeometryProxy {
+    fileprivate func exlusion(in space: some CoordinateSpaceProtocol) -> CGRect {
         var frame = self.frame(in: space)
         // Setting both of these makes sure we only call recalculates on a
         // change of line height
@@ -26,9 +26,9 @@ struct CodeView: View {
     // Internal state to recalculate the offsets
     @State var lineHeights: [CGFloat] = []
     @State var exclusionSizes: [Int: CGRect] = [:]
-
+    
     let space: NamedCoordinateSpace = .named("codeview")
-
+    
     var exclusionPaths: [CGRect] {
         return messages.keys.compactMap { line in exclusionSizes[line] }
     }
@@ -40,7 +40,7 @@ struct CodeView: View {
     
     var responses: some View {
         let numberWidth = self.calculateNumberLabel()
-
+        
         return VStack(spacing: 0) {
             ForEach(lineHeights.indices, id: \.self) { line in
                 let height = self.getLineHeight(at: line)
@@ -60,7 +60,8 @@ struct CodeView: View {
                 if let message = messages[line + 1] {
                     message.overlay(alignment: .center) {
                         GeometryReader { proxy in
-                            Color.clear.onChange(of: proxy.exlusion(in: space), initial: true) { (_, new) in
+                            Color.clear.onChange(of: proxy.exlusion(in: space), initial: true) {
+                                (_, new) in
                                 self.exclusionSizes[line + 1] = new
                             }
 #if OUTLINES
@@ -76,8 +77,8 @@ struct CodeView: View {
     var body: some View {
         // Add the padding we want
         let gutterWidth = self.calculateNumberLabel() + 4
-
-        let body = ScrollView([.vertical]) {
+        
+        ScrollView([.vertical]) {
             ZStack(alignment: .topLeading) {
                 CodeTextView(
                     text: $text,
@@ -102,12 +103,6 @@ struct CodeView: View {
         )
         .defaultScrollAnchor(.top)
         .scrollDismissesKeyboard(.interactively)
-
-        if #available(macOS 26.0, iOS 26.0, *) {
-            return body.scrollEdgeEffectStyle(.soft, for: .bottom)
-        } else {
-            return body
-        }
     }
     
     private func getLineHeight(at index: Int) -> CGFloat {
