@@ -26,15 +26,8 @@ struct LaunchScene: Scene {
         }
         DocumentGroup(newDocument: ElaborateDocument()) { file in
             NavigationStack {
-                let content = ContentView(document: file.$document)
+                ContentView(document: file.$document)
                     .openURLSheet()
-                if let url = file.fileURL {
-                    content
-                        .navigationDocument(url)
-                        .navigationTitle(url.lastPathComponent)
-                } else {
-                    content
-                }
             }
         }
     }
