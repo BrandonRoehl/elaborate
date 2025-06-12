@@ -28,7 +28,6 @@ final class CodeAttachment: NSTextAttachment {
 
     public init(view: OSView) {
         self.view = view
-        self.view.autoresizingMask = [.height]
         super.init(data: nil, ofType: nil)
     }
     
@@ -48,45 +47,37 @@ final class CodeAttachment: NSTextAttachment {
         let viewProvider = NSTextAttachmentViewProvider(textAttachment: self, parentView: parentView,
                                                         textLayoutManager: textContainer?.textLayoutManager,
                                                         location: location)
-//        viewProvider.tracksTextAttachmentViewBounds = true
+        viewProvider.tracksTextAttachmentViewBounds = true
         viewProvider.view = self.view
         return viewProvider
     }
     
     override func attachmentBounds(for attributes: [NSAttributedString.Key : Any], location: any NSTextLocation, textContainer: NSTextContainer?, proposedLineFragment: CGRect, position: CGPoint) -> CGRect {
-//        if size.height < 100 {
-//            size.height = 100
-//        }
-//        textContainer?.textView?.frame.width
-        
-//        return CGRect(origin: .zero, size: size)
         var result = CGRect()
-        self.view.autoresizingMask = [.height]
-        var size = self.view.intrinsicContentSize
-        if let width = textContainer?.size.width {
-            size.width = width
-        } else {
-            size.width = proposedLineFragment.width
-        }
+        
+        let width = textContainer?.size.width ?? proposedLineFragment.width
+        #if os(macOS)
+//        let constraint: NSLayoutConstraint
+//        if let f = self.view.constraints.first {
+//            constraint = f
+//        } else {
+//            constraint = self.view.widthAnchor.constraint(equalToConstant: width)
+//            NSLayoutConstraint.activate([constraint])
+//        }
+//        constraint.constant = width
+//        if self.view.window != nil {
+//            self.view.needsLayout = true
+//            self.view.layoutSubtreeIfNeeded()
+//        }
+        self.view.setFrameSize(CGSize(width: width, height: 10_000))
+        var size = self.view.fittingSize
+        #else
+        var size = self.view.sizeThatFits(CGSize(width: width, height: .infinity))
+        #endif
+        size.width = width
         result.size = size
         result.origin = CGPoint(x: proposedLineFragment.origin.x, y: proposedLineFragment.maxY)
         return result
-//        return CGRect(origin: .zero, size: CGSize(width: 100, height: 100))
     }
-
-//    func toggleHidden() {
-//        guard let textStorage: NSTextStorage = (textLayoutManager?.textContentManager as? NSTextContentStorage)?.textStorage else { return }
-//        textLayoutManager?.textContentManager?.performEditingTransaction {
-//            if hiddenContent != nil { // Showing
-//                let ellipsisRange = NSRange(location: textStorage.length - 2, length: 1)
-//                textStorage.replaceCharacters(in: ellipsisRange, with: hiddenContent!)
-//                hiddenContent = nil
-//            } else { // Hiding
-//                let firstParagraphRange = NSRange(location: 0, length: 331)
-//                let hidingRange = NSRange(location: NSMaxRange(firstParagraphRange), length: textStorage.length - NSMaxRange(firstParagraphRange) - 1)
-//                hiddenContent = textStorage.attributedSubstring(from: hidingRange)
-//                textStorage.replaceCharacters(in: hidingRange, with: "…")
-//            }
-//        }
-//    }
 }
+

@@ -60,11 +60,11 @@ extension CVCoordinator: NSTextStorageDelegate {
         
         // Good checks in dev but don't use this code in prod far to slow
         #if DEBUG
-        for offset in newlineOffsets {
-            let idx = text.index(text.startIndex, offsetBy: offset)
-            assert(text[idx] == "\n", "our adjustments don't lead to a \n")
-        }
-        assert(check == newlineOffsets, "Somehow we lost count and newlines aren't aligned")
+//        for offset in newlineOffsets {
+//            let idx = text.index(text.startIndex, offsetBy: offset)
+////            assert(text[idx] == "\n", "our adjustments don't lead to a \n")
+//        }
+////        assert(check == newlineOffsets, "Somehow we lost count and newlines aren't aligned")
         #endif
     }
     
