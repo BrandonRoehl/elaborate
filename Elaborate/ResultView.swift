@@ -53,7 +53,7 @@ struct ResultView: View {
     }
 
     var body: some View {
-        VStack(alignment: .leading) {
+        let body = VStack(alignment: .leading) {
             HStack {
                 Label("\(result.line)", systemImage: "list.dash")
                     .font(.headline)
@@ -73,12 +73,19 @@ struct ResultView: View {
             }
         }
         .padding(.all, 8)
-#if OUTLINES
-        .background(RoundedRectangle(cornerRadius: 8).stroke(color, lineWidth: 1))
-#else
-        .background(color.opacity(0.5))
-        .background(.regularMaterial.secondary, in: RoundedRectangle(cornerRadius: 16, style: .circular))
         .foregroundStyle(.primary)
+
+#if OUTLINES
+        return body.background(RoundedRectangle(cornerRadius: 8).stroke(color, lineWidth: 1))
+#else
+        if #available(macOS 26.0, iOS 26.0, *) {
+            let glass: Glass = if (color == .clear) { .regular } else { .regular.tint(color.opacity(0.5)) }
+            return body.glassEffect(glass, in: RoundedRectangle(cornerRadius: 16, style: .circular))
+        } else {
+            return body
+                .background(color.opacity(0.5))
+                .background(.regularMaterial.secondary, in: RoundedRectangle(cornerRadius: 16, style: .circular))
+        }
 #endif
     }
 }

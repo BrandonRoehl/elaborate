@@ -41,7 +41,7 @@ struct CodeView: View {
     var responses: some View {
         let numberWidth = self.calculateNumberLabel()
 
-        return VStack(spacing: 0) {
+        let stack = VStack(spacing: 0) {
             ForEach(lineHeights.indices, id: \.self) { line in
                 let height = self.getLineHeight(at: line)
                 HStack {
@@ -71,11 +71,31 @@ struct CodeView: View {
                 }
             }
         }
+
+        if #available(macOS 26.0, iOS 26.0, *) {
+            return GlassEffectContainer {
+                stack
+            }
+        } else {
+            return stack
+        }
     }
     
     var body: some View {
         // Add the padding we want
         let gutterWidth = self.calculateNumberLabel() + 4
+        
+        let background = ZStack {
+#if os(macOS)
+            Color(NSColor.textBackgroundColor)
+#else
+            Color.init(UIColor.systemBackground)
+#endif
+            HStack {
+                Color.clear.frame(width: gutterWidth).background(.regularMaterial)
+                Color.clear
+            }
+        }
 
         ScrollView([.vertical]) {
             ZStack(alignment: .topLeading) {
@@ -87,19 +107,13 @@ struct CodeView: View {
                 self.responses
             }.coordinateSpace(space)
         }
-        .background(
-            ZStack {
-#if os(macOS)
-                Color(NSColor.textBackgroundColor)
-#else
-                Color.init(UIColor.systemBackground)
-#endif
-                HStack {
-                    Color.clear.frame(width: gutterWidth).background(.regularMaterial)
-                    Color.clear
-                }
+        .background {
+            if #available(macOS 26.0, iOS 26.0, *) {
+                background.backgroundExtensionEffect()
+            } else {
+                background
             }
-        )
+        }
         .defaultScrollAnchor(.top)
         .scrollDismissesKeyboard(.interactively)
     }
