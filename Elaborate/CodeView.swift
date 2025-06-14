@@ -41,7 +41,7 @@ struct CodeView: View {
     var responses: some View {
         let numberWidth = self.calculateNumberLabel()
 
-        let stack = VStack(spacing: 0) {
+        return VStack(spacing: 0) {
             ForEach(lineHeights.indices, id: \.self) { line in
                 let height = self.getLineHeight(at: line)
                 HStack {
@@ -70,14 +70,6 @@ struct CodeView: View {
                     }
                 }
             }
-        }
-
-        if #available(macOS 26.0, iOS 26.0, *) {
-            return GlassEffectContainer {
-                stack
-            }
-        } else {
-            return stack
         }
     }
     

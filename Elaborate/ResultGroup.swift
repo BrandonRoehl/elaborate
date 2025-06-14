@@ -12,7 +12,7 @@ struct ResultGroup: View {
     let results: [Response]
 
     var body: some View {
-        VStack(spacing: 8) {
+        VStack(spacing: 4) {
             ForEach(results) { result in
                 ResultView(result: result)
             }
