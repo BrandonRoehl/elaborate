@@ -13,7 +13,7 @@ import os
 `NSTextContentManager.performEditingTransaction(_ transaction: () -> Void)`
 */
 
-public class CVCoordinator: NSObject {
+public class CVCoordinator: NSObject, @unchecked Sendable {
     static let logger = Logger(subsystem: "elb", category: "coordinator")
     
     let textStorage: NSTextStorage
