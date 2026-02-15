@@ -15,7 +15,6 @@ import (
 	"io"
 	"math/big"
 	"os"
-	"strconv"
 	"strings"
 	"unsafe"
 
@@ -23,6 +22,7 @@ import (
 	"robpike.io/ivy/exec"
 	"robpike.io/ivy/parse"
 	"robpike.io/ivy/scan"
+	"robpike.io/ivy/state"
 	"robpike.io/ivy/value"
 
 	_ "robpike.io/ivy/run" // Needed to initialize IvyEval
@@ -44,15 +44,6 @@ func newConfig() *config.Config {
 	conf.SetOutput(os.Stdout)
 	conf.SetErrOutput(os.Stdout)
 	return &conf
-}
-
-// parseLine extracts the line number from the location string.
-// requiring `parse.NewParser(" ", scanner, context)`
-func parseLine(parse *parse.Parser) int64 {
-	loc := parse.Loc()
-	line := loc[2 : len(loc)-2]
-	out, _ := strconv.ParseInt(line, 10, 64)
-	return out
 }
 
 // Execute must match the header file so this import works
@@ -91,11 +82,11 @@ func Execute(content *C.cchar_t) C.Response {
 // printValues neatly prints the values returned from execution, followed by a newline.
 // It also handles the ')debug types' output.
 // The return value reports whether it printed anything.
-func printValues(conf *config.Config, writer io.Writer, values []value.Value) bool {
+func printValues(c value.Context, writer io.Writer, values []value.Value) bool {
 	if len(values) == 0 {
 		return false
 	}
-	if conf.Debug("types") > 0 {
+	if c.Config().Debug("types") > 0 {
 		for i, v := range values {
 			if i > 0 {
 				fmt.Fprint(writer, ",")
@@ -106,10 +97,11 @@ func printValues(conf *config.Config, writer io.Writer, values []value.Value) bo
 	}
 	printed := false
 	for _, v := range values {
-		if _, ok := v.(value.Assignment); ok {
+		switch v.(type) {
+		case value.QuietValue:
 			continue
 		}
-		s := v.Sprint(conf)
+		s := v.Sprint(c)
 		if printed && len(s) > 0 && s[len(s)-1] != '\n' {
 			fmt.Fprint(writer, " ")
 		}
@@ -122,7 +114,7 @@ func printValues(conf *config.Config, writer io.Writer, values []value.Value) bo
 	return printed
 }
 
-func Result(output string, status C.Status, line int64) C.Result {
+func Result(context value.Context, output string, status C.Status) C.Result {
 	// var cout
 	var cout *C.char
 	if len(output) > 0 {
@@ -134,7 +126,7 @@ func Result(output string, status C.Status, line int64) C.Result {
 	return C.Result{
 		output: cout,
 		status: status,
-		line:   C.int64_t(line),
+		line:   C.int64_t(context.Pos().Line),
 	}
 }
 
@@ -157,9 +149,9 @@ func Run(p *parse.Parser, context value.Context) (results []C.Result) {
 			panic(err)
 		}
 		results = append(results, Result(
+			context,
 			fmt.Sprint(err),
 			C.ERROR,
-			parseLine(p),
 		))
 	}()
 
@@ -175,29 +167,29 @@ func Run(p *parse.Parser, context value.Context) (results []C.Result) {
 		}
 		// Attempt to print the values if there are any
 		var out bytes.Buffer
-		if printValues(conf, &out, values) {
+		if printValues(context, &out, values) {
 			context.AssignGlobal("_", values[len(values)-1])
 			results = append(results, Result(
+				context,
 				out.String(),
 				C.VALUE,
-				parseLine(p),
 			))
 		}
 		// Collect info
 		if info.Len() > 0 {
 			results = append(results, Result(
+				context,
 				info.String(),
 				C.INFO,
-				parseLine(p),
 			))
 			info.Reset()
 		}
 		// If we are at EOF, we're done. Return the last value.
 		if !ok {
 			results = append(results, Result(
+				context,
 				"",
 				C.EOF,
-				parseLine(p),
 			))
 			return
 		}
@@ -212,8 +204,8 @@ func innerExecute(expr string) []C.Result {
 
 	conf := newConfig()
 	context := exec.NewContext(conf)
-	scanner := scan.New(context, " ", reader)
-	parser := parse.NewParser(" ", scanner, context)
+	scanner := scan.New(state.New(context), "<elb>", reader)
+	parser := parse.NewParser("<elb>", scanner, context)
 
 	// Run to the end or the first error
 	return Run(parser, context)
