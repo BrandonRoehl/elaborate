@@ -114,7 +114,7 @@ func printValues(c value.Context, writer io.Writer, values []value.Value) bool {
 	return printed
 }
 
-func Result(context value.Context, output string, status C.Status) C.Result {
+func Result(output string, status C.Status, line int64) C.Result {
 	// var cout
 	var cout *C.char
 	if len(output) > 0 {
@@ -126,7 +126,7 @@ func Result(context value.Context, output string, status C.Status) C.Result {
 	return C.Result{
 		output: cout,
 		status: status,
-		line:   C.int64_t(context.Pos().Line),
+		line:   C.int64_t(line),
 	}
 }
 
@@ -136,6 +136,7 @@ func Result(context value.Context, output string, status C.Status) C.Result {
 // Typical execution is therefore to loop calling Run until it succeeds.
 // Error details are reported to the configured error output stream.
 func Run(p *parse.Parser, context value.Context) (results []C.Result) {
+	var line int64 = 0
 	// Handle errors that are thrown
 	defer func() {
 		err := recover()
@@ -149,9 +150,9 @@ func Run(p *parse.Parser, context value.Context) (results []C.Result) {
 			panic(err)
 		}
 		results = append(results, Result(
-			context,
 			fmt.Sprint(err),
 			C.ERROR,
+			line,
 		))
 	}()
 
@@ -160,6 +161,7 @@ func Run(p *parse.Parser, context value.Context) (results []C.Result) {
 	var info bytes.Buffer
 	conf.SetOutput(&info)
 	for {
+		line += 1
 		exprs, ok := p.Line()
 		var values []value.Value
 		if exprs != nil {
@@ -170,26 +172,26 @@ func Run(p *parse.Parser, context value.Context) (results []C.Result) {
 		if printValues(context, &out, values) {
 			context.AssignGlobal("_", values[len(values)-1])
 			results = append(results, Result(
-				context,
 				out.String(),
 				C.VALUE,
+				line,
 			))
 		}
 		// Collect info
 		if info.Len() > 0 {
 			results = append(results, Result(
-				context,
 				info.String(),
 				C.INFO,
+				line,
 			))
 			info.Reset()
 		}
 		// If we are at EOF, we're done. Return the last value.
 		if !ok {
 			results = append(results, Result(
-				context,
 				"",
 				C.EOF,
+				line,
 			))
 			return
 		}

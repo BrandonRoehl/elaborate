@@ -40,9 +40,10 @@ struct CodeView: View {
     
     var responses: some View {
         let numberWidth = self.calculateNumberLabel()
+		let undisplayed = messages.keys.sorted().drop { $0 <= lineHeights.count }
 
         return VStack(spacing: 0) {
-            ForEach(lineHeights.indices, id: \.self) { line in
+			ForEach(self.lineHeights.indices, id: \.self) { line in
                 let height = self.getLineHeight(at: line)
                 HStack {
                     Text("\(line + 1)")
@@ -70,6 +71,11 @@ struct CodeView: View {
                     }
                 }
             }
+			ForEach(undisplayed, id: \.self) { key in
+				if let message = messages[key] {
+					message
+				}
+			}
         }
     }
     
