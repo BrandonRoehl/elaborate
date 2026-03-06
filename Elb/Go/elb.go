@@ -175,6 +175,7 @@ func Run(p *parse.Parser, context value.Context) (results []C.Result) {
 				out.String(),
 				C.VALUE,
 				line,
+				// context.Pos().Line
 			))
 		}
 		// Collect info
