@@ -9,10 +9,6 @@ export CGO_ENABLED = 1
 # export CGO_CFLAGS = -fembed-bitcode
 # export CGO_LDFLAGS = -lresolv
 
-.PHONY: test
-test: lib/Elb.xcframework
-	swift test
-
 .PHONY: build
 build: lib/Elb.xcframework
 
@@ -73,3 +69,8 @@ lib/Elb.xcframework: $(SWIFT) lib/macos-arm64_x86_64.a lib/ios-arm64.a lib/ios-s
 		-library lib/macos-arm64_x86_64.a \
 		-headers ./Go/include/ \
 		-output $@
+
+.PHONY: test
+test: lib/Elb.xcframework
+	swift test
+
