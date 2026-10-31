@@ -41,9 +41,7 @@ extension CodeTextView: UIViewRepresentable {
         let containerSize = CGSize(width: width, height: CGFloat.greatestFiniteMagnitude)
         if containerSize != container.size {
             container.size = containerSize
-            Task.detached { @MainActor in
-                context.coordinator.syncHeights()
-            }
+			context.coordinator.syncHeights()
         }
         layout.ensureLayout(for: container)
         let usedRect = layout.usedRect(for: container)

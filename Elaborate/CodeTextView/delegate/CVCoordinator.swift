@@ -74,7 +74,7 @@ public class CVCoordinator: NSObject {
         }
     }
     
-    @MainActor func syncHeights() {
+    func syncHeights() {
         guard let lineHeights = self.lineHeight else {
             return
         }
