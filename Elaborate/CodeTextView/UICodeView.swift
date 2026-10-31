@@ -26,7 +26,13 @@ final class ElaborateUITextView: UITextView {
     
     override func cut(_ sender: Any?) {
         self.copy(sender)
-        self.deleteSelection()
+        let range = self.selectedRange
+        guard range.length > 0 else {
+            return
+        }
+        self.text = (self.text as NSString).replacingCharacters(in: range, with: "") as String
+        // Notify the delegate so the bound state reflects the deletion.
+        (self.delegate as? UITextViewDelegate)?.textViewDidChange?(self)
     }
 }
 

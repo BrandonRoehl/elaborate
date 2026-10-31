@@ -77,7 +77,12 @@ final class MessageAttachment: NSTextAttachment {
         let height = controller.sizeThatFits(in: CGSize(width: width, height: 0)).height
         #else
         let controller = UIHostingController(rootView: view)
-        let height = controller.sizeThatFits(CGSize(width: width, height: 0)).height
+        let fitting = controller.view.systemLayoutSizeFitting(
+            CGSize(width: width, height: UIView.layoutFittingCompressedSize.height),
+            withHorizontalFittingPriority: .required,
+            verticalFittingPriority: .fittingSizeLevel
+        )
+        let height = fitting.height
         #endif
         heightCache[line] = CacheEntry(width: width, height: height, results: results)
         return height

@@ -8,6 +8,11 @@
 import SwiftUI
 import os
 import Elb
+#if os(macOS)
+import AppKit
+#else
+import UIKit
+#endif
 
 struct CodeView: View {
     static let logger = Logger(subsystem: "elb", category: "codeview")
@@ -21,6 +26,15 @@ struct CodeView: View {
     func calculateNumberLabel() -> CGFloat {
         let chars: CGSize = "\(lineHeights.count * 10)".size(withAttributes: [.font: OSMonoFont])
         return chars.width
+    }
+    
+    /// The editor background color, per platform.
+    private var editorBackground: Color {
+        #if os(macOS)
+        Color(nsColor: .textBackgroundColor)
+        #else
+        Color(uiColor: .systemBackground)
+        #endif
     }
     
     var responses: some View {
@@ -56,7 +70,7 @@ struct CodeView: View {
                 )
                     .padding(.leading, self.calculateNumberLabel() + 20)
             }
-            .background(Color(nsColor: .textBackgroundColor))
+            .background(self.editorBackground)
         }
     }
 }

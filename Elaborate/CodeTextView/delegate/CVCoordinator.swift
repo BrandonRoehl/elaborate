@@ -85,21 +85,20 @@ public class CVCoordinator: NSObject, NSTextStorageDelegate, NSTextContentStorag
     // MARK: - Decoration
     
     /// Builds the decorated buffer. Every line that has a message gets an
-    /// attachment character (U+FFFC) appended at its linebreak.
+    /// attachment character (U+FFFC) on its own line directly below it.
     ///
-    /// The real newline is preserved (the attachment is *added at* the
-    /// linebreak, not in place of it) so that line numbering, copy/paste and
-    /// round-tripping all keep working. TextKit 2 lays the attachment out on
-    /// its own full-width line below the code line.
+    /// The code line and its newline are preserved (the attachment is *added
+    /// at* the linebreak, not in place of it) so that line numbering,
+    /// copy/paste and round-tripping all keep working. TextKit 2 then lays the
+    /// attachment out on its own full-width line below the code line.
     static func decorate(_ text: String, _ messages: [Int: ResultGroup]) -> String {
         var lines: [String] = []
         var line = 1
         for piece in text.components(separatedBy: "\n") {
-            var decorated = piece
+            lines.append(piece)
             if messages[line] != nil {
-                decorated.append("\u{FFFC}")
+                lines.append("\u{FFFC}")
             }
-            lines.append(decorated)
             line += 1
         }
         return lines.joined(separator: "\n")
