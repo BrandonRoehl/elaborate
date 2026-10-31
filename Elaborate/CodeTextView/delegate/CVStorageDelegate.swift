@@ -51,7 +51,9 @@ extension CVCoordinator: NSTextContentStorageDelegate {
         var searchStart = string.startIndex
         while let found = string[searchStart...].range(of: "\u{FFFC}") {
             let offset = string.utf16.distance(from: string.startIndex, to: found.lowerBound)
-            if let attachment = self.attachment(for: offset, in: textContentStorage) {
+            // `offset` is relative to the paragraph; convert it to a buffer
+            // offset so the source line can be looked up correctly.
+            if let attachment = self.attachment(for: range.location + offset, in: textContentStorage) {
                 attrString.addAttribute(.attachment, value: attachment, range: NSRange(location: offset, length: 1))
             }
             searchStart = found.upperBound
@@ -65,12 +67,13 @@ extension CVCoordinator: NSTextContentStorageDelegate {
     /// Builds the message attachment for the line that owns the attachment
     /// character at `offset`.
     func attachment(for offset: Int, in textContentStorage: NSTextContentStorage) -> MessageAttachment? {
-        // The attachment sits at the linebreak of its source line.
+        // `offset` is a buffer offset; the attachment sits at the linebreak of
+        // its source line.
         let line = self.lineNumber(at: offset)
         guard let message = self.messages[line] else {
             return nil
         }
-        let width = max(self.textContentStorage.textLayoutManager?.textContainer?.size.width ?? 0, 1)
+        let width = max(self.textContainer.size.width, 1)
         let height = MessageAttachment.measuredHeight(line: line, results: message.results, width: width)
         return MessageAttachment(line: line, results: message.results, size: CGSize(width: width, height: height))
     }

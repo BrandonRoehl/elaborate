@@ -5,11 +5,14 @@
 //  Created by Brandon Roehl on 6/6/25.
 //
 
+#if os(macOS)
+
 import SwiftUI
 import AppKit
 
-/// A text view whose copy/cut replaces message attachments (U+FFFC) with a
-/// linebreak on the pasteboard.
+/// A text view whose copy/cut emits the plain source text on the pasteboard.
+/// Message attachments (U+FFFC) are dropped; the real newlines that follow
+/// them are kept, so the copy still has its linebreaks.
 final class ElaborateTextView: NSTextView {
     override func copy(_ sender: Any?) {
         let range = self.selectedRange
@@ -17,7 +20,7 @@ final class ElaborateTextView: NSTextView {
             return super.copy(sender)
         }
         let selection = (self.string as NSString).substring(with: range)
-        let clean = selection.replacingOccurrences(of: "\u{FFFC}", with: "\n")
+        let clean = selection.replacingOccurrences(of: "\u{FFFC}", with: "")
         NSPasteboard.general.clearContents()
         NSPasteboard.general.setString(clean, forType: .string)
     }
@@ -61,3 +64,5 @@ extension CodeTextView: NSViewRepresentable {
         return proposal.replacingUnspecifiedDimensions(by: usedRect.size)
     }
 }
+
+#endif

@@ -85,19 +85,25 @@ public class CVCoordinator: NSObject, NSTextStorageDelegate, NSTextContentStorag
     
     // MARK: - Decoration
     
-    /// Inserts an attachment character (U+FFFC) at the linebreak of every
-    /// line that has a message.
+    /// Builds the decorated buffer. Every line that has a message gets an
+    /// attachment character (U+FFFC) appended at its linebreak.
+    ///
+    /// The real newline is preserved (the attachment is *added at* the
+    /// linebreak, not in place of it) so that line numbering, copy/paste and
+    /// round-tripping all keep working. TextKit 2 lays the attachment out on
+    /// its own full-width line below the code line.
     static func decorate(_ text: String, _ messages: [Int: ResultGroup]) -> String {
-        var output = ""
+        var lines: [String] = []
         var line = 1
         for piece in text.components(separatedBy: "\n") {
-            output += piece
+            var decorated = piece
             if messages[line] != nil {
-                output.unicodeScalars.append(0xFFFC)
+                decorated.append("\u{FFFC}")
             }
+            lines.append(decorated)
             line += 1
         }
-        return output
+        return lines.joined(separator: "\n")
     }
     
     /// Removes the attachment characters to recover the plain source text.
@@ -128,35 +134,44 @@ public class CVCoordinator: NSObject, NSTextStorageDelegate, NSTextContentStorag
     
     /// Enumerates the visual lines of the layout and publishes one gutter row
     /// per line: numbered for code lines, unnumbered for message views.
+    ///
+    /// Each layout fragment corresponds to exactly one source line in the
+    /// decorated buffer (the attachment rides on its own line at the end of
+    /// the fragment). `NSTextLineFragment.characterRange` is relative to the
+    /// fragment's paragraph, so the line number is tracked per fragment
+    /// rather than looked up in the whole buffer.
     func syncHeights() {
         guard let gutter = self.lineHeight else {
             return
         }
         
-        let buffer = self.textStorage.string
         var rows: [GutterRow] = []
-        var lastNumbered: Int? = nil
+        var sourceLine = 1
         
         self.textLayoutManager.enumerateTextLayoutFragments(from: self.textLayoutManager.documentRange.location) { fragment in
+            let paragraph = (
+                self.textContentStorage
+                    .attributedString(for: fragment.textElement ?? NSTextParagraph(attributedString: NSAttributedString(string: "")))?
+                .string ?? ""
+            ) as NSString
+            var numbered = false
+            
             for line in fragment.textLineFragments {
                 let height = (line.typographicBounds.height * 10).rounded() / 10
-                let substring = (buffer as NSString).substring(with: line.characterRange)
+                let substring = paragraph.substring(with: line.characterRange)
                 
                 if substring.contains("\u{FFFC}") {
                     // A message row; no line number.
                     rows.append(GutterRow(height: height))
+                } else if numbered {
+                    // A continuation of a wrapped code line; not renumbered.
+                    rows.append(GutterRow(height: height))
                 } else {
-                    // A code row. Continuations of a wrapped line are not
-                    // renumbered.
-                    let line = self.lineNumber(at: line.characterRange.location)
-                    if line == lastNumbered {
-                        rows.append(GutterRow(height: height))
-                    } else {
-                        rows.append(GutterRow(height: height, line: line))
-                        lastNumbered = line
-                    }
+                    rows.append(GutterRow(height: height, line: sourceLine))
+                    numbered = true
                 }
             }
+            sourceLine += 1
             return true
         }
         
