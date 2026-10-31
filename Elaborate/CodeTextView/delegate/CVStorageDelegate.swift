@@ -67,9 +67,14 @@ extension CVCoordinator {
     /// Builds the message attachment for the line that owns the attachment
     /// character at `offset`.
     func attachment(for offset: Int, in textContentStorage: NSTextContentStorage) -> MessageAttachment? {
-        // `offset` is a buffer offset; the attachment sits at the linebreak of
-        // its source line.
-        let line = self.lineNumber(at: offset)
+        // The attachment sits on its own line directly below its source line,
+        // so the source line is the count of non-attachment lines above it.
+        let prefix = (self.textStorage.string as NSString).substring(to: offset)
+        let line = prefix
+            .components(separatedBy: "\n")
+            .dropLast()
+            .filter { $0.trimmingCharacters(in: .whitespaces) != "\u{FFFC}" }
+            .count
         guard let message = self.messages[line] else {
             return nil
         }

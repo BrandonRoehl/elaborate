@@ -153,6 +153,7 @@ public class CVCoordinator: NSObject, NSTextStorageDelegate, NSTextContentStorag
                 .string ?? ""
             ) as NSString
             var numbered = false
+            var isAttachment = false
             
             for line in fragment.textLineFragments {
                 let height = (line.typographicBounds.height * 10).rounded() / 10
@@ -160,6 +161,7 @@ public class CVCoordinator: NSObject, NSTextStorageDelegate, NSTextContentStorag
                 
                 if substring.contains("\u{FFFC}") {
                     // A message row; no line number.
+                    isAttachment = true
                     rows.append(GutterRow(height: height))
                 } else if numbered {
                     // A continuation of a wrapped code line; not renumbered.
@@ -169,7 +171,11 @@ public class CVCoordinator: NSObject, NSTextStorageDelegate, NSTextContentStorag
                     numbered = true
                 }
             }
-            sourceLine += 1
+            // Attachment rows are not source lines, so they don't advance the
+            // line number.
+            if !isAttachment {
+                sourceLine += 1
+            }
             return true
         }
         

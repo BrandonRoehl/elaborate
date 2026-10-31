@@ -20,7 +20,12 @@ final class ElaborateTextView: NSTextView {
             return super.copy(sender)
         }
         let selection = (self.string as NSString).substring(with: range)
-        let clean = selection.replacingOccurrences(of: "\u{FFFC}", with: "")
+        // Message attachments live on their own line; drop those lines so a
+        // copied message line is just the code plus its single linebreak.
+        let clean = selection
+            .components(separatedBy: "\n")
+            .filter { $0.trimmingCharacters(in: .whitespaces) != "\u{FFFC}" }
+            .joined(separator: "\n")
         NSPasteboard.general.clearContents()
         NSPasteboard.general.setString(clean, forType: .string)
     }
