@@ -15,7 +15,7 @@ public struct ResultGroup: View, Equatable {
         self.results = results
     }
 
-    var body: some View {
+    public var body: some View {
         VStack(spacing: 4) {
             ForEach(results) { result in
                 ResultView(result: result)

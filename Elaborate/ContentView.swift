@@ -85,24 +85,21 @@ struct ContentView: View {
     }
     
     nonisolated func run(_ document: borrowing ElaborateDocument) async {
-        await Task.detached(priority: .high) { @MainActor in
-            running = true
-        }.value
-        await withTaskGroup(of: Void.self) { taskGroup in
-            let responses = elbExecute(document.text)
-            // Run the thing
-            let messages = Dictionary(grouping: responses) { result in
+        // Show the spinner on the main actor.
+        await MainActor.run {
+            self.running = true
+        }
+        // Heavy work off the main actor.
+        let responses = elbExecute(document.text)
+        // Build the ResultGroup views and update state on the main actor
+        // (View is @MainActor, so ResultGroup's members are isolated there).
+        await MainActor.run {
+            let messages: [Int: ResultGroup] = Dictionary(grouping: responses) { result in
                 Int(clamping: result.line)
             }.mapValues(ResultGroup.init(results:))
-            // Call back to main to update the stuff
-            taskGroup.addTask(priority: .high) { @MainActor in
-                self.messages = messages
-            }
-            taskGroup.addTask(priority: .high) { @MainActor in
-                self.running = false
-                Self.logger.debug("Done updating the main actor")
-            }
-            await taskGroup.waitForAll()
+            self.messages = messages
+            self.running = false
+            Self.logger.debug("Done updating the main actor")
         }
     }
 }

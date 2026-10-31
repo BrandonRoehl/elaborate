@@ -36,11 +36,10 @@ public class CVCoordinator: NSObject, NSTextStorageDelegate, NSTextContentStorag
     // MARK: - Init
     
     @MainActor init(_ codeView: borrowing CodeTextView) {
-        super.init()
-        
         self.text = codeView.text
         self.messages = codeView.messages
         self.lineHeight = codeView.lineHeight
+        super.init()
         
         // Zero padding so embedded message views span the full container
         // width, edge to edge.
