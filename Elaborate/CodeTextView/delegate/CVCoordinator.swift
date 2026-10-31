@@ -1,109 +1,173 @@
 //
-//  CodeViewCoordinator.swift
-//  CodeView
+//  CVCoordinator.swift
+//  Elaborate
 //
-//  Created by Brandon Roehl on 1/5/25.
+//  Created by Brandon Roehl on 6/6/25.
 //
 
-import Foundation
 import SwiftUI
-import os
+import Elb
 
-/** Push `NSTextContentStorage` changes through `NSTextContentManager`
-`NSTextContentManager.performEditingTransaction(_ transaction: () -> Void)`
-*/
+#if os(macOS)
+    import AppKit
+#else
+    import UIKit
+#endif
 
-public class CVCoordinator: NSObject {
-    static let logger = Logger(subsystem: "elb", category: "coordinator")
-
-    let textStorage: NSTextStorage
-    let textContainer: NSTextContainer
-    let textLayoutManager: NSTextLayoutManager
-    let textContentStorage: NSTextContentStorage
+public class CVCoordinator: NSObject, NSTextStorageDelegate, NSTextContentStorageDelegate {
+    
+    #if os(macOS)
+        nonisolated(unsafe) let OSMonoFont = NSFont(name: "JetBrains Mono", size: 9) ?? NSFont.monospacedSystemFont(ofSize: 9, weight: .regular)
+    #elseif os(iOS) || targetEnvironment(macCatalyst)
+        nonisolated(unsafe) let OSMonoFont = UIFont(name: "JetBrains Mono", size: 9) ?? UIFont.monospacedSystemFont(ofSize: 9, weight: .regular)
+    #endif
     
     var text: Binding<String>
-    var lineHeight: Binding<[CGFloat]>?
+    var messages: [Int: ResultGroup]
+    var lineHeight: Binding<[GutterRow]>?
     
-    var exclusionPaths: [CGRect] = [] {
-        didSet {
-#if os(macOS)
-            self.textContainer.exclusionPaths = self.exclusionPaths.map(NSBezierPath.init(rect:))
-#else
-            self.textContainer.exclusionPaths = self.exclusionPaths.map(UIBezierPath.init(rect:))
-#endif
+    // MARK: - Text Stack
+
+    nonisolated(unsafe) let textStorage = NSTextStorage()
+    nonisolated(unsafe) let textContentStorage = NSTextContentStorage()
+    nonisolated(unsafe) let textLayoutManager = NSTextLayoutManager()
+    nonisolated(unsafe) let textContainer = NSTextContainer(size: CGSize(width: 0, height: CGFloat.greatestFiniteMagnitude))
+    
+    // MARK: - Init
+    
+    @MainActor init(_ codeView: borrowing CodeTextView) {
+        super.init()
+        
+        self.text = codeView.text
+        self.messages = codeView.messages
+        self.lineHeight = codeView.lineHeight
+        
+        // Zero padding so embedded message views span the full container
+        // width, edge to edge.
+        self.textContainer.lineFragmentPadding = 0
+        
+        // Wire up the TextKit 2 text stack
+        self.textStorage.delegate = self
+        self.textContentStorage.delegate = self
+        self.textContentStorage.textStorage = self.textStorage
+        self.textContentStorage.addTextLayoutManager(self.textLayoutManager)
+        self.textLayoutManager.textContainer = self.textContainer
+        
+        // Register the view provider that hosts the message views
+        NSTextAttachment.registerViewProviderClass(
+            MessageViewProvider.self,
+            forFileType: MessageAttachment.fileType
+        )
+        
+        self.update(codeView)
+    }
+    
+    // MARK: - Updates
+    
+    @MainActor func update(_ codeView: borrowing CodeTextView) {
+        let oldMessages = self.messages
+        self.text = codeView.text
+        self.messages = codeView.messages
+        self.lineHeight = codeView.lineHeight
+        
+        // Build the decorated buffer: every line that has a message gets an
+        // attachment character (U+FFFC) at its linebreak.
+        let buffer = Self.decorate(self.text.wrappedValue, self.messages)
+        
+        if buffer != self.textStorage.string {
+            self.textStorage.setAttributedString(NSAttributedString(string: buffer))
+        } else if oldMessages != self.messages {
+            // Same buffer, but the message contents changed; re-fetch the
+            // paragraphs so the attachments pick up the new results.
             self.textLayoutManager.invalidateLayout(for: self.textLayoutManager.documentRange)
         }
     }
     
-    @MainActor init(_ codeView: borrowing CodeTextView) {
-        // Set to defaults to void dump until we get an initialized binding
-        self.text = codeView.text
-        
-        // Initilize the container first
-        self.textStorage = NSTextStorage()
-        self.textContainer = NSTextContainer()
-        self.textLayoutManager = NSTextLayoutManager()
-        self.textContentStorage = NSTextContentStorage()
-
-        super.init()
-
-        // MARK: NSTextStorageDelegate
-        self.textStorage.delegate = self
-
-        self.textContentStorage.delegate = self
-        self.textContentStorage.textStorage = self.textStorage
-        self.textContentStorage.addTextLayoutManager(self.textLayoutManager)
-
-        // Update the text container
-        self.textLayoutManager.textContainer = self.textContainer
-
-        // At the end refresh the contents
-        self.update(codeView)
-    }
-
-    @MainActor func update(_ codeView: borrowing CodeTextView) {
-        self.text = codeView.text
-        self.lineHeight = codeView.lineHeight
-        // Thse have to be sorted before they are set
-        self.exclusionPaths = codeView.exclusionPaths.sorted { $0.minY < $1.minY }
-
-        // TODO: this check is very slow and also dumb but I don't have time
-        if self.text.wrappedValue != self.textStorage.string {
-            let attrString = NSAttributedString(string: self.text.wrappedValue)
-            self.textStorage.setAttributedString(attrString)
+    // MARK: - Decoration
+    
+    /// Inserts an attachment character (U+FFFC) at the linebreak of every
+    /// line that has a message.
+    static func decorate(_ text: String, _ messages: [Int: ResultGroup]) -> String {
+        var output = ""
+        var line = 1
+        for piece in text.components(separatedBy: "\n") {
+            output += piece
+            if messages[line] != nil {
+                output.unicodeScalars.append(0xFFFC)
+            }
+            line += 1
         }
+        return output
     }
     
-    func syncHeights() {
-        guard let lineHeights = self.lineHeight else {
-            return
-        }
-        var heights: [CGFloat] = []
-
-        self.textLayoutManager.enumerateTextLayoutFragments(
-            from: self.textLayoutManager.documentRange.location
-        ) { fragement in
-            var height: CGFloat = 0
-            for line in fragement.textLineFragments {
-                height += line.typographicBounds.height
+    /// Removes the attachment characters to recover the plain source text.
+    static func undecorate(_ buffer: String) -> String {
+        buffer.replacingOccurrences(of: "\u{FFFC}", with: "")
+    }
+    
+    /// The UTF-16 offsets of every newline in the buffer.
+    public var newlineOffsets: [Int] {
+        var offsets: [Int] = []
+        var offset = 0
+        for unit in self.textStorage.string.utf16 {
+            if unit == 0x0A {
+                offsets.append(offset)
             }
-            let rounded = (height * 10).rounded(.awayFromZero) / 10
-            heights.append(rounded)
-            return rounded > 0
+            offset += 1
         }
-        guard heights.last != 0 else {
+        return offsets
+    }
+    
+    /// The 1-based source line number of the character at the given buffer
+    /// offset.
+    public func lineNumber(at offset: Int) -> Int {
+        self.newlineOffsets.filter { $0 < offset }.count + 1
+    }
+    
+    // MARK: - Heights
+    
+    /// Enumerates the visual lines of the layout and publishes one gutter row
+    /// per line: numbered for code lines, unnumbered for message views.
+    func syncHeights() {
+        guard let gutter = self.lineHeight else {
             return
         }
-        // assert(heights.allSatisfy { $0 >= 0 }, "Check your math, lines cannot have negative height")
-        if lineHeights.wrappedValue != heights {
-            print("heights:", heights.count, heights)
-            lineHeights.wrappedValue = heights
+        
+        let buffer = self.textStorage.string
+        var rows: [GutterRow] = []
+        var lastNumbered: Int? = nil
+        
+        self.textLayoutManager.enumerateTextLayoutFragments(from: self.textLayoutManager.documentRange.location) { fragment in
+            for line in fragment.textLineFragments {
+                let height = (line.typographicBounds.height * 10).rounded() / 10
+                let substring = (buffer as NSString).substring(with: line.characterRange)
+                
+                if substring.contains("\u{FFFC}") {
+                    // A message row; no line number.
+                    rows.append(GutterRow(height: height))
+                } else {
+                    // A code row. Continuations of a wrapped line are not
+                    // renumbered.
+                    let line = self.lineNumber(at: line.characterRange.location)
+                    if line == lastNumbered {
+                        rows.append(GutterRow(height: height))
+                    } else {
+                        rows.append(GutterRow(height: height, line: line))
+                        lastNumbered = line
+                    }
+                }
+            }
+            return true
+        }
+        
+        if gutter.wrappedValue != rows {
+            gutter.wrappedValue = rows
         }
     }
 }
 
 extension CodeTextView {
-    @MainActor public func makeCoordinator() -> CVCoordinator {
+    public func makeCoordinator() -> CVCoordinator {
         return CVCoordinator(self)
     }
 }

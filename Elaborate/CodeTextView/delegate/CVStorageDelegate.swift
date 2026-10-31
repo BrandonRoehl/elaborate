@@ -6,6 +6,13 @@
 //
 
 import SwiftUI
+import Elb
+
+#if os(macOS)
+    import AppKit
+#else
+    import UIKit
+#endif
 
 extension CVCoordinator: NSTextContentStorageDelegate {
     // MARK: - NSTextContentStorageDelegate
@@ -36,6 +43,35 @@ extension CVCoordinator: NSTextContentStorageDelegate {
         ]
 #endif
         attrString.setAttributes(attr, range: NSRange(location: 0, length: attrString.length))
+        
+        // Embed a message view at every attachment character (U+FFFC) in the
+        // paragraph. The view is full container width and as tall as its
+        // content.
+        let string = attrString.string
+        var searchStart = string.startIndex
+        while let found = string[searchStart...].range(of: "\u{FFFC}") {
+            let offset = string.utf16.distance(from: string.startIndex, to: found.lowerBound)
+            if let attachment = self.attachment(for: offset, in: textContentStorage) {
+                attrString.addAttribute(.attachment, value: attachment, range: NSRange(location: offset, length: 1))
+            }
+            searchStart = found.upperBound
+        }
+        
         return NSTextParagraph(attributedString: attrString)
+    }
+    
+    // MARK: - Attachments
+    
+    /// Builds the message attachment for the line that owns the attachment
+    /// character at `offset`.
+    func attachment(for offset: Int, in textContentStorage: NSTextContentStorage) -> MessageAttachment? {
+        // The attachment sits at the linebreak of its source line.
+        let line = self.lineNumber(at: offset)
+        guard let message = self.messages[line] else {
+            return nil
+        }
+        let width = max(self.textContentStorage.textLayoutManager?.textContainer?.size.width ?? 0, 1)
+        let height = MessageAttachment.measuredHeight(line: line, results: message.results, width: width)
+        return MessageAttachment(line: line, results: message.results, size: CGSize(width: width, height: height))
     }
 }

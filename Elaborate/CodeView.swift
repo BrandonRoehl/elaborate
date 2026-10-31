@@ -1,145 +1,83 @@
 //
 //  CodeView.swift
-//  elaborate
+//  Elaborate
 //
-//  Created by Brandon Roehl on 5/8/25.
+//  Created by Brandon Roehl on 11/24/24.
 //
 
-import Elb
 import SwiftUI
-
-extension GeometryProxy {
-    fileprivate func exlusion(in space: some CoordinateSpaceProtocol) -> CGRect {
-        var frame = self.frame(in: space)
-        // Setting both of these makes sure we only call recalculates on a
-        // change of line height
-        frame.origin.x = 0
-        frame.size.width = .infinity
-        return frame
-    }
-}
+import os
+import Elb
 
 struct CodeView: View {
+    static let logger = Logger(subsystem: "elb", category: "codeview")
+    
     @Binding var text: String
+    
     @Binding var messages: [Int: ResultGroup]
     
-    // Internal state to recalculate the offsets
-    @State var lineHeights: [CGFloat] = []
-    @State var exclusionSizes: [Int: CGRect] = [:]
+    @State var lineHeights: [GutterRow] = []
     
-    let space: NamedCoordinateSpace = .named("codeview")
-    
-    var exclusionPaths: [CGRect] {
-        return messages.keys.compactMap { line in exclusionSizes[line] }
-    }
-    
-    func calculateNumberLabel() -> CGFloat {
+    var calculateNumberLabel: () -> CGFloat {
         let chars: CGSize = "\(lineHeights.count * 10)".size(withAttributes: [.font: OSMonoFont])
         return chars.width
     }
     
     var responses: some View {
         let numberWidth = self.calculateNumberLabel()
-        
         return VStack(spacing: 0) {
-            ForEach(lineHeights.indices, id: \.self) { line in
-                let height = self.getLineHeight(at: line)
+            ForEach(lineHeights.indices, id: \.self) { index in
+                let row = self.lineHeights[index]
                 HStack {
-                    Text("\(line + 1)")
-                        .frame(width: numberWidth, height: height, alignment: .topTrailing)
-                        .font(Font(OSMonoFont))
-#if OUTLINES
-                        .border(Color.green, width: 1)
-#endif
+                    if let line = row.line {
+                        Text("\(line)")
+                            .frame(width: numberWidth, height: row.height, alignment: .topTrailing)
+                            .font(Font(OSMonoFont))
+                    } else {
+                        Color.clear
+                            .frame(width: numberWidth, height: row.height)
+                    }
                     Spacer()
                 }
-                .frame(height: height)
-#if OUTLINES
-                .border(Color.blue, width: 1)
-#endif
-                if let message = messages[line + 1] {
-                    message.overlay(alignment: .center) {
-                        GeometryReader { proxy in
-                            Color.clear.onChange(of: proxy.exlusion(in: space), initial: true) {
-                                (_, new) in
-                                self.exclusionSizes[line + 1] = new
-                            }
-#if OUTLINES
-                            .border(Color.red, width: 1)
-#endif
-                        }
-                    }
-                }
+                .frame(height: row.height)
             }
         }
     }
     
     var body: some View {
-        // Add the padding we want
-        let gutterWidth = self.calculateNumberLabel() + 4
-        
-        ScrollView([.vertical]) {
+        ScrollView {
             ZStack(alignment: .topLeading) {
+                self.responses
+                    .background(.regularMaterial, in: Rectangle().path(in: .local))
                 CodeTextView(
                     text: $text,
+                    messages: self.messages,
                     lineHeight: $lineHeights,
-                    exclusionPaths: exclusionPaths,
-                ).padding(.leading, gutterWidth)
-                self.responses
-            }.coordinateSpace(space)
-        }
-        .background(
-            ZStack {
-#if os(macOS)
-                Color(NSColor.textBackgroundColor)
-#else
-                Color.init(UIColor.systemBackground)
-#endif
-                HStack {
-                    Color.clear.frame(width: gutterWidth).background(.regularMaterial)
-                    Color.clear
-                }
+                )
+                    .padding(.leading, self.calculateNumberLabel() + 20)
             }
-        )
-        .defaultScrollAnchor(.top)
-        .scrollDismissesKeyboard(.interactively)
-    }
-    
-    private func getLineHeight(at index: Int) -> CGFloat {
-        if self.lineHeights.count > index && self.lineHeights[index] > 0 {
-            return self.lineHeights[index]
+            .background(Color(nsColor: .textBackgroundColor))
         }
-        return 0
     }
 }
 
 #Preview {
-    CodeView(
-        text: .constant("count \"Hello World\"\nprint (2 * 100)\n"),
-        messages: .constant([
-            1: ResultGroup(results: [
-                Response(
-                    line: 1,
-                    status: .value,
-                    output: "1234 alskdjasd aslkjdasd asldkjasdlkj asldkjasd lajsd\n",
-                ),
-                Response(
-                    line: 1,
-                    status: .info,
-                    output: "Info that gets printed",
-                ),
-                Response(
-                    line: 1,
-                    status: .error,
-                    output: "This is an error output"
-                )
-            ]),
-            2: ResultGroup(results: [
-                Response(
-                    line: 1,
-                    status: .eof,
-                )
-            ])
-        ])
+    @State var messages: [Int: ResultGroup] = [
+        1: ResultGroup(results: [
+            Response(line: 1, status: .value, output: "100"),
+        ]),
+        3: ResultGroup(results: [
+            Response(line: 3, status: .info, output: "hello"),
+            Response(line: 3, status: .value, output: "world"),
+        ]),
+    ]
+    @State var text = """
+    a = 100
+    print a
+    1 + 3
+    count "the time of this"
+    """
+    return AnyView(
+        CodeView(text: $text, messages: $messages)
     )
 }

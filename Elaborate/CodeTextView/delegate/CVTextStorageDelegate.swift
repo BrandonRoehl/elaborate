@@ -23,11 +23,12 @@ extension CVCoordinator: NSTextStorageDelegate {
     ) {
         guard editedMask.contains(.editedCharacters) else { return }
         
-        // Add in the new paragraph markers
-		let newText = textStorage.string
-		if self.text.wrappedValue != newText {
-			self.text.wrappedValue = newText
-		}
-		self.syncHeights()
+        // Sync the plain source text (attachment characters stripped) back to
+        // the binding.
+        let newText = Self.undecorate(textStorage.string)
+        if self.text.wrappedValue != newText {
+            self.text.wrappedValue = newText
+        }
+        self.syncHeights()
     }
 }

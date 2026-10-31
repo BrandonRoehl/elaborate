@@ -1,33 +1,48 @@
 //
 //  NSCodeView.swift
-//  CodeView
+//  Elaborate
 //
-//  Created by Brandon Roehl on 1/3/25.
+//  Created by Brandon Roehl on 6/6/25.
 //
 
-#if os(macOS)
 import SwiftUI
 import AppKit
 
-extension CodeTextView: NSViewRepresentable {
-    public typealias Coordinator = CVCoordinator
+/// A text view whose copy/cut replaces message attachments (U+FFFC) with a
+/// linebreak on the pasteboard.
+final class ElaborateTextView: NSTextView {
+    override func copy(_ sender: Any?) {
+        let range = self.selectedRange
+        guard range.length > 0 else {
+            return super.copy(sender)
+        }
+        let selection = (self.string as NSString).substring(with: range)
+        let clean = selection.replacingOccurrences(of: "\u{FFFC}", with: "\n")
+        NSPasteboard.general.clearContents()
+        NSPasteboard.general.setString(clean, forType: .string)
+    }
     
-    @MainActor public func makeNSView(context: Context) -> NSTextView {
-        let textView = NSTextView(
-            frame: CGRect(),
-            textContainer: context.coordinator.textContainer
-        )
-        textView.minSize = NSSize(width: 0, height: 0)
-        textView.maxSize = NSSize(width: CGFloat.infinity, height: CGFloat.infinity)
-        textView.isVerticallyResizable = false
+    override func cut(_ sender: Any?) {
+        self.copy(sender)
+        self.deleteSelection(from: self)
+    }
+}
+
+extension CodeTextView: NSViewRepresentable {
+    
+    public func makeNSView(context: Context) -> NSTextView {
+        let textView = ElaborateTextView(frame: CGRect(), textContainer: context.coordinator.textContainer)
+        textView.allowsUndo = true
         textView.isHorizontallyResizable = false
-        textView.autoresizingMask = []
+        textView.isRichText = false
+        textView.isVerticallyResizable = false
+        textView.autoresizingMask = [.height]
+        textView.font = context.coordinator.OSMonoFont
         textView.backgroundColor = .clear
-        textView.textContainerInset = .zero
         return textView
     }
     
-    @MainActor public func updateNSView(_ textView: NSTextView, context: Context) {
+    public func updateNSView(_ textView: NSTextView, context: Context) {
         context.coordinator.update(self)
     }
     
@@ -37,14 +52,12 @@ extension CodeTextView: NSViewRepresentable {
         }
         let container = context.coordinator.textContainer
         let containerSize = CGSize(width: width, height: CGFloat.greatestFiniteMagnitude)
-        if containerSize != container.containerSize {
-            container.containerSize = containerSize
-			context.coordinator.syncHeights()
+        if containerSize != container.size {
+            container.size = containerSize
+            context.coordinator.syncHeights()
         }
         let layout = context.coordinator.textLayoutManager
         let usedRect = layout.usageBoundsForTextContainer
-        let newSize = proposal.replacingUnspecifiedDimensions(by: usedRect.size)
-        return newSize
+        return proposal.replacingUnspecifiedDimensions(by: usedRect.size)
     }
 }
-#endif
