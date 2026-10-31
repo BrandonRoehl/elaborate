@@ -18,7 +18,7 @@ struct CodeView: View {
     
     @State var lineHeights: [GutterRow] = []
     
-    var calculateNumberLabel: () -> CGFloat {
+    func calculateNumberLabel() -> CGFloat {
         let chars: CGSize = "\(lineHeights.count * 10)".size(withAttributes: [.font: OSMonoFont])
         return chars.width
     }
@@ -48,7 +48,7 @@ struct CodeView: View {
         ScrollView {
             ZStack(alignment: .topLeading) {
                 self.responses
-                    .background(.regularMaterial, in: Rectangle().path(in: .local))
+                    .background(.regularMaterial, in: Rectangle())
                 CodeTextView(
                     text: $text,
                     messages: self.messages,

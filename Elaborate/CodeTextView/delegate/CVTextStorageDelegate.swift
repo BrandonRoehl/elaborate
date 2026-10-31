@@ -13,7 +13,7 @@
     public typealias OSTextStorageEditActions = NSTextStorage.EditActions
 #endif
 
-extension CVCoordinator: NSTextStorageDelegate {
+extension CVCoordinator {
     /// Set the line endings
     public func textStorage(
         _ textStorage: NSTextStorage,

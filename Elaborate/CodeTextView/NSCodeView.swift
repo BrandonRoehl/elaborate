@@ -26,8 +26,12 @@ final class ElaborateTextView: NSTextView {
     }
     
     override func cut(_ sender: Any?) {
+        let range = self.selectedRange
+        guard range.length > 0 else {
+            return super.cut(sender)
+        }
         self.copy(sender)
-        self.deleteSelection(from: self)
+        self.replaceCharacters(in: range, with: "")
     }
 }
 

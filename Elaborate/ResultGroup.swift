@@ -8,8 +8,12 @@
 import SwiftUI
 import Elb
 
-struct ResultGroup: View {
-    let results: [Response]
+public struct ResultGroup: View, Equatable {
+    public let results: [Response]
+    
+    public init(results: [Response]) {
+        self.results = results
+    }
 
     var body: some View {
         VStack(spacing: 4) {

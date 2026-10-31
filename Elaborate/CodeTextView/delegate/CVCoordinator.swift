@@ -182,7 +182,7 @@ public class CVCoordinator: NSObject, NSTextStorageDelegate, NSTextContentStorag
 }
 
 extension CodeTextView {
-    public func makeCoordinator() -> CVCoordinator {
+    @MainActor public func makeCoordinator() -> CVCoordinator {
         return CVCoordinator(self)
     }
 }

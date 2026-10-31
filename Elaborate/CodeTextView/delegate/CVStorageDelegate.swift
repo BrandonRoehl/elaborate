@@ -14,7 +14,7 @@ import Elb
     import UIKit
 #endif
 
-extension CVCoordinator: NSTextContentStorageDelegate {
+extension CVCoordinator {
     // MARK: - NSTextContentStorageDelegate
 
     public func textContentStorage(
