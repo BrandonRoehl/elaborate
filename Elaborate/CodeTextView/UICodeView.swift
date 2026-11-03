@@ -68,7 +68,7 @@ final class CodeUITextView: UITextView, CodeTextSurface {
 
     private func updateInsets(footerHeight: CGFloat) {
         self.footerHeight = footerHeight
-        let insets = UIEdgeInsets(top: 0, left: gutterWidth, bottom: footerHeight, right: 0)
+        let insets = UIEdgeInsets(top: 0, left: gutterWidth + GutterRenderer.textGap, bottom: footerHeight, right: 0)
         if textContainerInset != insets {
             textContainerInset = insets
         }
@@ -86,7 +86,7 @@ final class CodeUITextView: UITextView, CodeTextSurface {
                 updateInsets(footerHeight: height)
             }
             let used = layout.usageBoundsForTextContainer
-            footer.view.frame = CGRect(x: gutterWidth, y: textContainerInset.top + used.maxY, width: width, height: height)
+            footer.view.frame = CGRect(x: gutterWidth + GutterRenderer.textGap, y: textContainerInset.top + used.maxY, width: width, height: height)
         } else if footerHeight != 0 {
             updateInsets(footerHeight: 0)
         }

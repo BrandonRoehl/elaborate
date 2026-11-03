@@ -23,6 +23,9 @@ protocol CodeTextSurface: AnyObject {
 }
 
 enum GutterRenderer {
+    /// Space between the gutter and the text, one no-break space wide
+    static let textGap: CGFloat = ceil(("\u{00A0}" as NSString).size(withAttributes: [.font: OSMonoFont]).width)
+
     static func textAttributes() -> [NSAttributedString.Key: Any] {
         let style = NSMutableParagraphStyle()
         style.alignment = .right

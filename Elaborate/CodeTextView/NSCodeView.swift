@@ -58,7 +58,7 @@ final class CodeNSTextView: NSTextView, CodeTextSurface {
 
     // The container is shifted right to make room for the gutter
     override var textContainerOrigin: NSPoint {
-        NSPoint(x: gutterWidth, y: 0)
+        NSPoint(x: gutterWidth + GutterRenderer.textGap, y: 0)
     }
 
     func refreshGutter() {
@@ -67,7 +67,7 @@ final class CodeNSTextView: NSTextView, CodeTextSurface {
 
     private func updateContainerSize() {
         guard let container = textContainer else { return }
-        let width = max(bounds.width - gutterWidth, 0)
+        let width = max(bounds.width - gutterWidth - GutterRenderer.textGap, 0)
         if container.size.width != width {
             container.size = NSSize(width: width, height: .greatestFiniteMagnitude)
         }
@@ -120,7 +120,7 @@ final class CodeNSTextView: NSTextView, CodeTextSurface {
                 textContainerInset = inset
             }
             let used = layout.usageBoundsForTextContainer
-            footer.view.frame = CGRect(x: gutterWidth, y: used.maxY, width: width, height: height)
+            footer.view.frame = CGRect(x: gutterWidth + GutterRenderer.textGap, y: used.maxY, width: width, height: height)
         } else if textContainerInset != .zero {
             textContainerInset = .zero
         }
