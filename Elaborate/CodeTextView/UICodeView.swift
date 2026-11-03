@@ -27,7 +27,7 @@ final class CodeGutterView: UIView {
 
     override func draw(_ rect: CGRect) {
         GutterRenderer.backgroundColor.setFill()
-        UIRectFill(rect)
+        UIRectFillUsingBlendMode(rect.intersection(bounds), .normal)
         guard let coordinator else { return }
         let visible = CGRect(x: 0, y: frame.minY + rect.minY, width: bounds.width, height: rect.height)
         GutterRenderer.draw(coordinator.gutterLines(in: visible), originY: frame.minY, width: bounds.width)

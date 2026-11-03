@@ -18,8 +18,12 @@ final class CodeGutterView: NSView {
     override func hitTest(_ point: NSPoint) -> NSView? { nil }
 
     override func draw(_ dirtyRect: NSRect) {
+        // Stay inside the gutter and blend, NSRect.fill() defaults to .copy
+        // which replaces what is underneath instead of tinting it
+        let area = dirtyRect.intersection(bounds)
+        guard !area.isEmpty else { return }
         GutterRenderer.backgroundColor.setFill()
-        dirtyRect.fill()
+        area.fill(using: .sourceOver)
         guard let coordinator else { return }
         let visible = CGRect(x: 0, y: frame.minY + dirtyRect.minY, width: bounds.width, height: dirtyRect.height)
         GutterRenderer.draw(coordinator.gutterLines(in: visible), originY: frame.minY, width: bounds.width)
@@ -77,6 +81,8 @@ final class CodeNSTextView: NSTextView, CodeTextSurface {
     override func viewDidMoveToSuperview() {
         super.viewDidMoveToSuperview()
         if gutter.superview == nil {
+            gutter.wantsLayer = true
+            gutter.layer?.masksToBounds = true
             addSubview(gutter)
         }
         if let clip = enclosingScrollView?.contentView, clip !== observedClipView {
