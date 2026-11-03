@@ -152,7 +152,7 @@ func Run(p *parse.Parser, context value.Context) (results []C.Result) {
 		results = append(results, Result(
 			fmt.Sprint(err),
 			C.ERROR,
-			line,
+			int64(context.Pos().Line),
 		))
 	}()
 
@@ -175,7 +175,6 @@ func Run(p *parse.Parser, context value.Context) (results []C.Result) {
 				out.String(),
 				C.VALUE,
 				line,
-				// context.Pos().Line
 			))
 		}
 		// Collect info
@@ -192,7 +191,7 @@ func Run(p *parse.Parser, context value.Context) (results []C.Result) {
 			results = append(results, Result(
 				"",
 				C.EOF,
-				line,
+				int64(context.Pos().Line),
 			))
 			return
 		}
