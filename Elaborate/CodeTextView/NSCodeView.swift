@@ -9,48 +9,166 @@
 import SwiftUI
 import AppKit
 
+/// Line number gutter that lives inside the text view and scrolls with it
+final class CodeGutterView: NSView {
+    weak var coordinator: CVCoordinator?
+
+    override var isFlipped: Bool { true }
+
+    override func hitTest(_ point: NSPoint) -> NSView? { nil }
+
+    override func draw(_ dirtyRect: NSRect) {
+        GutterRenderer.backgroundColor.setFill()
+        dirtyRect.fill()
+        guard let coordinator else { return }
+        let visible = CGRect(x: 0, y: frame.minY + dirtyRect.minY, width: bounds.width, height: dirtyRect.height)
+        GutterRenderer.draw(coordinator.gutterLines(in: visible), originY: frame.minY, width: bounds.width)
+    }
+}
+
+final class CodeNSTextView: NSTextView, CodeTextSurface {
+    let gutter = CodeGutterView()
+    private var observedClipView: NSClipView?
+
+    var gutterWidth: CGFloat = 0 {
+        didSet {
+            guard oldValue != gutterWidth else { return }
+            updateContainerSize()
+            needsLayout = true
+            needsDisplay = true
+        }
+    }
+
+    var footer: ResultHost? {
+        didSet {
+            guard oldValue !== footer else { return }
+            oldValue?.view.removeFromSuperview()
+            if let footer {
+                addSubview(footer.view)
+            }
+            needsLayout = true
+        }
+    }
+
+    var containerOrigin: CGPoint { textContainerOrigin }
+
+    // The container is shifted right to make room for the gutter
+    override var textContainerOrigin: NSPoint {
+        NSPoint(x: gutterWidth, y: 0)
+    }
+
+    func refreshGutter() {
+        gutter.needsDisplay = true
+    }
+
+    private func updateContainerSize() {
+        guard let container = textContainer else { return }
+        let width = max(bounds.width - gutterWidth, 0)
+        if container.size.width != width {
+            container.size = NSSize(width: width, height: .greatestFiniteMagnitude)
+        }
+    }
+
+    override func setFrameSize(_ newSize: NSSize) {
+        super.setFrameSize(newSize)
+        updateContainerSize()
+    }
+
+    override func viewDidMoveToSuperview() {
+        super.viewDidMoveToSuperview()
+        if gutter.superview == nil {
+            addSubview(gutter)
+        }
+        if let clip = enclosingScrollView?.contentView, clip !== observedClipView {
+            if let observedClipView {
+                NotificationCenter.default.removeObserver(self, name: NSView.boundsDidChangeNotification, object: observedClipView)
+            }
+            observedClipView = clip
+            clip.postsBoundsChangedNotifications = true
+            NotificationCenter.default.addObserver(self, selector: #selector(scrolled), name: NSView.boundsDidChangeNotification, object: clip)
+        }
+    }
+
+    @objc private func scrolled(_ notification: Notification) {
+        layoutGutter()
+    }
+
+    private func layoutGutter() {
+        let visible = visibleRect
+        let frame = CGRect(x: 0, y: visible.minY, width: gutterWidth, height: visible.height)
+        if gutter.frame != frame {
+            gutter.frame = frame
+        }
+        gutter.needsDisplay = true
+    }
+
+    override func layout() {
+        super.layout()
+        // The footer takes the room under the text, the inset is applied to
+        // both ends of the view so it is split in half
+        if let footer, let layout = textLayoutManager {
+            let width = textContainer?.size.width ?? 0
+            let height = footer.size(fitting: width).height
+            let inset = NSSize(width: 0, height: height / 2)
+            if textContainerInset != inset {
+                textContainerInset = inset
+            }
+            let used = layout.usageBoundsForTextContainer
+            footer.view.frame = CGRect(x: gutterWidth, y: used.maxY, width: width, height: height)
+        } else if textContainerInset != .zero {
+            textContainerInset = .zero
+        }
+        layoutGutter()
+    }
+}
+
 extension CodeTextView: NSViewRepresentable {
     public typealias Coordinator = CVCoordinator
-    
-    @MainActor public func makeNSView(context: Context) -> NSTextView {
-        let textView = NSTextView(
-            frame: CGRect(),
-            textContainer: context.coordinator.textContainer
-        )
+
+    @MainActor public func makeNSView(context: Context) -> NSScrollView {
+        let textView = CodeNSTextView(usingTextLayoutManager: true)
+        textView.gutter.coordinator = context.coordinator
         textView.minSize = NSSize(width: 0, height: 0)
         textView.maxSize = NSSize(width: CGFloat.infinity, height: CGFloat.infinity)
-        textView.isVerticallyResizable = false
+        textView.isVerticallyResizable = true
         textView.isHorizontallyResizable = false
-        textView.autoresizingMask = []
+        textView.autoresizingMask = [.width]
+        textView.textContainer?.widthTracksTextView = false
+        textView.textContainer?.lineFragmentPadding = 0
         textView.backgroundColor = .clear
+        textView.drawsBackground = false
         textView.textContainerInset = .zero
-        return textView
+        textView.isRichText = false
+        textView.allowsUndo = true
+        textView.font = OSMonoFont
+        // This is code, don't be clever with the input
+        textView.isAutomaticQuoteSubstitutionEnabled = false
+        textView.isAutomaticDashSubstitutionEnabled = false
+        textView.isAutomaticTextReplacementEnabled = false
+        textView.isAutomaticSpellingCorrectionEnabled = false
+        textView.delegate = context.coordinator
+
+        let scrollView = NSScrollView()
+        scrollView.hasVerticalScroller = true
+        scrollView.hasHorizontalScroller = false
+        scrollView.drawsBackground = false
+        scrollView.borderType = .noBorder
+        scrollView.documentView = textView
+
+        context.coordinator.attach(textView)
+        context.coordinator.update(self)
+        context.coordinator.linesDidChange()
+        return scrollView
     }
-    
-    @MainActor public func updateNSView(_ textView: NSTextView, context: Context) {
+
+    @MainActor public func updateNSView(_ scrollView: NSScrollView, context: Context) {
         context.coordinator.update(self)
     }
-    
-    @MainActor public func sizeThatFits(_ proposal: ProposedViewSize, nsView textView: NSTextView, context: Context) -> CGSize? {
-        guard
-            let container = textView.textContainer,
-            let layout = textView.layoutManager,
-            let width = proposal.width,
-            width > 0
-        else {
-            return nil
-        }
-        let containerSize = CGSize(width: width, height: CGFloat.greatestFiniteMagnitude)
-        if containerSize != container.containerSize {
-            container.containerSize = containerSize
-            Task.detached { @MainActor in
-                context.coordinator.syncHeights()
-            }
-        }
-        layout.ensureLayout(for: container)
-        let usedRect = layout.usedRect(for: container)
-        let newSize = proposal.replacingUnspecifiedDimensions(by: usedRect.size)
-        return newSize
+}
+
+extension CVCoordinator: NSTextViewDelegate {
+    public func textDidChange(_ notification: Notification) {
+        self.textDidChangeByUser()
     }
 }
 #endif

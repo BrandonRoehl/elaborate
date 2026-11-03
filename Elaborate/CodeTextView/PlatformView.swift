@@ -10,9 +10,13 @@ import SwiftUI
 #if os(macOS)
 typealias OSView = NSView
 typealias OSFont = NSFont
+typealias OSColor = NSColor
+typealias OSTextView = NSTextView
 #else
 typealias OSView = UIView
 typealias OSFont = UIFont
+typealias OSColor = UIColor
+typealias OSTextView = UITextView
 #endif
 
 internal extension View {
@@ -38,3 +42,14 @@ let OSMonoFont: UIFont = {
     return UIFont.monospacedSystemFont(ofSize: size, weight: .regular)
 }()
 #endif
+
+extension OSColor {
+    /// The color behind editable text
+    static var textBackgroundColorCompat: OSColor {
+#if os(macOS)
+        return .textBackgroundColor
+#else
+        return .systemBackground
+#endif
+    }
+}

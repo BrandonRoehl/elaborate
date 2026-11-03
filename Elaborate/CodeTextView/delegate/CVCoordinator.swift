@@ -9,92 +9,143 @@ import Foundation
 import SwiftUI
 import os
 
-/** Push `NSTextContentStorage` changes through `NSTextContentManager`
-`NSTextContentManager.performEditingTransaction(_ transaction: () -> Void)`
-*/
-
-public class CVCoordinator: NSObject, @unchecked Sendable {
+/// Owns the TextKit 2 text view's state: the text binding, the result views
+/// and the line bookkeeping used by the gutter and the attachments.
+@MainActor
+public final class CVCoordinator: NSObject {
     static let logger = Logger(subsystem: "elb", category: "coordinator")
-    
-    let textStorage: NSTextStorage
-    let textContainer: NSTextContainer
-    let textLayoutManager: NSLayoutManager
 
     var text: Binding<String>
-    var lineHeight: Binding<[CGFloat]>?
+    var results: [Int: ResultGroup] = [:]
 
-    var exclusionPaths: [CGRect] = [] {
-        didSet {
-#if os(macOS)
-            self.textContainer.exclusionPaths = self.exclusionPaths.map(NSBezierPath.init(rect:))
-#else
-            self.textContainer.exclusionPaths = self.exclusionPaths.map(UIBezierPath.init(rect:))
-#endif
-        }
-    }
+    weak var surface: (any CodeTextSurface)?
 
-    @MainActor init(_ codeView: borrowing CodeTextView) {
-        // Set to defaults to void dump until we get an initialized binding
+    /// One persistent hosted view per line that has results
+    var hosts: [Int: ResultHost] = [:]
+    var tailHost: ResultHost?
+
+    private var cachedIndex: LineIndex?
+
+    init(_ codeView: borrowing CodeTextView) {
         self.text = codeView.text
-
-        // Initilize the container first
-        self.textStorage = NSTextStorage()
-        self.textContainer = NSTextContainer()
-        self.textLayoutManager = NSLayoutManager()
-
         super.init()
-
-        // MARK: NSTextStorageDelegate
-        self.textStorage.delegate = self
-        // Update the text container
-        self.textStorage.addLayoutManager(self.textLayoutManager)
-        self.textContainer.replaceLayoutManager(self.textLayoutManager)
-        // At the end refresh the contents
-        self.update(codeView)
     }
 
-    @MainActor func update(_ codeView: borrowing CodeTextView) {
+    // MARK: - Line bookkeeping
+
+    var lineIndex: LineIndex {
+        if let cachedIndex { return cachedIndex }
+        let index = LineIndex(self.currentText)
+        self.cachedIndex = index
+        return index
+    }
+
+    var currentText: String {
+        return self.textStorage?.string ?? ""
+    }
+
+    func invalidateLineIndex() {
+        self.cachedIndex = nil
+    }
+
+    var contentStorage: NSTextContentStorage? {
+        return self.surface?.textLayoutManager?.textContentManager as? NSTextContentStorage
+    }
+
+    var textStorage: NSTextStorage? {
+        return self.contentStorage?.textStorage
+    }
+
+    // MARK: - Updates
+
+    func attach(_ surface: some CodeTextSurface) {
+        self.surface = surface
+        self.contentStorage?.delegate = self
+        self.textStorage?.delegate = self
+    }
+
+    func update(_ codeView: borrowing CodeTextView) {
         self.text = codeView.text
-        self.lineHeight = codeView.lineHeight
-        // Thse have to be sorted before they are set
-        self.exclusionPaths = codeView.exclusionPaths.sorted { $0.minY < $1.minY }
 
         // TODO: this check is very slow and also dumb but I don't have time
-        if self.text.wrappedValue != self.textStorage.string {
-            let attrString = NSAttributedString(string: self.text.wrappedValue)
-            self.textStorage.setAttributedString(attrString)
+        if self.text.wrappedValue != self.currentText {
+            self.contentStorage?.performEditingTransaction {
+                self.textStorage?.setAttributedString(NSAttributedString(string: self.text.wrappedValue))
+            }
+        }
+        self.apply(results: codeView.results)
+    }
+
+    /// Called after the user edits the text
+    func textDidChangeByUser() {
+        let newText = self.currentText
+        if self.text.wrappedValue != newText {
+            self.text.wrappedValue = newText
         }
     }
-    
-    var newlineOffsets: [Int] = []
-    
-    @MainActor func syncHeights() {
-        guard let lineHeights = self.lineHeight else {
+
+    /// The text changed (typing or the binding) so line derived state is stale
+    func linesDidChange() {
+        self.refreshGutterWidth()
+        self.refreshFooter()
+        self.surface?.refreshGutter()
+    }
+
+    private func apply(results new: [Int: ResultGroup]) {
+        guard new != self.results else { return }
+        let old = self.results
+        self.results = new
+
+        for (line, group) in new where old[line] != group {
+            if let host = self.hosts[line] {
+                host.setRoot(group)
+            } else {
+                self.hosts[line] = ResultHost(group)
+            }
+        }
+        self.hosts = self.hosts.filter { new[$0.key] != nil }
+        self.refreshFooter()
+
+        // Rebuild the paragraphs so the attachments pick up the new views
+        guard let storage = self.textStorage, storage.length > 0 else { return }
+        let full = NSRange(location: 0, length: storage.length)
+        self.contentStorage?.performEditingTransaction {
+            storage.edited(.editedAttributes, range: full, changeInLength: 0)
+        }
+        self.surface?.refreshGutter()
+    }
+
+    // MARK: - Gutter and footer
+
+    func refreshGutterWidth() {
+        let digits = "\(max(self.lineIndex.lineCount, 1) * 10)"
+        let width = ceil(digits.size(withAttributes: [.font: OSMonoFont]).width) + 8
+        if let surface = self.surface, surface.gutterWidth != width {
+            surface.gutterWidth = width
+        }
+    }
+
+    /// Results for lines that have no newline to stand in for, ex. the last line
+    func refreshFooter() {
+        let terminated = self.lineIndex.newlines.count
+        let tail = self.results.filter { $0.key > terminated }.sorted { $0.key < $1.key }.map(\.value)
+        guard !tail.isEmpty else {
+            self.tailHost = nil
+            self.surface?.footer = nil
             return
         }
-        // let to prevent accidental modification
-        let offsets = self.newlineOffsets
-        var heights: [CGFloat] = []
-
-        let documentRange = NSRange(location: 0, length: self.textStorage.length)
-        var line: Int = 0
-        self.textLayoutManager.enumerateLineFragments(forGlyphRange: documentRange, using: { rect, usedRect, textContainer, glyphRange, stop in
-            while line < offsets.count && offsets[line] < glyphRange.location {
-                line += 1
-            }
-
-            if heights.count < line + 1 {
-                heights.append(contentsOf: Array(repeating: 0, count: line - heights.count + 1))
-            }
-            
-            heights[line] += ((rect.height * 100).rounded(.awayFromZero) / 100)
-        })
-        if lineHeights.wrappedValue != heights {
-            lineHeights.wrappedValue = heights
+        let root = VStack(spacing: 0) {
+            ForEach(tail.indices, id: \.self) { tail[$0] }
+        }
+        if let host = self.tailHost {
+            host.setRoot(root)
+        } else {
+            let host = ResultHost(root)
+            self.tailHost = host
+            self.surface?.footer = host
         }
     }
 }
-
 
 extension CodeTextView {
     @MainActor public func makeCoordinator() -> CVCoordinator {

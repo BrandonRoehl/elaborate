@@ -8,22 +8,13 @@
 import SwiftUI
 
 public struct CodeTextView {
-    static let fontSize: CGFloat = {
-#if os(macOS)
-        return NSFont.systemFontSize(for: .regular)
-#else
-        return UIFont.preferredFont(forTextStyle: .body).pointSize
-#endif
-    }()
-
     public var text: Binding<String>
-    public var lineHeight: Binding<[CGFloat]>?
-    public var exclusionPaths: [CGRect]
+    /// Result views keyed by the (1 based) line they belong to
+    var results: [Int: ResultGroup]
 
-    public init(text: Binding<String>, lineHeight: Binding<[CGFloat]>? = nil, exclusionPaths: [CGRect] = []) {
+    init(text: Binding<String>, results: [Int: ResultGroup] = [:]) {
         self.text = text
-        self.lineHeight = lineHeight
-        self.exclusionPaths = exclusionPaths
+        self.results = results
     }
 }
 

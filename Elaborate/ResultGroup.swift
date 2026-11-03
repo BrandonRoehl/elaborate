@@ -22,6 +22,8 @@ struct ResultGroup: View {
     }
 }
 
+extension ResultGroup: Equatable {}
+
 #Preview {
     ResultGroup(results: [
         Response(
