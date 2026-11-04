@@ -2,8 +2,13 @@
   "colors" : [
     {
       "color" : {
-        "platform" : "universal",
-        "reference" : "systemOrangeColor"
+        "color-space" : "srgb",
+        "components" : {
+          "alpha" : "1.000",
+          "blue" : "0x0B",
+          "green" : "0x64",
+          "red" : "0xFE"
+        }
       },
       "idiom" : "universal"
     },
@@ -15,8 +20,13 @@
         }
       ],
       "color" : {
-        "platform" : "universal",
-        "reference" : "systemOrangeColor"
+        "color-space" : "srgb",
+        "components" : {
+          "alpha" : "1.000",
+          "blue" : "0x87",
+          "green" : "0xB3",
+          "red" : "0xFA"
+        }
       },
       "idiom" : "universal"
     }
