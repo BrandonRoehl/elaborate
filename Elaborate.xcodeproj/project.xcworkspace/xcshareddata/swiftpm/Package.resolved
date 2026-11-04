@@ -1,5 +1,5 @@
 {
-  "originHash" : "b0f9e6ccb7df2dcf1a4c53c9446e93d0118270b96c07031ba1035dffcad4d873",
+  "originHash" : "ddd6c0c4d561add5ff2d118b14976369d9fa86c2f6030596f34386c910a18550",
   "pins" : [
     {
       "identity" : "swift-async-algorithms",
@@ -17,6 +17,24 @@
       "state" : {
         "revision" : "671108c96644956dddcd89dd59c203dcdb36cec7",
         "version" : "1.1.4"
+      }
+    },
+    {
+      "identity" : "swift-tree-sitter",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/tree-sitter/swift-tree-sitter",
+      "state" : {
+        "revision" : "08ef81eb8620617b55b08868126707ad72bf754f",
+        "version" : "0.25.0"
+      }
+    },
+    {
+      "identity" : "tree-sitter",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/tree-sitter/tree-sitter",
+      "state" : {
+        "revision" : "da6fe9beb4f7f67beb75914ca8e0d48ae48d6406",
+        "version" : "0.25.10"
       }
     }
   ],

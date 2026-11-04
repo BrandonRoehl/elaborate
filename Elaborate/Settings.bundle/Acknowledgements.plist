@@ -28,6 +28,14 @@
 			<key>File</key>
 			<string>swift-async-algorithms</string>
 		</dict>
+		<dict>
+			<key>Type</key>
+			<string>PSChildPaneSpecifier</string>
+			<key>Title</key>
+			<string>swift-tree-sitter</string>
+			<key>File</key>
+			<string>swift-tree-sitter</string>
+		</dict>
 	</array>
 </dict>
 </plist>
