@@ -37,6 +37,20 @@ final class CodeGutterView: UIView {
 final class CodeUITextView: UITextView, CodeTextSurface {
     let gutter = CodeGutterView()
 
+    init() {
+        let contentStorage = NSTextContentStorage()
+        let layoutManager = NSTextLayoutManager()
+        contentStorage.addTextLayoutManager(layoutManager)
+        let container = NSTextContainer()
+        layoutManager.textContainer = container
+        super.init(frame: .zero, textContainer: container)
+    }
+
+    @available(*, unavailable)
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+
     var gutterWidth: CGFloat = 0 {
         didSet {
             guard oldValue != gutterWidth else { return }
@@ -104,7 +118,7 @@ extension CodeTextView: UIViewRepresentable {
     public typealias Coordinator = CVCoordinator
 
     public func makeUIView(context: Context) -> UITextView {
-        let textView = CodeUITextView(usingTextLayoutManager: true)
+        let textView = CodeUITextView()
         textView.gutter.coordinator = context.coordinator
         textView.textContainerInset = .zero
         textView.textContainer.lineFragmentPadding = 0
