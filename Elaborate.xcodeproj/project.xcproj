@@ -108,15 +108,15 @@
           "product-name": "Elb",
           "build-phase": { "build-phase": "frameworks" },
         }, {
+          "product-name": "TreeSitterIvy",
+          "build-phase": { "build-phase": "frameworks" },
+        }, {
           "package": "swift-async-algorithms",
           "product-name": "AsyncAlgorithms",
           "build-phase": { "build-phase": "frameworks" },
         }, {
           "package": "swift-tree-sitter",
           "product-name": "SwiftTreeSitter",
-          "build-phase": { "build-phase": "frameworks" },
-        }, {
-          "product-name": "TreeSitterIvy",
           "build-phase": { "build-phase": "frameworks" },
         },
       ],
