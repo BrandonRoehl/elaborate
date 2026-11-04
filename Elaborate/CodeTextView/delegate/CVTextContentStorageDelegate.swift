@@ -14,6 +14,45 @@ func colorAttr(_ named: String) -> [NSAttributedString.Key: Any] {
 	]
 }
 
+/// Color asset for a capture name like `punctuation.bracket`. The most
+/// specific known prefix wins, nil means leave the text color alone.
+private let highlightColors: [String: String] = [
+	"keyword": "KeywordColor",
+	"conditional": "KeywordColor",
+	"repeat": "KeywordColor",
+	"include": "KeywordColor",
+	"exception": "KeywordColor",
+	"string": "StringColor",
+	"character": "StringColor",
+	"escape": "StringColor",
+	"number": "NumberColor",
+	"float": "NumberColor",
+	"comment": "CommentColor",
+	"operator": "OperatorColor",
+	"punctuation": "TextColor",
+	"punctuation.bracket": "BracketColor",
+	"function": "FunctionColor",
+	"method": "FunctionColor",
+	"constructor": "FunctionColor",
+	"type": "TypeColor",
+	"constant": "ConstantColor",
+	"boolean": "ConstantColor",
+	"property": "PropertyColor",
+	"field": "PropertyColor",
+	"attribute": "PropertyColor",
+	"tag": "PropertyColor",
+	"variable": "TextColor",
+]
+
+func highlightColorName(for components: [String]) -> String? {
+	var prefix = components
+	while !prefix.isEmpty {
+		if let name = highlightColors[prefix.joined(separator: ".")] { return name }
+		prefix.removeLast()
+	}
+	return nil
+}
+
 extension CVCoordinator: @MainActor NSTextContentStorageDelegate {
     /// Swap the newline that ends a line for an attachment holding its results.
     /// The attachment is the same length as the newline so every offset in the
@@ -32,17 +71,14 @@ extension CVCoordinator: @MainActor NSTextContentStorageDelegate {
 
 		let rawString = paragraph.string
 
-		// MARK: Highlight numbers
-		for (regex, color) in [
-			(/[\/\-\^+*&%$!=]/, colorAttr("OperatorColor")),
-			(/[\[\]()]/, colorAttr("BracketColor")),
-			(/\d+/, colorAttr("NumberColor")),
-			(/(?:"[^"]*"|'[^']*')/, colorAttr("StringColor")),
-			(/#.*/, colorAttr("CommentColor"))
-		] {
-			for match in rawString.matches(of: regex) {
-				paragraph.setAttributes(color, range: NSRange(match.range, in: rawString))
-			}
+		// MARK: Highlight
+		let bounds = NSRange(location: 0, length: range.length)
+		for highlight in self.highlights(in: range) {
+			guard let color = highlightColorName(for: highlight.nameComponents) else { continue }
+			let local = NSRange(location: highlight.range.location - range.location, length: highlight.range.length)
+			let clamped = NSIntersectionRange(local, bounds)
+			guard clamped.length > 0 else { continue }
+			paragraph.addAttributes(colorAttr(color), range: clamped)
 		}
 
 		// MARK: Insert the attachment

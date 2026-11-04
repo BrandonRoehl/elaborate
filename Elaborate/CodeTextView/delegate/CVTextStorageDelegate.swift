@@ -21,6 +21,7 @@ extension CVCoordinator: @MainActor NSTextStorageDelegate {
         changeInLength delta: Int
     ) {
         guard editedMask.contains(.editedCharacters) else { return }
+        self.languageDidEdit(range: editedRange, changeInLength: delta)
         self.invalidateLineIndex()
         self.linesDidChange()
     }
