@@ -114,10 +114,6 @@
           "package": "swift-tree-sitter",
           "product-name": "SwiftTreeSitter",
           "build-phase": { "build-phase": "frameworks" },
-        }, {
-          "package": "swift-tree-sitter",
-          "product-name": "SwiftTreeSitterLayer",
-          "build-phase": { "build-phase": "frameworks" },
         },
       ],
       "build-settings": {

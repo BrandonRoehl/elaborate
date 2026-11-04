@@ -8,7 +8,6 @@
 import Foundation
 import SwiftUI
 import SwiftTreeSitter
-import SwiftTreeSitterLayer
 import os
 
 /// Owns the TextKit 2 text view's state: the text binding, the result views
@@ -28,53 +27,57 @@ public final class CVCoordinator: NSObject {
 
     private var cachedIndex: LineIndex?
 
-    let language: LanguageLayer?
-    /// Whether the language layer has parsed the current text
-    private var languageParsed = false
+    let language: LanguageConfiguration?
+    private var parser: Parser?
+    private var tree: MutableTree?
 
     init(_ codeView: borrowing CodeTextView) {
         self.text = codeView.text
         self.language = codeView.language
         super.init()
+        if let language = self.language {
+            let parser = Parser()
+            do {
+                try parser.setLanguage(language.language)
+                self.parser = parser
+            } catch {
+                Self.logger.error("unsupported language: \(error)")
+            }
+        }
     }
 
     // MARK: - Syntax tree
 
-    /// Feed a text storage edit to the language layer. Offsets are UTF-16 code
-    /// units, which the layer doubles into the bytes tree-sitter expects.
+    /// Reparse after a text storage edit. Offsets are UTF-16 code units, which
+    /// tree-sitter sees as bytes doubled.
     func languageDidEdit(range editedRange: NSRange, changeInLength delta: Int) {
-        guard let language else { return }
-        guard self.languageParsed else {
-            language.replaceContent(with: self.currentText)
-            self.languageParsed = true
-            return
+        guard let parser else { return }
+        if let tree = self.tree {
+            tree.edit(InputEdit(
+                startByte: editedRange.location * 2,
+                oldEndByte: (editedRange.upperBound - delta) * 2,
+                newEndByte: editedRange.upperBound * 2,
+                startPoint: .zero,
+                oldEndPoint: .zero,
+                newEndPoint: .zero
+            ))
         }
-        let content = LanguageLayer.Content(string: self.currentText)
-        let edit = InputEdit(
-            startByte: editedRange.location * 2,
-            oldEndByte: (editedRange.upperBound - delta) * 2,
-            newEndByte: editedRange.upperBound * 2,
-            startPoint: .zero,
-            oldEndPoint: .zero,
-            newEndPoint: .zero
-        )
-        language.didChangeContent(content, using: edit)
+        self.tree = parser.parse(tree: self.tree, string: self.currentText)
     }
 
     /// The highlight names and ranges (in storage coordinates) that touch `range`
     func highlights(in range: NSRange) -> [NamedRange] {
-        guard let language else { return [] }
-        if !self.languageParsed {
-            language.replaceContent(with: self.currentText)
-            self.languageParsed = true
+        guard let parser, let query = self.language?.queries[.highlights] else { return [] }
+        if self.tree == nil {
+            self.tree = parser.parse(self.currentText)
         }
-        let text = self.currentText
-        do {
-            return try language.highlights(in: range, provider: text.predicateTextProvider).sorted()
-        } catch {
-            Self.logger.error("highlighting failed: \(error)")
-            return []
-        }
+        guard let tree = self.tree else { return [] }
+        let cursor = query.execute(in: tree)
+        cursor.setRange(range)
+        let provider = self.currentText.predicateTextProvider
+        return cursor
+            .resolve(with: Predicate.Context(textProvider: provider))
+            .highlights()
     }
 
     // MARK: - Line bookkeeping
