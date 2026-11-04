@@ -34,6 +34,7 @@
       ],
     },
     { "path": "Elb" },
+    { "path": "TreeSitterIvy" },
     {
       "kind": "group",
       "path": "Elaborate",
@@ -113,6 +114,9 @@
         }, {
           "package": "swift-tree-sitter",
           "product-name": "SwiftTreeSitter",
+          "build-phase": { "build-phase": "frameworks" },
+        }, {
+          "product-name": "TreeSitterIvy",
           "build-phase": { "build-phase": "frameworks" },
         },
       ],

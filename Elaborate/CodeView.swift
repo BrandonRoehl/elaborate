@@ -7,16 +7,31 @@
 
 import SwiftUI
 import Elb
+import SwiftTreeSitter
+import TreeSitterIvy
+import OSLog
 
 struct CodeView: View {
     @Binding var text: String
     @Binding var messages: [Int: ResultGroup]
 
+    private static let logger = Logger(subsystem: "org.brandonroehl.elaborate", category: "CodeView")
+
+    /// Ivy parser and highlight queries, loaded once from the TreeSitterIvy bundle
+    private static let language: LanguageConfiguration? = {
+        do {
+            return try Ivy.configuration()
+        } catch {
+            logger.error("failed to load ivy language: \(error)")
+            return nil
+        }
+    }()
+
     var body: some View {
         let background = Color(OSColor.textBackgroundColorCompat)
 
         // The text view scrolls itself, results and line numbers live inside it
-        CodeTextView(text: $text, results: messages)
+        CodeTextView(text: $text, results: messages, language: Self.language)
             .background {
                 if #available(macOS 26.0, iOS 26.0, *) {
                     background.backgroundExtensionEffect()

@@ -1,0 +1,11 @@
+(comment) @comment
+(string) @string
+(number) @number
+(keyword) @keyword
+(operator_definition) @keyword
+(assign) @operator
+(operator) @operator
+(colon) @punctuation
+(semicolon) @punctuation
+(bracket) @punctuation.bracket
+(identifier) @variable

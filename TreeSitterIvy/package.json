@@ -1,0 +1,7 @@
+{
+  "name": "tree-sitter-ivy",
+  "version": "0.1.0",
+  "description": "ivy grammar for tree-sitter",
+  "main": "bindings/node",
+  "tree-sitter": [{ "scope": "source.ivy", "file-types": ["ivy"] }]
+}
