@@ -5,7 +5,7 @@
 (operator_definition) @keyword
 (assign) @operator
 (operator) @operator
-(colon) @punctuation
-(semicolon) @punctuation
-(bracket) @punctuation.bracket
+(colon) @punctuation.delimiter
+(semicolon) @punctuation.delimiter
+(bracket) @punctuation.braces
 (identifier) @variable

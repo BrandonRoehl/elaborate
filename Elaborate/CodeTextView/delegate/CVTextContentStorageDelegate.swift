@@ -14,7 +14,7 @@ func colorAttr(_ named: String) -> [NSAttributedString.Key: Any] {
 	]
 }
 
-/// Color asset for a capture name like `punctuation.bracket`. The most
+/// Color asset for a capture name like `punctuation.braces`. The most
 /// specific known prefix wins, nil means leave the text color alone.
 private let highlightColors: [String: String] = [
 	"keyword": "KeywordColor",
@@ -30,7 +30,8 @@ private let highlightColors: [String: String] = [
 	"comment": "CommentColor",
 	"operator": "OperatorColor",
 	"punctuation": "TextColor",
-	"punctuation.bracket": "BracketColor",
+	"punctuation.braces": "BracesColor",
+	"punctuation.delimiter": "DelimiterColor",
 	"function": "FunctionColor",
 	"method": "FunctionColor",
 	"constructor": "FunctionColor",
