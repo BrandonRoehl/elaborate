@@ -7,6 +7,13 @@
 
 import SwiftUI
 
+func colorAttr(_ named: String) -> [NSAttributedString.Key: Any] {
+	return [
+		.font: OSMonoFont,
+		.foregroundColor: OSColor(named: named) ?? OSColor.textFallbackColor
+	]
+}
+
 extension CVCoordinator: @MainActor NSTextContentStorageDelegate {
     /// Swap the newline that ends a line for an attachment holding its results.
     /// The attachment is the same length as the newline so every offset in the
@@ -20,14 +27,26 @@ extension CVCoordinator: @MainActor NSTextContentStorageDelegate {
         }
 
 		let paragraph = NSMutableAttributedString(attributedString: storage.attributedSubstring(from: range))
-        let attr: [NSAttributedString.Key: Any] = [
-            .font: OSMonoFont,
-			.foregroundColor: OSColor(named: "TextColor") ?? OSColor.textFallbackColor
-        ]
-		paragraph.setAttributes(attr, range: NSRange(location: 0, length: range.length))
+		
+		paragraph.setAttributes(colorAttr("TextColor"), range: NSRange(location: 0, length: range.length))
+
+		let rawString = paragraph.string
+
+		// MARK: Highlight numbers
+		for (regex, color) in [
+			(/\d+/, colorAttr("NumberColor")),
+			// Color comments last
+			(/#.*/, colorAttr("CommentColor"))
+		] {
+			for match in rawString.matches(of: regex) {
+				paragraph.setAttributes(color, range: NSRange(match.range, in: rawString))
+			}
+		}
+
+		// MARK: Insert the attachment
 
         let last = range.length - 1
-        guard (paragraph.string as NSString).character(at: last) == 0x0A else {
+        guard (rawString as NSString).character(at: last) == 0x0A else {
 			return NSTextParagraph(attributedString: paragraph)
         }
 
