@@ -31,7 +31,10 @@ struct CodeView: View {
         let background = Color(OSColor.textBackgroundColorCompat)
 
         // The text view scrolls itself, results and line numbers live inside it
+        // Extend under the title bar and home indicator, the platform scroll view
+        // insets its content so text starts clear of them but can scroll beneath
         CodeTextView(text: $text, results: messages, language: Self.language)
+            .ignoresSafeArea(.container)
             .background {
                 if #available(macOS 26.0, iOS 26.0, *) {
                     background.backgroundExtensionEffect()
