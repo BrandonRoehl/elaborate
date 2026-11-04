@@ -34,8 +34,10 @@ extension CVCoordinator: @MainActor NSTextContentStorageDelegate {
 
 		// MARK: Highlight numbers
 		for (regex, color) in [
+			(/[\/\-\^+*&%$!=]/, colorAttr("OperatorColor")),
+			(/[\[\]()]/, colorAttr("BracketColor")),
 			(/\d+/, colorAttr("NumberColor")),
-			// Color comments last
+			(/(?:"[^"]*"|'[^']*')/, colorAttr("StringColor")),
 			(/#.*/, colorAttr("CommentColor"))
 		] {
 			for match in rawString.matches(of: regex) {
