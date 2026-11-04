@@ -52,4 +52,12 @@ extension OSColor {
         return .systemBackground
 #endif
     }
+
+	static var textFallbackColor: OSColor {
+#if os(macOS)
+		return NSColor.textColor
+#else
+        return UIColor.label
+#endif
+	}
 }

@@ -20,18 +20,10 @@ extension CVCoordinator: @MainActor NSTextContentStorageDelegate {
         }
 
 		let paragraph = NSMutableAttributedString(attributedString: storage.attributedSubstring(from: range))
-        let attr: [NSAttributedString.Key: Any]
-#if os(macOS)
-        attr = [
+        let attr: [NSAttributedString.Key: Any] = [
             .font: OSMonoFont,
-            .foregroundColor: NSColor.labelColor
+			.foregroundColor: OSColor(named: "TextColor") ?? OSColor.textFallbackColor
         ]
-#else
-        attr = [
-            .font: OSMonoFont,
-            .foregroundColor: UIColor.label
-        ]
-#endif
 		paragraph.setAttributes(attr, range: NSRange(location: 0, length: range.length))
 
         let last = range.length - 1
