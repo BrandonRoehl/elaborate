@@ -26,6 +26,7 @@ If the ivy team wants this project they are more than welcome to take it over.
 
 - Go 1.23
 - Xcode 15.2
+- Treesitter CLI
 
 ## Build the Bindings
 ```sh
