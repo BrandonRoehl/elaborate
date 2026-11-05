@@ -161,7 +161,7 @@ func Run(p *parse.Parser, context value.Context) (results []C.Result) {
 	conf.SetOutput(&info)
 	for {
 		exprs, ok := p.Line()
-		line := max(int64(context.Pos().Line)-1, 0)
+		line := max(int64(context.Pos().Line)-1, 1)
 		var values []value.Value
 		if exprs != nil {
 			values = context.Eval(exprs)
