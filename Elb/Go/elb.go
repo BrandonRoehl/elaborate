@@ -160,8 +160,8 @@ func Run(p *parse.Parser, context value.Context) (results []C.Result) {
 	var info bytes.Buffer
 	conf.SetOutput(&info)
 	for {
-		line := int64(context.Pos().Line)
 		exprs, ok := p.Line()
+		line := int64(context.Pos().Line) - 1
 		var values []value.Value
 		if exprs != nil {
 			values = context.Eval(exprs)
