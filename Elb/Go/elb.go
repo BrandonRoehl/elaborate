@@ -136,7 +136,6 @@ func Result(output string, status C.Status, line int64) C.Result {
 // Typical execution is therefore to loop calling Run until it succeeds.
 // Error details are reported to the configured error output stream.
 func Run(p *parse.Parser, context value.Context) (results []C.Result) {
-	var line int64 = 0
 	// Handle errors that are thrown
 	defer func() {
 		err := recover()
@@ -161,7 +160,7 @@ func Run(p *parse.Parser, context value.Context) (results []C.Result) {
 	var info bytes.Buffer
 	conf.SetOutput(&info)
 	for {
-		line += 1
+		line := int64(context.Pos().Line)
 		exprs, ok := p.Line()
 		var values []value.Value
 		if exprs != nil {
