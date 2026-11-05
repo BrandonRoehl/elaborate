@@ -13,8 +13,9 @@ struct LaunchScene: Scene {
     @State private var urlToOpen: URL?
 
     var body: some Scene {
-        DocumentGroupLaunchScene("Elaborate") {
+		DocumentGroupLaunchScene(Text("Elaborate").foregroundStyle(.orange)) {
             NewDocumentButton("Start Calculating")
+				.tint(.blue)
             Button("Getting Started") {
                 if let url = URL(string: "https://pkg.go.dev/robpike.io/ivy") {
                     urlToOpen = url
@@ -22,8 +23,8 @@ struct LaunchScene: Scene {
             }
             .sheet(item: $urlToOpen, content: SFSafariView.init(url:))
         } background: {
-            Color.orange
-        }
+//            Color.orange
+		}
         DocumentGroup(newDocument: ElaborateDocument()) { file in
             NavigationStack {
                 ContentView(document: file.$document)
