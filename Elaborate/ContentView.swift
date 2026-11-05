@@ -97,21 +97,13 @@ struct ContentView: View {
                 continuation.resume(returning: elbExecute(text))
             }
         }
-        await withTaskGroup(of: Void.self) { taskGroup in
-            // Run the thing
-            let messages = Dictionary(grouping: responses) { result in
-                Int(clamping: result.line)
-            }.mapValues(ResultGroup.init(results:))
-            // Call back to main to update the stuff
-            taskGroup.addTask(priority: .high) { @MainActor in
-                self.messages = messages
-            }
-            taskGroup.addTask(priority: .high) { @MainActor in
-                self.running = false
-                Self.logger.debug("Done updating the main actor")
-            }
-            await taskGroup.waitForAll()
-        }
+		await Task.detached(priority: .high) { @MainActor in
+			self.messages = Dictionary(grouping: responses) { result in
+				Int(clamping: result.line)
+			}.mapValues(ResultGroup.init(results:))
+			self.running = false
+			Self.logger.debug("Done updating the main actor")
+		}.value
     }
 }
 
