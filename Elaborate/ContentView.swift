@@ -5,15 +5,14 @@
 //  Created by Brandon Roehl on 11/24/24.
 //
 
-import SwiftUI
-import Elb
-import os
 import AsyncAlgorithms
-
+import Elb
+import SwiftUI
+import os
 
 struct ContentView: View {
     static let logger = Logger(subsystem: "elb", category: "content")
-    
+
     @Binding var document: ElaborateDocument
 
     @State var running: Bool = false
@@ -61,7 +60,7 @@ struct ContentView: View {
                 }
             }
         }
-        .task(priority: .background) {
+        .task(priority: .utility) {
             let typing = self.debounce.debounce(for: .milliseconds(500))
             let stream = merge(typing, instant)
             for await doc in stream {
@@ -76,20 +75,29 @@ struct ContentView: View {
             self.instant.finish()
         }
         .onChange(of: self.document.text, initial: true) {
-            Task.detached(priority: .background) {
-                await Self.logger.debug("Sending")
-                await self.debounce.send(self.document)
-                await Self.logger.debug("Sent")
+            // Snapshot on the main actor so the binding is never read off-main
+            let snapshot = self.document
+            let debounce = self.debounce
+            Task(priority: .utility) {
+				Self.logger.debug("Sending")
+                await debounce.send(snapshot)
+				Self.logger.debug("Sent")
             }
         }
     }
-    
+
     nonisolated func run(_ document: borrowing ElaborateDocument) async {
         await Task.detached(priority: .high) { @MainActor in
             running = true
         }.value
+        let text = document.text
+        // Run the blocking Go call on its own thread, not the cooperative pool
+        let responses = await withCheckedContinuation { continuation in
+            DispatchQueue.global(qos: .userInitiated).async {
+                continuation.resume(returning: elbExecute(text))
+            }
+        }
         await withTaskGroup(of: Void.self) { taskGroup in
-            let responses = elbExecute(document.text)
             // Run the thing
             let messages = Dictionary(grouping: responses) { result in
                 Int(clamping: result.line)
