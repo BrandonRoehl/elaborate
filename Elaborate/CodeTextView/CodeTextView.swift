@@ -11,10 +11,9 @@ import SwiftTreeSitter
 public struct CodeTextView {
     public var text: Binding<String>
     /// Result views keyed by the (1 based) line they belong to
-    var results: [Int: ResultGroup]
+    let results: [Int: ResultGroup]
     /// Drives syntax highlighting. Everything is `TextColor` when nil.
     let language: LanguageConfiguration?
-
     /// Renders the line number gutter when true
     let lineNumbers: Bool
 

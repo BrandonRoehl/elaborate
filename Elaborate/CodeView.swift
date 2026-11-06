@@ -15,6 +15,8 @@ struct CodeView: View {
     @Binding var text: String
     @Binding var messages: [Int: ResultGroup]
 
+	@AppStorage("lineNumbers") private var lineNumbers: Bool = true
+
     private static let logger = Logger(subsystem: "org.brandonroehl.elaborate", category: "CodeView")
 
     /// Ivy parser and highlight queries, loaded once from the TreeSitterIvy bundle
@@ -28,7 +30,7 @@ struct CodeView: View {
     }()
 
     var body: some View {
-        CodeTextView(text: $text, results: messages, language: Self.language)
+		CodeTextView(text: $text, results: messages, language: Self.language, lineNumbers: lineNumbers)
             .ignoresSafeArea(.container)
             .background {
 				let background = Color(OSColor.textBackgroundColorCompat)

@@ -10,6 +10,7 @@ import SwiftUI
 @main
 struct ElaborateApp: App {
 	@Environment(\.openURL) private var openURL
+	@AppStorage("lineNumbers") private var lineNumbers: Bool = true
 
     var body: some Scene {
        LaunchScene()
@@ -20,6 +21,10 @@ struct ElaborateApp: App {
 							openURL(url)
 						}
 					}
+				}
+				CommandGroup(before: .toolbar) {
+					Toggle("Show Line Numbers", isOn: $lineNumbers)
+						.keyboardShortcut("l", modifiers: [.command])
 				}
 			}
     }
