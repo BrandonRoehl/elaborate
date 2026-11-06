@@ -16,6 +16,8 @@ struct GutterLine {
 protocol CodeTextSurface: AnyObject {
     var textLayoutManager: NSTextLayoutManager? { get }
     var gutterWidth: CGFloat { get set }
+    /// Whether the gutter is rendered at all
+    var showsGutter: Bool { get set }
     var footer: ResultHost? { get set }
     /// Where the text container starts in text view coordinates
     var containerOrigin: CGPoint { get }

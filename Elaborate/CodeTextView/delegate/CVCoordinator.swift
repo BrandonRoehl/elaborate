@@ -28,12 +28,14 @@ public final class CVCoordinator: NSObject {
     private var cachedIndex: LineIndex?
 
     let language: LanguageConfiguration?
+    let lineNumbers: Bool
     private var parser: Parser?
     private var tree: MutableTree?
 
     init(_ codeView: borrowing CodeTextView) {
         self.text = codeView.text
         self.language = codeView.language
+        self.lineNumbers = codeView.lineNumbers
         super.init()
         if let language = self.language {
             let parser = Parser()
@@ -167,6 +169,12 @@ public final class CVCoordinator: NSObject {
     // MARK: - Gutter and footer
 
     func refreshGutterWidth() {
+        guard self.lineNumbers else {
+            if let surface = self.surface, surface.gutterWidth != 0 {
+                surface.gutterWidth = 0
+            }
+            return
+        }
         let digits = "\(max(self.lineIndex.lineCount, 1) * 10)"
         let width = ceil(digits.size(withAttributes: [.font: OSMonoFont]).width) + 8
         if let surface = self.surface, surface.gutterWidth != width {

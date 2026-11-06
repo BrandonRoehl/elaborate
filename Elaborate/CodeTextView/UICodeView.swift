@@ -59,6 +59,12 @@ final class CodeUITextView: UITextView, CodeTextSurface {
         }
     }
 
+    var showsGutter = true
+
+    private var gutterInset: CGFloat {
+        showsGutter ? gutterWidth + GutterRenderer.textGap : 0
+    }
+
     var footer: ResultHost? {
         didSet {
             guard oldValue !== footer else { return }
@@ -82,7 +88,7 @@ final class CodeUITextView: UITextView, CodeTextSurface {
 
     private func updateInsets(footerHeight: CGFloat) {
         self.footerHeight = footerHeight
-        let insets = UIEdgeInsets(top: 0, left: gutterWidth + GutterRenderer.textGap, bottom: footerHeight, right: 0)
+        let insets = UIEdgeInsets(top: 0, left: gutterInset, bottom: footerHeight, right: 0)
         if textContainerInset != insets {
             textContainerInset = insets
         }
@@ -90,7 +96,7 @@ final class CodeUITextView: UITextView, CodeTextSurface {
 
     override func layoutSubviews() {
         super.layoutSubviews()
-        if gutter.superview == nil {
+        if gutter.superview == nil && showsGutter {
             addSubview(gutter)
         }
         if let footer, let layout = textLayoutManager {
@@ -100,12 +106,13 @@ final class CodeUITextView: UITextView, CodeTextSurface {
                 updateInsets(footerHeight: height)
             }
             let used = layout.usageBoundsForTextContainer
-            footer.view.frame = CGRect(x: gutterWidth + GutterRenderer.textGap, y: textContainerInset.top + used.maxY, width: width, height: height)
+            footer.view.frame = CGRect(x: gutterInset, y: textContainerInset.top + used.maxY, width: width, height: height)
         } else if footerHeight != 0 {
             updateInsets(footerHeight: 0)
         }
 
         // Only back the part of the gutter that is on screen
+        guard showsGutter else { return }
         let frame = CGRect(x: 0, y: bounds.minY, width: gutterWidth, height: bounds.height)
         if gutter.frame != frame {
             gutter.frame = frame
@@ -120,6 +127,7 @@ extension CodeTextView: UIViewRepresentable {
     public func makeUIView(context: Context) -> UITextView {
         let textView = CodeUITextView()
         textView.gutter.coordinator = context.coordinator
+        textView.showsGutter = lineNumbers
         textView.textContainerInset = .zero
         textView.textContainer.lineFragmentPadding = 0
         textView.autocapitalizationType = .none

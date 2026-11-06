@@ -15,10 +15,14 @@ public struct CodeTextView {
     /// Drives syntax highlighting. Everything is `TextColor` when nil.
     let language: LanguageConfiguration?
 
-    init(text: Binding<String>, results: [Int: ResultGroup] = [:], language: LanguageConfiguration? = nil) {
+    /// Renders the line number gutter when true
+    let lineNumbers: Bool
+
+    init(text: Binding<String>, results: [Int: ResultGroup] = [:], language: LanguageConfiguration? = nil, lineNumbers: Bool = true) {
         self.text = text
         self.results = results
         self.language = language
+        self.lineNumbers = lineNumbers
     }
 }
 
