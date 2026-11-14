@@ -16,6 +16,7 @@ struct CodeView: View {
     @Binding var messages: [Int: ResultGroup]
 
 	@AppStorage("lineNumbers") private var lineNumbers: Bool = true
+	@AppStorage("syntaxHighlight") private var syntaxHighlight: Bool = true
 
     private static let logger = Logger(subsystem: "org.brandonroehl.elaborate", category: "CodeView")
 
@@ -30,8 +31,8 @@ struct CodeView: View {
     }()
 
     var body: some View {
-		CodeTextView(text: $text, results: messages, language: Self.language, lineNumbers: lineNumbers)
-            .id(lineNumbers)
+		CodeTextView(text: $text, results: messages, language: syntaxHighlight ? Self.language : nil, lineNumbers: lineNumbers)
+            .id("\(lineNumbers):\(syntaxHighlight)")
             .ignoresSafeArea(.container)
             .background {
 				let background = Color(OSColor.textBackgroundColorCompat)
