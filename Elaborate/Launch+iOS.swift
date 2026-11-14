@@ -22,7 +22,7 @@ struct LaunchScene: Scene {
                 }
             }
             .sheet(item: $urlToOpen, content: SFSafariView.init(url:))
-        } background: {
+//        } background: {
 //            Color.orange
 		}
         DocumentGroup(newDocument: ElaborateDocument()) { file in

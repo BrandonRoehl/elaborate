@@ -31,6 +31,7 @@ struct CodeView: View {
 
     var body: some View {
 		CodeTextView(text: $text, results: messages, language: Self.language, lineNumbers: lineNumbers)
+            .id(lineNumbers)
             .ignoresSafeArea(.container)
             .background {
 				let background = Color(OSColor.textBackgroundColorCompat)
