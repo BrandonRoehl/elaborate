@@ -12,7 +12,7 @@
 			<key>Type</key>
 			<string>PSToggleSwitchSpecifier</string>
 			<key>Title</key>
-			<string>Show Line Numbers</string>
+			<string>lineNumbers</string>
 			<key>Key</key>
 			<string>lineNumbers</string>
 			<key>DefaultValue</key>
@@ -22,13 +22,13 @@
 			<key>Type</key>
 			<string>PSGroupSpecifier</string>
 			<key>FooterText</key>
-			<string>Whether or not line numbers should be rendered</string>
+			<string>lineNumbersDescription</string>
 		</dict>
 		<dict>
 			<key>Type</key>
 			<string>PSToggleSwitchSpecifier</string>
 			<key>Title</key>
-			<string>Syntax Highlighting</string>
+			<string>syntaxHighlight</string>
 			<key>Key</key>
 			<string>syntaxHighlight</string>
 			<key>DefaultValue</key>
@@ -38,7 +38,7 @@
 			<key>Type</key>
 			<string>PSGroupSpecifier</string>
 			<key>FooterText</key>
-			<string>Whether or not to render text with syntax colors</string>
+			<string>syntaxHighlightDescription</string>
 		</dict>
 		<dict>
 			<key>Type</key>
