@@ -6,24 +6,27 @@
 
 typedef const char cchar_t;
 
-typedef enum Status {
-    ERROR = 0,
-    VALUE = 1,
-    EOF = 2,
-    INFO = 3
-} Status;
+typedef enum Status { ERROR = 0, VALUE = 1, EOF = 2, INFO = 3 } Status;
 
 typedef struct Result {
-    char* output;
-    int64_t line;
-    Status status;
+  char *output;
+  int64_t line;
+  Status status;
 } Result;
 
 typedef struct Response {
-    Result *results;
-    int64_t size;
+  Result *results;
+  int64_t size;
 } Response;
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 extern Response Execute(cchar_t *content);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

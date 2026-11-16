@@ -1,5 +1,5 @@
-#ifndef TREE_SITTER_IVY_H_
-#define TREE_SITTER_IVY_H_
+#ifndef TREE_SITTER_IVY_H
+#define TREE_SITTER_IVY_H
 
 typedef struct TSLanguage TSLanguage;
 
