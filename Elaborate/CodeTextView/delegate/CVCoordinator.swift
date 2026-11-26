@@ -133,21 +133,11 @@ public final class CVCoordinator: NSObject {
         }
     }
 
-    /// A caret rectangle in text view coordinates for either side of a result
-    /// attachment. Before it, use the end of the source line. After it, use the
-    /// result view's trailing edge and height.
+    /// A caret rectangle for the source-line side of a result attachment.
+    /// After the attachment, the native caret already starts the next source line.
     func attachmentCaretRect(at offset: Int, width: CGFloat) -> CGRect? {
-        let newlineOffset: Int
-        let isAfterAttachment: Bool
-        if self.hasResultAttachment(at: offset) {
-            newlineOffset = offset
-            isAfterAttachment = false
-        } else if offset > 0 && self.hasResultAttachment(at: offset - 1) {
-            newlineOffset = offset - 1
-            isAfterAttachment = true
-        } else {
-            return nil
-        }
+        guard self.hasResultAttachment(at: offset) else { return nil }
+        let newlineOffset = offset
 
         guard
             let surface = self.surface,
@@ -168,15 +158,6 @@ public final class CVCoordinator: NSObject {
             x: surface.containerOrigin.x + fragmentOrigin.x,
             y: surface.containerOrigin.y + fragmentOrigin.y
         )
-        if isAfterAttachment {
-            return CGRect(
-                x: origin.x + attachment.maxX,
-                y: origin.y + attachment.minY,
-                width: width,
-                height: attachment.height
-            )
-        }
-
         // A full-width attachment wraps onto its own line. In that case the
         // preceding line fragment supplies the source line's trailing edge.
         if
