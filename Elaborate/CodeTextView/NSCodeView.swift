@@ -84,13 +84,20 @@ final class CodeNSTextView: NSTextView, CodeTextSurface {
         return gutter.coordinator?.attachmentCaretRect(at: range.location, width: 2)
     }
 
-    override var shouldDrawInsertionPoint: Bool {
-        if resultAttachmentCaretRect != nil { return false }
-        return super.shouldDrawInsertionPoint
+    private func updateNativeInsertionIndicators(in view: NSView, hidden: Bool) {
+        for subview in view.subviews {
+            if let indicator = subview as? NSTextInsertionIndicator, indicator !== attachmentCaret {
+                indicator.displayMode = hidden || !super.shouldDrawInsertionPoint ? .hidden : .automatic
+            } else {
+                updateNativeInsertionIndicators(in: subview, hidden: hidden)
+            }
+        }
     }
 
     func updateAttachmentCaret() {
-        guard let rect = resultAttachmentCaretRect, super.shouldDrawInsertionPoint else {
+        let rect = resultAttachmentCaretRect
+        updateNativeInsertionIndicators(in: self, hidden: rect != nil)
+        guard let rect, super.shouldDrawInsertionPoint else {
             attachmentCaret.displayMode = .hidden
             return
         }
