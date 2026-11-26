@@ -41,7 +41,7 @@
       "children": [
         { "kind": "folder", "path": "CodeTextView", "target-membership": [ "Elaborate" ] },
         { "path": "CodeView.swift", "target-membership": [ "Elaborate/compile-sources" ] },
-        { "path": "ElaborateDocument.swift", "target-membership": [ "Elaborate/compile-sources" ] },
+        { "path": "elaborateDocument.swift", "target-membership": [ "Elaborate/compile-sources" ] },
         { "path": "ElaborateApp.swift", "target-membership": [ "Elaborate/compile-sources" ] },
         { "path": "Launch+macOS.swift", "target-membership": [ "Elaborate/compile-sources" ] },
         { "path": "Launch+iOS.swift", "target-membership": [ "Elaborate/compile-sources" ] },
@@ -127,7 +127,7 @@
         "CODE_SIGN_ENTITLEMENTS": "elaborate/elaborate.entitlements",
         "CODE_SIGN_IDENTITY[sdk=macosx*]": "Apple Development",
         "CODE_SIGN_STYLE": "Automatic",
-        "CURRENT_PROJECT_VERSION": "16",
+        "CURRENT_PROJECT_VERSION": "17",
         "DEAD_CODE_STRIPPING": "YES",
         "DEVELOPMENT_ASSET_PATHS": "\"elaborate/Preview Content\"",
         "DEVELOPMENT_TEAM": "V7JGZY6Z4Z",
