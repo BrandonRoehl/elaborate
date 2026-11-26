@@ -111,6 +111,7 @@ public final class CVCoordinator: NSObject {
         self.surface = surface
         self.contentStorage?.delegate = self
         self.textStorage?.delegate = self
+        self.surface?.textLayoutManager?.delegate = self
     }
 
     func update(_ codeView: borrowing CodeTextView) {
