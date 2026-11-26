@@ -176,5 +176,9 @@ extension CVCoordinator: NSTextViewDelegate {
     public func textDidChange(_ notification: Notification) {
         self.textDidChangeByUser()
     }
+
+    public func textViewDidChangeSelection(_ notification: Notification) {
+        self.updateSelectionAffinity()
+    }
 }
 #endif

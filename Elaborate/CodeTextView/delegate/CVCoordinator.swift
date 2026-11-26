@@ -133,6 +133,43 @@ public final class CVCoordinator: NSObject {
         }
     }
 
+    /// Keep both sides of a result attachment on the preceding visual line.
+    /// Before the attachment that is the end of the source line; after it that
+    /// is the trailing edge of the result view, with the view's full height.
+    func updateSelectionAffinity() {
+        guard
+            let storage = self.contentStorage,
+            let layout = self.surface?.textLayoutManager,
+            layout.textSelections.count == 1,
+            let selection = layout.textSelections.first,
+            selection.textRanges.count == 1,
+            let range = selection.textRanges.first,
+            range.isEmpty
+        else { return }
+
+        let offset = storage.offset(from: storage.documentRange.location, to: range.location)
+        guard self.isResultAttachmentBoundary(at: offset), selection.affinity != .upstream else { return }
+
+        let replacement = NSTextSelection(
+            selection.textRanges,
+            affinity: .upstream,
+            granularity: selection.granularity
+        )
+        replacement.anchorPositionOffset = selection.anchorPositionOffset
+        replacement.secondarySelectionLocation = selection.secondarySelectionLocation
+        layout.textSelections = [replacement]
+    }
+
+    func isResultAttachmentBoundary(at offset: Int) -> Bool {
+        return self.hasResultAttachment(at: offset)
+            || (offset > 0 && self.hasResultAttachment(at: offset - 1))
+    }
+
+    private func hasResultAttachment(at offset: Int) -> Bool {
+        guard self.lineIndex.newlines.contains(offset) else { return false }
+        return self.hosts[self.lineIndex.lineNumber(at: offset)] != nil
+    }
+
     /// The text changed (typing or the binding) so line derived state is stale
     func linesDidChange() {
         self.refreshGutterWidth()
@@ -162,6 +199,7 @@ public final class CVCoordinator: NSObject {
             storage.edited(.editedAttributes, range: full, changeInLength: 0)
         }
         self.surface?.refreshGutter()
+        self.updateSelectionAffinity()
     }
 
     // MARK: - Gutter and footer

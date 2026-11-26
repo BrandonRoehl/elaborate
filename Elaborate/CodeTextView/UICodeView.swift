@@ -147,5 +147,9 @@ extension CVCoordinator: UITextViewDelegate {
     public func textViewDidChange(_ textView: UITextView) {
         self.textDidChangeByUser()
     }
+
+    public func textViewDidChangeSelection(_ textView: UITextView) {
+        self.updateSelectionAffinity()
+    }
 }
 #endif
