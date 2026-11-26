@@ -80,6 +80,17 @@ final class CodeUITextView: UITextView, CodeTextSurface {
         gutter.setNeedsDisplay()
     }
 
+    func updateAttachmentCaret() {
+        setNeedsLayout()
+    }
+
+    override func caretRect(for position: UITextPosition) -> CGRect {
+        let defaultRect = super.caretRect(for: position)
+        guard markedTextRange == nil else { return defaultRect }
+        let offset = self.offset(from: beginningOfDocument, to: position)
+        return gutter.coordinator?.attachmentCaretRect(at: offset, width: defaultRect.width) ?? defaultRect
+    }
+
     private func updateInsets(footerHeight: CGFloat) {
         self.footerHeight = footerHeight
         let insets = UIEdgeInsets(top: 0, left: gutterWidth + GutterRenderer.textGap, bottom: footerHeight, right: 0)
@@ -146,6 +157,10 @@ extension CodeTextView: UIViewRepresentable {
 extension CVCoordinator: UITextViewDelegate {
     public func textViewDidChange(_ textView: UITextView) {
         self.textDidChangeByUser()
+    }
+
+    public func textViewDidChangeSelection(_ textView: UITextView) {
+        self.surface?.updateAttachmentCaret()
     }
 }
 #endif

@@ -33,6 +33,15 @@ final class CodeGutterView: NSView {
 final class CodeNSTextView: NSTextView, CodeTextSurface {
     let gutter = CodeGutterView()
     private var observedClipView: NSClipView?
+    private lazy var attachmentCaret: NSTextInsertionIndicator = {
+        let indicator = NSTextInsertionIndicator(frame: .zero)
+        indicator.displayMode = .hidden
+        indicator.effectsViewInserter = { [weak self] view in
+            self?.addSubview(view)
+        }
+        self.addSubview(indicator)
+        return indicator
+    }()
 
     var gutterWidth: CGFloat = 0 {
         didSet {
@@ -63,6 +72,46 @@ final class CodeNSTextView: NSTextView, CodeTextSurface {
 
     func refreshGutter() {
         gutter.needsDisplay = true
+    }
+
+    private var resultAttachmentCaretRect: CGRect? {
+        guard
+            !hasMarkedText(),
+            selectedRanges.count == 1,
+            let range = selectedRanges.first?.rangeValue,
+            range.length == 0
+        else { return nil }
+        return gutter.coordinator?.attachmentCaretRect(at: range.location, width: 2)
+    }
+
+    private func updateNativeInsertionIndicators(in view: NSView, hidden: Bool) {
+        for subview in view.subviews {
+            if let indicator = subview as? NSTextInsertionIndicator, indicator !== attachmentCaret {
+                indicator.displayMode = hidden || !super.shouldDrawInsertionPoint ? .hidden : .automatic
+            } else {
+                updateNativeInsertionIndicators(in: subview, hidden: hidden)
+            }
+        }
+    }
+
+    func updateAttachmentCaret() {
+        let rect = resultAttachmentCaretRect
+        updateNativeInsertionIndicators(in: self, hidden: rect != nil)
+        guard let rect, super.shouldDrawInsertionPoint else {
+            attachmentCaret.displayMode = .hidden
+            return
+        }
+        attachmentCaret.frame = rect
+        attachmentCaret.color = insertionPointColor
+        attachmentCaret.displayMode = .automatic
+        if subviews.last !== attachmentCaret {
+            addSubview(attachmentCaret, positioned: .above, relativeTo: nil)
+        }
+    }
+
+    override func updateInsertionPointStateAndRestartTimer(_ restart: Bool) {
+        super.updateInsertionPointStateAndRestartTimer(restart)
+        updateAttachmentCaret()
     }
 
     private func updateContainerSize() {
@@ -125,6 +174,7 @@ final class CodeNSTextView: NSTextView, CodeTextSurface {
             textContainerInset = .zero
         }
         layoutGutter()
+        updateAttachmentCaret()
     }
 }
 
@@ -175,6 +225,10 @@ extension CodeTextView: NSViewRepresentable {
 extension CVCoordinator: NSTextViewDelegate {
     public func textDidChange(_ notification: Notification) {
         self.textDidChangeByUser()
+    }
+
+    public func textViewDidChangeSelection(_ notification: Notification) {
+        self.surface?.updateAttachmentCaret()
     }
 }
 #endif

@@ -20,6 +20,7 @@ protocol CodeTextSurface: AnyObject {
     /// Where the text container starts in text view coordinates
     var containerOrigin: CGPoint { get }
     func refreshGutter()
+    func updateAttachmentCaret()
 }
 
 enum GutterRenderer {

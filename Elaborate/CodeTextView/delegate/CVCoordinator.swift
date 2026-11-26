@@ -134,6 +134,63 @@ public final class CVCoordinator: NSObject {
         }
     }
 
+    /// A caret rectangle for the source-line side of a result attachment.
+    /// After the attachment, the native caret already starts the next source line.
+    func attachmentCaretRect(at offset: Int, width: CGFloat) -> CGRect? {
+        guard self.hasResultAttachment(at: offset) else { return nil }
+        let newlineOffset = offset
+
+        guard
+            let surface = self.surface,
+            let storage = self.contentStorage,
+            let layout = surface.textLayoutManager,
+            let location = storage.location(storage.documentRange.location, offsetBy: newlineOffset),
+            let end = storage.location(location, offsetBy: 1),
+            let range = NSTextRange(location: location, end: end)
+        else { return nil }
+
+        layout.ensureLayout(for: range)
+        guard let fragment = layout.textLayoutFragment(for: location) else { return nil }
+        let attachment = fragment.frameForTextAttachment(at: location)
+        guard !attachment.isEmpty else { return nil }
+
+        let fragmentOrigin = fragment.layoutFragmentFrame.origin
+        let origin = CGPoint(
+            x: surface.containerOrigin.x + fragmentOrigin.x,
+            y: surface.containerOrigin.y + fragmentOrigin.y
+        )
+        // A full-width attachment wraps onto its own line. In that case the
+        // preceding line fragment supplies the source line's trailing edge.
+        if
+            let attachmentLine = fragment.textLineFragment(for: location, isUpstreamAffinity: false),
+            let index = fragment.textLineFragments.firstIndex(where: { $0 === attachmentLine }),
+            index > 0
+        {
+            let sourceLine = fragment.textLineFragments[index - 1].typographicBounds
+            return CGRect(
+                x: origin.x + sourceLine.maxX,
+                y: origin.y + sourceLine.minY,
+                width: width,
+                height: sourceLine.height
+            )
+        }
+
+        // An inline or empty-line attachment starts where the source caret
+        // belongs. Keep the caret at the source font's height, not the view's.
+        let font = self.textStorage?.attributes(at: newlineOffset, effectiveRange: nil)[.font] as? OSFont ?? OSMonoFont
+        return CGRect(
+            x: origin.x + attachment.minX,
+            y: origin.y + attachment.minY,
+            width: width,
+            height: font.ascender - font.descender + font.leading
+        )
+    }
+
+    private func hasResultAttachment(at offset: Int) -> Bool {
+        guard self.lineIndex.newlines.contains(offset) else { return false }
+        return self.hosts[self.lineIndex.lineNumber(at: offset)] != nil
+    }
+
     /// The text changed (typing or the binding) so line derived state is stale
     func linesDidChange() {
         self.refreshGutterWidth()
@@ -163,6 +220,7 @@ public final class CVCoordinator: NSObject {
             storage.edited(.editedAttributes, range: full, changeInLength: 0)
         }
         self.surface?.refreshGutter()
+        self.surface?.updateAttachmentCaret()
     }
 
     // MARK: - Gutter and footer
