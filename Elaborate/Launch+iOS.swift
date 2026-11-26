@@ -20,8 +20,10 @@ struct LaunchScene: Scene {
                 if let url = URL(string: "https://pkg.go.dev/robpike.io/ivy") {
                     urlToOpen = url
                 }
-            }
-            .sheet(item: $urlToOpen, content: SFSafariView.init(url:))
+			}.sheet(item: $urlToOpen, content: SFSafariView.init(url:))
+			Button("Settings") {
+				UIApplication.shared.open(URL(string: UIApplication.openSettingsURLString)!)
+			}
         } background: {
 //            Color.orange
 		}
