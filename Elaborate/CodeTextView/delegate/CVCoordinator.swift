@@ -133,36 +133,75 @@ public final class CVCoordinator: NSObject {
         }
     }
 
-    /// Keep both sides of a result attachment on the preceding visual line.
-    /// Before the attachment that is the end of the source line; after it that
-    /// is the trailing edge of the result view, with the view's full height.
-    func updateSelectionAffinity() {
+    /// A caret rectangle in text view coordinates for either side of a result
+    /// attachment. Before it, use the end of the source line. After it, use the
+    /// result view's trailing edge and height.
+    func attachmentCaretRect(at offset: Int, width: CGFloat) -> CGRect? {
+        let newlineOffset: Int
+        let isAfterAttachment: Bool
+        if self.hasResultAttachment(at: offset) {
+            newlineOffset = offset
+            isAfterAttachment = false
+        } else if offset > 0 && self.hasResultAttachment(at: offset - 1) {
+            newlineOffset = offset - 1
+            isAfterAttachment = true
+        } else {
+            return nil
+        }
+
         guard
+            let surface = self.surface,
             let storage = self.contentStorage,
-            let layout = self.surface?.textLayoutManager,
-            layout.textSelections.count == 1,
-            let selection = layout.textSelections.first,
-            selection.textRanges.count == 1,
-            let range = selection.textRanges.first,
-            range.isEmpty
-        else { return }
+            let layout = surface.textLayoutManager,
+            let location = storage.location(storage.documentRange.location, offsetBy: newlineOffset),
+            let end = storage.location(location, offsetBy: 1),
+            let range = NSTextRange(location: location, end: end)
+        else { return nil }
 
-        let offset = storage.offset(from: storage.documentRange.location, to: range.location)
-        guard self.isResultAttachmentBoundary(at: offset), selection.affinity != .upstream else { return }
+        layout.ensureLayout(for: range)
+        guard let fragment = layout.textLayoutFragment(for: location) else { return nil }
+        let attachment = fragment.frameForTextAttachment(at: location)
+        guard !attachment.isEmpty else { return nil }
 
-        let replacement = NSTextSelection(
-            selection.textRanges,
-            affinity: .upstream,
-            granularity: selection.granularity
+        let fragmentOrigin = fragment.layoutFragmentFrame.origin
+        let origin = CGPoint(
+            x: surface.containerOrigin.x + fragmentOrigin.x,
+            y: surface.containerOrigin.y + fragmentOrigin.y
         )
-        replacement.anchorPositionOffset = selection.anchorPositionOffset
-        replacement.secondarySelectionLocation = selection.secondarySelectionLocation
-        layout.textSelections = [replacement]
-    }
+        if isAfterAttachment {
+            return CGRect(
+                x: origin.x + attachment.maxX,
+                y: origin.y + attachment.minY,
+                width: width,
+                height: attachment.height
+            )
+        }
 
-    func isResultAttachmentBoundary(at offset: Int) -> Bool {
-        return self.hasResultAttachment(at: offset)
-            || (offset > 0 && self.hasResultAttachment(at: offset - 1))
+        // A full-width attachment wraps onto its own line. In that case the
+        // preceding line fragment supplies the source line's trailing edge.
+        if
+            let attachmentLine = fragment.textLineFragment(for: location, isUpstreamAffinity: false),
+            let index = fragment.textLineFragments.firstIndex(where: { $0 === attachmentLine }),
+            index > 0
+        {
+            let sourceLine = fragment.textLineFragments[index - 1].typographicBounds
+            return CGRect(
+                x: origin.x + sourceLine.maxX,
+                y: origin.y + sourceLine.minY,
+                width: width,
+                height: sourceLine.height
+            )
+        }
+
+        // An inline or empty-line attachment starts where the source caret
+        // belongs. Keep the caret at the source font's height, not the view's.
+        let font = self.textStorage?.attributes(at: newlineOffset, effectiveRange: nil)[.font] as? OSFont ?? OSMonoFont
+        return CGRect(
+            x: origin.x + attachment.minX,
+            y: origin.y + attachment.minY,
+            width: width,
+            height: font.ascender - font.descender + font.leading
+        )
     }
 
     private func hasResultAttachment(at offset: Int) -> Bool {
@@ -199,7 +238,7 @@ public final class CVCoordinator: NSObject {
             storage.edited(.editedAttributes, range: full, changeInLength: 0)
         }
         self.surface?.refreshGutter()
-        self.updateSelectionAffinity()
+        self.surface?.updateAttachmentCaret()
     }
 
     // MARK: - Gutter and footer
